@@ -1,4 +1,4 @@
-# frontend.admin
+# frontend-admin
 
 
 
