@@ -1,0 +1,139 @@
+.login-page {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-image: url('../../images/bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: 'Nunito', sans-serif;
+}
+
+.login_block-wrapper {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 548px;
+    width: 614px;
+    background-color: #fff;
+    border-radius: 20px;
+}
+
+.login_block-title {
+    font-size: 72px;
+}
+
+.login-input-wrapper {
+    margin-bottom: 20px;
+}
+
+.login-input {
+    outline: none;
+    border: 2px solid transparent;
+    width: 454px;
+    height: 66px;
+    text-align: center;
+    border-radius: 10px;
+    padding: 0px 40px 0px 40px;
+    font-size: 18px;
+    background-color: #EDEDED;
+    font-family: 'Nunito', sans-serif;
+}
+
+.login-input::placeholder {
+    color: #C1C1C3;
+}
+
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.password-input {
+    outline: none;
+    border: 2px solid transparent;
+    width: 454px;
+    height: 66px;
+    text-align: center;
+    border-radius: 10px;
+    padding: 0px 40px 0px 40px;
+    font-size: 18px;
+    background-color: #EDEDED;
+    font-family: 'Nunito', sans-serif;
+}
+
+.password-input::placeholder {
+    color: #C1C1C3;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;  
+    margin-top: 5px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    outline: none;
+    transition: scale ease 0.3s;
+  }
+  
+  .toggle-password img {
+    width: 22px;  
+    height: 22px;  
+  }
+
+  .toggle-password:hover {
+    scale: 1.2;
+  }
+
+.login-button {
+    display: flex;
+    border: none;
+    margin: 0 auto;
+    width: 540px;
+    height: 66px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 18px;
+    background-color: #00315D;
+    color: #fff;
+    transition: all ease 0.3s;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+}
+
+.login-button:hover {
+    scale: 0.97;
+    background-color: #022240;
+}
+
+.login-button:disabled {
+    background-color: #5C7994;
+}
+
+.login-button:disabled:hover {
+    scale: 1.0;
+    cursor: default;
+}
+
+.error-message {
+    position: absolute;
+    top: 41%;
+    color: #FF4B4B;
+    transition: all ease 0.6s;
+}
+
+.error {
+    border-color: #FF4B4B;
+    color: #FF4B4B;
+    transition: all ease 0.6s;
+}
+  
