@@ -1,14 +1,15 @@
 import React from 'react';
+import ContentHeader from '../../components/ContentHeader';
 
 const Stock = () => {
-  return (
-    <div className="menu-container">
-      <div className="menu-header">
-        <h2 className='container-title'>Склад</h2>
+    const handleStockSearch = (searchTerm) => {
         
-      </div>
+    };
 
-      <div className="menu-content">
+  return (
+    <div className="stock-container">
+      <ContentHeader title="Склад" onSearch={handleStockSearch} />
+      <div className="stock-content">
       </div>
     </div>
   );

@@ -1,0 +1,38 @@
+.content-header {
+    padding-bottom: 20px;
+}
+
+.content-header-title {
+    font-size: 48px;
+    padding: 20px;
+    margin: 0;
+}
+
+.search-bar {
+    width: 85%;
+    height: 42px;
+    margin: 0px 1% 0px 1.5%;
+    padding-left: 10px;
+    font-size: 18px;
+    border-radius: 6px;
+    border: none;
+    background-color: #E7E7E7;
+    outline: none;
+}
+
+.create-button {
+    width: 9%;
+    height: 42px;
+    border: none;
+    border-radius: 6px;
+    background-color: #00315D;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.create-button:hover {
+    background-color: #005199;
+}
+

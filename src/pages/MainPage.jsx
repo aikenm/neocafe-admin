@@ -4,7 +4,8 @@ import Stock from './main_subpages/Stock';
 import Branches from './main_subpages/Branches';
 import Employees from './main_subpages/Employees';
 import '../styles/pages/main_page.css';
-import logo from '../images/logo.svg'
+import logo from '../images/logo.svg';
+import notificationsIcon from '../images/notifications.svg';
 
 const MainPage = () => {
     const [activeComponent, setActiveComponent] = useState('menu'); 
@@ -37,14 +38,31 @@ const MainPage = () => {
             <div className="side-bar">  
                 <img src={logo} alt='logo' className='logo'/>
                 <div className='side-bar-buttons-wrapper'>
-                    <button onClick={() => handleSetActiveComponent('menu')} className='side-bar-button'>Меню</button>
-                    <button onClick={() => handleSetActiveComponent('stock')} className='side-bar-button'>Склад</button>
-                    <button onClick={() => handleSetActiveComponent('branches')} className='side-bar-button'>Филиалы</button>
-                    <button onClick={() => handleSetActiveComponent('employees')} className='side-bar-button'>Сотрудники</button>
+                    <button 
+                        onClick={() => handleSetActiveComponent('menu')} 
+                        className={`side-bar-button ${activeComponent === 'menu' ? 'active-button' : ''}`}>
+                            Меню
+                    </button>
+                    <button 
+                        onClick={() => handleSetActiveComponent('stock')} 
+                        className={`side-bar-button ${activeComponent === 'stock' ? 'active-button' : ''}`}>
+                            Склад
+                    </button>
+                    <button 
+                        onClick={() => handleSetActiveComponent('branches')} 
+                        className={`side-bar-button ${activeComponent === 'branches' ? 'active-button' : ''}`}>
+                            Филиалы
+                    </button>
+                    <button 
+                        onClick={() => handleSetActiveComponent('employees')} 
+                        className={`side-bar-button ${activeComponent === 'employees' ? 'active-button' : ''}`}>
+                            Сотрудники
+                    </button>
                     <button onClick={() => handleLogOut()} className='side-bar-button log-out-button'>Выход</button>
                 </div>
             </div>
             <div className="content">
+                <button className='notifications-button'><img src={notificationsIcon} alt='notifications' /></button>
                 { renderContent() }
             </div>
         </div>

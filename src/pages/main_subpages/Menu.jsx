@@ -1,13 +1,14 @@
 import React from 'react';
+import ContentHeader from '../../components/ContentHeader';
 
 const Menu = () => {
+    const handleMenuSearch = (searchTerm) => {
+        
+    };
+
   return (
     <div className="menu-container">
-      <div className="menu-header">
-        <h2 className='container-title'>Меню</h2>
-        
-      </div>
-
+      <ContentHeader title="Меню" onSearch={handleMenuSearch} />
       <div className="menu-content">
       </div>
     </div>

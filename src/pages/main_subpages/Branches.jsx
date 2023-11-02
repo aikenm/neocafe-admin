@@ -1,14 +1,16 @@
 import React from 'react';
+import ContentHeader from '../../components/ContentHeader';
 
 const Branches = () => {
+    const handleBranchesSearch = (searchTerm) => {
+       
+    };
+      
   return (
-    <div className="menu-container">
-      <div className="menu-header">
-        <h2 className='container-title'>Филиалы</h2>
+    <div className="branches-container">
+      <ContentHeader title="Филиалы" onSearch={handleBranchesSearch} />
+      <div className="branches-content">
         
-      </div>
-
-      <div className="menu-content">
       </div>
     </div>
   );
