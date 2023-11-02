@@ -3,6 +3,7 @@ import eyeOpen from '../images/eye-open.svg';
 import eyeClosed from '../images/eye-closed.svg';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const { register, handleSubmit, clearErrors } = useForm();
@@ -12,12 +13,15 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  const navigate = useNavigate();
+
+
   const handleLogin = (data) => {
     if (data.username !== 'correctUsername' || data.password !== 'correctPassword') {
       setInputError(true);
       setErrorMessage('Логин или пароль неверный, попробуйте еще раз');
     } else {
-      // Successful login logic here
+      navigate('/main');
     }
   };
 
