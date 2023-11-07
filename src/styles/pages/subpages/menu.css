@@ -1,0 +1,12 @@
+.menu-content-header {
+    display: flex;
+    justify-content: space-between;
+    height: 42px;
+    align-items: center;
+    border-bottom: 2px solid black;
+}
+
+.menu-content-header-subtitle {
+    margin-left: 25px;
+    margin-right: 8%;
+}
