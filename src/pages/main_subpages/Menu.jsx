@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import ContentHeader from '../../components/ContentHeader';
-import '../../styles/pages/subpages/menu.css';
+import MenuItemModal from '../../modal_windows/MenuItemModal';
+import '../../styles/pages/subpages/menu/menu.css';
 
 const Menu = () => {
+    const menuItems = useSelector((state) => state.menu.items);
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const toggleModal = () => setModalOpen(!modalOpen);
     const handleMenuSearch = (searchTerm) => {
         
     };
 
   return (
     <div className="menu-container">
-      <ContentHeader title="Меню" onSearch={handleMenuSearch} />
+      <ContentHeader title="Меню" onCreate={toggleModal} onSearch={handleMenuSearch} />
+      <MenuItemModal isOpen={modalOpen} toggleModal={toggleModal} />
       <div className="menu-content">
         <div className='menu-content-header'>
             <span className='menu-content-header-subtitle'>
@@ -31,6 +38,20 @@ const Menu = () => {
                 Филиал
             </span>
         </div>
+        {menuItems.map((item, index) => (
+                    <div key={index} className="menu-item">
+                        <span className='menu-item-detail'>№{index + 1}</span>
+                        <span className='menu-item-detail'>{item.name}</span>
+                        <span className='menu-item-detail'>{item.category}</span>
+                        <span className='menu-item-detail'>{item.price}</span>
+                        <span className='menu-item-detail'>
+                            {item.ingredients.map((ing, i) => (
+                                <div key={i}>{`${ing.name} ${ing.amount}${ing.unit}`}</div>
+                            ))}
+                        </span>
+                        <span className='menu-item-detail'>Главный филиал</span>
+                    </div>
+                ))}
       </div>
     </div>
   );
