@@ -1,4 +1,3 @@
-/* modal.css */
 .modal {
     position: fixed; 
     top: 0;
@@ -7,9 +6,10 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4); 
     display: flex;
-    align-items: center; 
     justify-content: center; 
-    overflow: scroll;
+    overflow-y: scroll;
+    flex-wrap: wrap;
+    z-index: 2;
 }
   
 .modal-content {
@@ -34,6 +34,11 @@
     border: none;
     cursor: pointer;
     padding: 20px;
+    transition: scale 0.3s ease;
+}
+
+.close-button:hover {
+    scale: 1.3;
 }
 
 .modal-title {
@@ -47,21 +52,31 @@
     padding: 30px;
 }
 
-.image-input-wrapper {
-    background-color: #F4F4F4;
-    padding: 20px 40px;
-}
-
 .section-title {
     font-size: 22px;
     font-weight: 500;
     margin: 0;
 }
 
+/* Добавьте фотографию к позиции */
+
+.image-input-wrapper {
+    background-color: #F4F4F4;
+    padding: 20px 40px;
+}
+
 .image-input-block {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
     background-color: #fff;
     border: 1px dashed #CDD3DD;
     padding: 30px;
+}
+
+.image-input-icon {
+    width: 95px;
 }
 
 .image-input {
@@ -71,6 +86,20 @@
 .image-input-text {
     font-size: 16px;
 }
+
+.view-button {
+    color: #00315D;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-button:hover {
+    color: #004583;
+    font-size: 14px;
+}
+
+/* Наименование, категория и стоимость */
 
 .input-title {
     font-size: 16px;
@@ -102,29 +131,59 @@
     justify-content: space-between; 
     align-items: center;
     flex-wrap: nowrap;
-  }
-
-  .amount-input {
-    display: grid;
-    align-items: center;
-    grid-template-columns: 3fr 1fr;
-  }
+}
   
-  .inline-input-group {
+.inline-input-group {
     flex: 2; 
-    flex-direction: column; 
     margin-right: 30px;
-  }
+}
   
-  .input-field.select {
+.input-field.select {
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
-  }
+}
+
+.inline-input-group select {
+    cursor: pointer;
+}
   
-  .inline-input-group:last-child {
+.inline-input-group:last-child {
     margin-right: 0;
-  }
+}
+
+/* Состав блюда и граммовка */
+
+.ingredients-inline-input-wrapper {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.ingredients-inline-input-group {
+    flex: 2;
+    margin-right: 30px;
+}
+
+.ingredients-inline-input-group:last-child {
+    display: flex;
+    margin-right: 0;
+}
+
+.amount-input-wrapper {
+    flex: 2.5;
+    margin-right: 10px;
+}
+
+.unit-input-wrapper {
+    flex: 1;
+    margin-top: 21.5px;
+}
+
+.unit-input-wrapper select {
+    cursor: pointer;
+}
 
 .section-title:first-child {
     margin-bottom: 20px;
@@ -135,10 +194,72 @@
     margin: 20px 0px;
 }
 
+.ingredients-remove-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    background: none;
+    border: none;
+    width: 20px;
+    margin-left: -23px;
+    opacity: 0.2;
+    transition: opacity 0.2s ease;
+}
+
+.ingredients-remove-button:hover {
+    opacity: 1;
+}
+
+.ingredients-close-icon {
+    width: 20px;
+}
+
+.button {
+    width: 252px;
+    height: 54px;
+    border-radius: 6px;
+    font-size: 18px;
+    border: none;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.add-more-button {
+    color: #fff;
+    background-color: #00315D;
+}
+
+.add-more-button:hover {
+    background-color: #004583;
+}
+
 .modal-actions {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
     padding: 30px;
 }
 
-.cancel-button {}
+.cancel-button {
+    flex: 1;
+    margin-right: 30px;
+    background-color: #fff;
+    border: 1px solid #00315D;
+    color: #00315D;
+}
 
-.save-button {}
+.cancel-button:hover {
+    color: #fff;
+    background-color: #004583;
+}
+
+.save-button {
+    flex: 1;
+    color: #fff;
+    background-color: #00315D;
+}
+
+.save-button:hover {
+    background-color: #004583;
+}

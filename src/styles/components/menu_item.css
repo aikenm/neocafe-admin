@@ -1,0 +1,41 @@
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+    height: 86px;
+    background-color: #F9F9F9;
+    border-bottom: 2px solid #cdd3dd;
+}
+
+.id {
+    width: 50px;
+}
+
+.name {
+    width: 200px;
+    margin-left: 25px;
+}
+
+.category {
+    width: 200px;
+    margin-left: 25px;
+}
+
+.ingredients {
+    text-overflow: ellipsis;
+    align-items: center;
+    width: 350px;
+    height: 22px;
+    overflow-x: auto;
+    margin-left: 25px;
+}
+
+.price {
+    width: 200px;
+    margin-left: 55px;
+}
+
+.branch {
+    width: 200px;
+    margin-left: 40px;
+}

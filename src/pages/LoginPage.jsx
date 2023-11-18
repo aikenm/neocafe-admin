@@ -17,7 +17,7 @@ const LoginPage = () => {
 
 
   const handleLogin = (data) => {
-    if (data.username !== 'correctUsername' || data.password !== 'correctPassword') {
+    if (data.username !== 'admin' || data.password !== 'admin') {
       setInputError(true);
       setErrorMessage('Логин или пароль неверный, попробуйте еще раз');
     } else {

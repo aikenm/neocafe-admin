@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../store/menuSlice';
 import CloseIcon from '../images/close-icon.svg';
+import ImageIcon from '../images/image-input.svg';
 import '../styles/pages/subpages/menu/menu_modal.css'
 
 const IngredientInput = ({ ingredient, onChange, onRemove, index }) => {
   return (
-    <div className="inline-input-wrapper">
-        <div className='inline-input-group name-input'>
+    <div className="ingredients-inline-input-wrapper">
+        <button onClick={onRemove} className='ingredients-remove-button'><img src={CloseIcon} alt='close-icon' className='ingredients-close-icon'/></button>
+        <div className='ingredients-inline-input-group name-input'>
             <span className='input-title'>Наименование</span>
             <input
                 type="text"
@@ -17,8 +19,9 @@ const IngredientInput = ({ ingredient, onChange, onRemove, index }) => {
                 className='input-field'
             />
         </div>
-        <div className='inline-input-group amount-input'>
-            <span className='input-title'>Количество</span>
+        <div className='ingredients-inline-input-group amount-input'>
+            <div className='amount-input-wrapper'>
+            <span className='input-title'>Кол-во (в гр, мл, л, кг)</span>
             <input
                 type="number"
                 placeholder="Количество"
@@ -26,6 +29,8 @@ const IngredientInput = ({ ingredient, onChange, onRemove, index }) => {
                 onChange={(e) => onChange(index, 'amount', e.target.value)}
                 className='input-field'
             />
+            </div>
+            <div className='unit-input-wrapper'>
             <select
                 value={ingredient.unit}
                 onChange={(e) => onChange(index, 'unit', e.target.value)}
@@ -35,8 +40,8 @@ const IngredientInput = ({ ingredient, onChange, onRemove, index }) => {
                 <option value="мл">мл</option>
                 <option value="шт">шт</option>
             </select>
+            </div>
         </div>
-        {/* Optionally add a button for removing the ingredient */}
     </div>
   );
 };
@@ -104,8 +109,9 @@ const MenuItemModal = ({ isOpen, toggleModal }) => {
                     <h3 className='section-title'>Добавьте фотографию к позиции</h3>
                     <div className="image-input-wrapper">
                         <div className='image-input-block'>
+                            <img src={ImageIcon} alt='upload-icon' className='image-input-icon' />
                             <input type="file" id="image-upload" className='image-input'/>
-                            <span className='image-input-text'>Перетащите изображение для добавления или <label htmlFor="image-upload">обзор</label></span>
+                            <span className='image-input-text'>Перетащите изображение для добавления или <label htmlFor="image-upload" className='view-button'>обзор</label></span>
                         </div>
                     </div>
                     <h3 className='section-title'>Наименование, категория и стоимость</h3>
@@ -158,11 +164,11 @@ const MenuItemModal = ({ isOpen, toggleModal }) => {
                         index={index}
                         />
                     ))}
-                    <button onClick={handleAddIngredient}>Добавить еще +</button>
+                    <button onClick={handleAddIngredient} className='add-more-button button'>Добавить еще +</button>
                 </div>
                 <div className="modal-actions">
-                    <button className="cancel-button" onClick={toggleModal}>Отмена</button>
-                    <button className="save-button" onClick={handleSave}>Создать</button>
+                    <button className="cancel-button button" onClick={toggleModal}>Отмена</button>
+                    <button className="save-button button" onClick={handleSave}>Создать</button>
                 </div>
             </div>
         </div>

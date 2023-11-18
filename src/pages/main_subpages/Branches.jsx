@@ -1,6 +1,6 @@
 import React from 'react';
 import ContentHeader from '../../components/ContentHeader';
-import '../../styles/pages/subpages/branches.css';
+import '../../styles/pages/subpages/branches/branches.css';
 
 const Branches = () => {
     const handleBranchesSearch = (searchTerm) => {

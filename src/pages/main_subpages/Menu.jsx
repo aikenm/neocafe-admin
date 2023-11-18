@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ContentHeader from '../../components/ContentHeader';
+import MenuItem from '../../components/menu/MenuItem';
 import MenuItemModal from '../../modal_windows/MenuItemModal';
 import '../../styles/pages/subpages/menu/menu.css';
 
@@ -19,39 +20,28 @@ const Menu = () => {
       <MenuItemModal isOpen={modalOpen} toggleModal={toggleModal} />
       <div className="menu-content">
         <div className='menu-content-header'>
-            <span className='menu-content-header-subtitle'>
+            <span className='menu-content-header-subtitle id'>
                 №
             </span>
-            <span className='menu-content-header-subtitle'>
+            <span className='menu-content-header-subtitle name'>
                 Наименование
             </span>
-            <span className='menu-content-header-subtitle'>
+            <span className='menu-content-header-subtitle category'>
                 Категория
             </span>
-            <span className='menu-content-header-subtitle'>
+            <span className='menu-content-header-subtitle ingredients'>
                 Состав блюда и граммовка
             </span>
-            <span className='menu-content-header-subtitle'>
+            <span className='menu-content-header-subtitle price'>
                 Стоимость
             </span>
-            <span className='menu-content-header-subtitle'>
+            <span className='menu-content-header-subtitle branch'>
                 Филиал
             </span>
         </div>
         {menuItems.map((item, index) => (
-                    <div key={index} className="menu-item">
-                        <span className='menu-item-detail'>№{index + 1}</span>
-                        <span className='menu-item-detail'>{item.name}</span>
-                        <span className='menu-item-detail'>{item.category}</span>
-                        <span className='menu-item-detail'>{item.price}</span>
-                        <span className='menu-item-detail'>
-                            {item.ingredients.map((ing, i) => (
-                                <div key={i}>{`${ing.name} ${ing.amount}${ing.unit}`}</div>
-                            ))}
-                        </span>
-                        <span className='menu-item-detail'>Главный филиал</span>
-                    </div>
-                ))}
+            <MenuItem key={index} item={item} index={index} />
+        ))}
       </div>
     </div>
   );
