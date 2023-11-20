@@ -4,7 +4,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { addItem, editItem } from '../../store/menuSlice';
 import CloseIcon from '../../images/close-icon.svg';
 import ImageIcon from '../../images/image-input.svg';
-import '../../styles/pages/subpages/menu/menu_modal.css';
+import '../../styles/components/menu/menu_modal.css';
 
 const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
     const dispatch = useDispatch();
