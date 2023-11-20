@@ -71,12 +71,21 @@
     flex-direction: column;
     align-items: center;
     background-color: #fff;
-    border: 1px dashed #CDD3DD;
+    border: 1.5px dashed #CDD3DD;
     padding: 30px;
 }
 
 .image-input-icon {
     width: 95px;
+    margin-bottom: 10px;
+}
+
+.uploaded-image {
+    width: 95px;
+    height: 95px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 10px;
 }
 
 .image-input {
@@ -122,30 +131,26 @@
     outline: none;
 }
 
+.input-field::placeholder {
+    color: #C1C1C3;
+}
+
 .description-field {
     height: 132px;
 }
 
 .inline-input-wrapper {
     display: flex; 
-    justify-content: space-between; 
     align-items: center;
-    flex-wrap: nowrap;
+}
+
+.inline-input-wrapper select {
+    cursor: pointer;
 }
   
 .inline-input-group {
-    flex: 2; 
+    flex: 1; 
     margin-right: 30px;
-}
-  
-.input-field.select {
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.inline-input-group select {
-    cursor: pointer;
 }
   
 .inline-input-group:last-child {
@@ -154,21 +159,8 @@
 
 /* Состав блюда и граммовка */
 
-.ingredients-inline-input-wrapper {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    flex-wrap: nowrap;
-}
-
-.ingredients-inline-input-group {
-    flex: 2;
-    margin-right: 30px;
-}
-
-.ingredients-inline-input-group:last-child {
+.amount-unit-group {
     display: flex;
-    margin-right: 0;
 }
 
 .amount-input-wrapper {
@@ -179,10 +171,6 @@
 .unit-input-wrapper {
     flex: 1;
     margin-top: 21.5px;
-}
-
-.unit-input-wrapper select {
-    cursor: pointer;
 }
 
 .section-title:first-child {
@@ -205,6 +193,7 @@
     margin-left: -23px;
     opacity: 0.2;
     transition: opacity 0.2s ease;
+    cursor: pointer;
 }
 
 .ingredients-remove-button:hover {
@@ -226,12 +215,20 @@
 }
 
 .add-more-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #fff;
     background-color: #00315D;
 }
 
 .add-more-button:hover {
     background-color: #004583;
+}
+
+.plus-sign {
+    font-size: 35px;
+    margin-left: 10px;
 }
 
 .modal-actions {
