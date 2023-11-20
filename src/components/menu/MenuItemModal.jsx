@@ -45,12 +45,12 @@ const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
         if (isEditMode) {
             dispatch(editItem({ ...data, id: editable.id }));
         } else {
-            dispatch(addItem(data));
+            dispatch(addItem({ ...data, id: Date.now() })); 
         }
         toggleModal();
         reset();
         setSelectedImage(null);
-    };
+    };    
     
 
     const handleCloseModal = () => {

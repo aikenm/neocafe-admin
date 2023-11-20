@@ -12,13 +12,16 @@ export const menuSlice = createSlice({
     editItem: (state, action) => {
         const index = state.items.findIndex(item => item.id === action.payload.id);
         if (index !== -1) {
-            state.items[index] = { ...action.payload };
+            state.items[index] = { ...state.items[index], ...action.payload };
         }
-    },    
-      
+    },          
+
     deleteItem: (state, action) => {
-      state.items = state.items.filter(item => item.id !== action.payload);
+        console.log('Deleting item with id:', action.payload);
+        state.items = state.items.filter(item => item.id !== action.payload);
+        console.log('Remaining items:', state.items);
     },
+    
   },
 });
 

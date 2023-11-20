@@ -14,7 +14,7 @@ const MenuItem = ({ item, index, onEdit, onDelete }) => {
     };
 
     const handleDelete = () => {
-        onDelete(item.id);
+        onDelete(item);
         setShowOptions(false);
     };
 

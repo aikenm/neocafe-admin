@@ -19,12 +19,11 @@ const Menu = () => {
     const handleEdit = (item) => {
         setEditableItem(item);
         setModalOpen(true);
-    };
+    };    
 
-    const handleDelete = (itemId) => {
-        // Dispatch an action to delete the item
-        dispatch(deleteItem(itemId));
-    };
+    const handleDelete = (item) => {
+        dispatch(deleteItem(item.id)); // Pass the id of the item to be deleted
+    };    
 
     const handleCloseModal = () => {
         setModalOpen(false);
