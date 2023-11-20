@@ -95,7 +95,7 @@ const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
                         <div className='inline-input-wrapper'>
                             <div className='inline-input-group'>
                                 <span className='input-title'>Категория</span>
-                                <select {...register('category')} className='input-field'>
+                                <select {...register('category')}  className='input-field'>
                                     <option value="Закуска">Закуска</option>
                                     <option value="Основное блюдо">Основное блюдо</option>
                                     <option value="Десерт">Десерт</option>

@@ -22,7 +22,7 @@ const Menu = () => {
     };    
 
     const handleDelete = (item) => {
-        dispatch(deleteItem(item.id)); // Pass the id of the item to be deleted
+        dispatch(deleteItem(item.id)); 
     };    
 
     const handleCloseModal = () => {
@@ -59,6 +59,9 @@ const Menu = () => {
                     </span>
                     <span className='menu-content-header-subtitle branch'>
                         Филиал
+                    </span>
+                    <span className='menu-content-header-subtitle edit'>
+                        Ред.
                     </span>
                 </div>
                 {menuItems.map((item, index) => (
