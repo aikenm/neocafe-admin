@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../../styles/components/menu/menu_item.css';
-import MoreIcon from '../../images/more-icon.svg';
+import moreIcon from '../../images/more-icon.svg';
+import editIcon from '../../images/edit-icon.svg';
+import deleteIcon from '../../images/delete-icon.svg';
 
 const MenuItem = ({ item, index, onEdit, onDelete }) => {
     const [showOptions, setShowOptions] = useState(false);
@@ -47,11 +49,11 @@ const MenuItem = ({ item, index, onEdit, onDelete }) => {
             </span>
             <span className='menu-item-card price'>{item.price} сом</span>
             <span className='menu-item-card branch'>Главный филиал</span>
-            <button onClick={handleMoreClick} className='more-button'><img src={MoreIcon} alt='more-icon' /></button>
+            <button onClick={handleMoreClick} className='more-button'><img src={moreIcon} alt='more-icon' /></button>
             {showOptions && (
                 <div className="options-window" ref={optionsRef}>
-                    <button onClick={handleEdit}>Edit</button>
-                    <button onClick={handleDelete}>Delete</button>
+                    <button onClick={handleEdit} className='option-button'><img src={editIcon} alt='edit-icon' className='option-icon' /> Редактировать</button>
+                    <button onClick={handleDelete} className='option-button'><img src={deleteIcon} alt='edit-icon' className='option-icon' /> Удалить</button>
                 </div>
             )}
         </div>

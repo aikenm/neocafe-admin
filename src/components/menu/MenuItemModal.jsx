@@ -139,7 +139,7 @@ const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
                     </div>
                     <div className="modal-actions">
                         <button type="button" className="cancel-button button" onClick={handleCloseModal}>Отмена</button>
-                        <button type="submit" className="save-button button">{isEditMode ? 'Edit' : 'Create'}</button>
+                        <button type="submit" className="save-button button">{isEditMode ? 'Сохранить' : 'Создать'}</button>
                     </div>
                 </div>
             </form>
