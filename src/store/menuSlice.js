@@ -17,11 +17,8 @@ export const menuSlice = createSlice({
     },          
 
     deleteItem: (state, action) => {
-        console.log('Deleting item with id:', action.payload);
         state.items = state.items.filter(item => item.id !== action.payload);
-        console.log('Remaining items:', state.items);
     },
-    
   },
 });
 

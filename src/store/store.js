@@ -7,6 +7,12 @@ const store = configureStore({
     admin: adminReducer,
     menu: menuReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredPaths: ['menu.items.image'],
+      },
+    }),
 });
 
 export default store;

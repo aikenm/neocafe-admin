@@ -210,7 +210,7 @@
     border-radius: 6px;
     font-size: 18px;
     border: none;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
     cursor: pointer;
 }
 
@@ -223,6 +223,7 @@
 }
 
 .add-more-button:hover {
+    scale: 0.97;
     background-color: #004583;
 }
 
@@ -247,6 +248,7 @@
 }
 
 .cancel-button:hover {
+    scale: 0.97;
     color: #fff;
     background-color: #004583;
 }
@@ -258,5 +260,6 @@
 }
 
 .save-button:hover {
+    scale: 0.97;
     background-color: #004583;
 }

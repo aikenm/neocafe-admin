@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { addItem, editItem } from '../../store/menuSlice';
@@ -9,6 +9,7 @@ import '../../styles/components/menu/menu_modal.css';
 const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
     const dispatch = useDispatch();
     const isEditMode = editable != null; 
+    
     const { register, handleSubmit, control, reset, setValue } = useForm({
         defaultValues: isEditMode ? editable : {
           name: '',
@@ -42,25 +43,37 @@ const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
     };
 
     const onSubmit = (data) => {
+        const formData = {
+            ...data,
+            image: selectedImage, 
+        };
+    
         if (isEditMode) {
-            dispatch(editItem({ ...data, id: editable.id }));
+            dispatch(editItem({ ...formData, id: editable.id }));
         } else {
-            dispatch(addItem({ ...data, id: Date.now() })); 
+            dispatch(addItem({ ...formData, id: Date.now() }));
         }
         toggleModal();
         reset();
         setSelectedImage(null);
-    };    
+    };
+       
     
-
     const handleCloseModal = () => {
         reset();
-        setSelectedImage(null);
         toggleModal();
     };
 
-    if (!isOpen) return null;
+    useEffect(() => {
+        if (isOpen && editable && editable.image) {
+            setSelectedImage(editable.image);
+        } else {
+            setSelectedImage(null);
+        }
+    }, [isOpen, editable]);
 
+    if (!isOpen) return null;
+    
     return (
         <div className="modal">
             <form onSubmit={handleSubmit(onSubmit)}>

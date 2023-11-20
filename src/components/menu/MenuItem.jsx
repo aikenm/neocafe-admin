@@ -1,28 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../../styles/components/menu/menu_item.css';
 import moreIcon from '../../images/more-icon.svg';
 import editIcon from '../../images/edit-icon.svg';
 import deleteIcon from '../../images/delete-icon.svg';
 
-const MenuItem = ({ item, index, onEdit, onDelete }) => {
+const MenuItem = ({ item, index, onMoreClick, onEdit, onDelete }) => {
     const [showOptions, setShowOptions] = useState(false);
     const optionsRef = useRef(null);
 
     const handleMoreClick = (e) => {
         e.stopPropagation(); 
         setShowOptions(!showOptions);
+        onMoreClick(item);
     };
-
-    const handleEdit = () => {
-        onEdit(item);
-        setShowOptions(false);
-    };
-
-    const handleDelete = () => {
-        onDelete(item);
-        setShowOptions(false);
-    };
-
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -52,8 +42,10 @@ const MenuItem = ({ item, index, onEdit, onDelete }) => {
             <button onClick={handleMoreClick} className='more-button'><img src={moreIcon} alt='more-icon' /></button>
             {showOptions && (
                 <div className="options-window" ref={optionsRef}>
-                    <button onClick={handleEdit} className='option-button'><img src={editIcon} alt='edit-icon' className='option-icon' /> Редактировать</button>
-                    <button onClick={handleDelete} className='option-button'><img src={deleteIcon} alt='edit-icon' className='option-icon' /> Удалить</button>
+                    <div className="options-window" ref={optionsRef}>
+                    <button onClick={() => { onEdit(item); setShowOptions(false); }} className='option-button'><img src={editIcon} alt='edit-icon' className='option-icon' /> Редактировать</button>
+                    <button onClick={() => { onDelete(item); setShowOptions(false); }} className='option-button'><img src={deleteIcon} alt='delete-icon' className='option-icon' /> Удалить</button>
+                </div>
                 </div>
             )}
         </div>
