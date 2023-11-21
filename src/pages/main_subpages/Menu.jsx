@@ -15,29 +15,27 @@ import '../../styles/pages/subpages/menu/menu.css';
 
 const Menu = () => {
     const dispatch = useDispatch();
-    const menuItems = useSelector((state) => state.menu.items);
-    const categories = useSelector((state) => state.menu.categories);
-    
+
+    const menuItems = useSelector((state) => state.menu.items);    
     const [modalOpen, setModalOpen] = useState(false);
     const [editableItem, setEditableItem] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
 
+    const categories = useSelector((state) => state.menu.categories);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [isCategoryCreateModalOpen, setIsCategoryCreateModalOpen] = useState(false);
+    const [isCategoryDeleteModalOpen, setIsCategoryDeleteModalOpen] = useState(false);
+    const [categoryToDelete, setCategoryToDelete] = useState(null);
+
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
-
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = menuItems.slice(indexOfFirstItem, indexOfLastItem);
-
     const totalPages = Math.ceil(menuItems.length / itemsPerPage);
-
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-    const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
-
-    const [selectedCategory, setSelectedCategory] = useState('all');
-    const [isCategoryCreateModalOpen, setIsCategoryCreateModalOpen] = useState(false);
 
     const handleEdit = (item) => {
         setEditableItem(item);
@@ -82,8 +80,28 @@ const Menu = () => {
         setIsDropdownOpen(false);
     };
 
-    const handleDeleteCategory = (categoryId) => {
-        dispatch(deleteCategory(categoryId));
+    const handleDeleteCategoryInitiated = (categoryId) => {
+        const category = categories.find(cat => cat.id === categoryId);
+        setCategoryToDelete(category);
+        setIsCategoryDeleteModalOpen(true);
+    };
+    
+
+    const handleConfirmDeleteCategory = () => {
+        if (categoryToDelete) {
+            dispatch(deleteCategory(categoryToDelete.id));
+            setIsCategoryDeleteModalOpen(false);
+            setCategoryToDelete(null);
+            if (selectedCategory === categoryToDelete.name) {
+                setSelectedCategory('all');
+            }
+        }
+    };
+    
+
+    const handleCancelDeleteCategory = () => {
+        setIsCategoryDeleteModalOpen(false);
+        setCategoryToDelete(null);
     };
 
     return (
@@ -119,7 +137,7 @@ const Menu = () => {
                                     <div key={category.id} className='categories-wrapper'>
                                         <span  onClick={() => handleCategorySelect(category.name)} className='category-option'>
                                                 {category.name}
-                                                <button onClick={() => handleDeleteCategory(category.id)} className='category-delete-btn'>
+                                                <button onClick={() => handleDeleteCategoryInitiated(category.id)} className='category-delete-btn'>
                                                     <img src={categoryDelete} alt='delete-icon' className='category-delete-icon' />
                                                 </button>
                                         </span>
@@ -136,6 +154,12 @@ const Menu = () => {
                             onCreate={handleCategoryCreation}
                         />
                     )}
+                    <DeleteModal 
+                        isOpen={isCategoryDeleteModalOpen} 
+                        message={`Вы действительно хотите удалить категорию "${categoryToDelete?.name}"?`} 
+                        onConfirm={handleConfirmDeleteCategory} 
+                        onCancel={handleCancelDeleteCategory} 
+                    />
                     <span className='menu-content-header-subtitle ingredients'>
                         Состав блюда и граммовка
                     </span>
