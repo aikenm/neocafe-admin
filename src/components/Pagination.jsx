@@ -28,23 +28,25 @@ const Pagination = ({ currentPage, totalPages, paginate }) => {
             <button 
                     onClick={goToPreviousPage} 
                     disabled={currentPage === 1} 
-                    className='page-link'
+                    className='arrow-button left-arrow'
                 >
                     <img src={arrowLeftIcon} alt='Prev' className='arrow-left-icon' />
                 </button>
-                {pageNumbers.map(number => (
-                    <button 
-                    key={number} 
-                    onClick={() => paginate(number)} 
-                    className={`page-link ${number === currentPage ? 'active' : ''}`}
-                >
-                    {number}
-                </button>
-                ))}
+                <div className='page-numbers-wrapper'>
+                    {pageNumbers.map(number => (
+                        <button 
+                            key={number} 
+                            onClick={() => paginate(number)} 
+                            className={`page-link ${number === currentPage ? 'active' : ''}`}
+                        >
+                            {number}
+                        </button>
+                    ))}
+                </div>
                 <button 
                     onClick={goToNextPage} 
                     disabled={currentPage === totalPages} 
-                    className='page-link'
+                    className='arrow-button right-arrow'
                 >
                     <img src={arrowRightIcon} alt='Next' className='arrow-right-icon' />
                 </button>
