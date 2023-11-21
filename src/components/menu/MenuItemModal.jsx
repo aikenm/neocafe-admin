@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { addItem, editItem } from '../../store/menuSlice';
 import CloseIcon from '../../images/close-icon.svg';
@@ -8,6 +8,7 @@ import '../../styles/components/menu/menu_modal.css';
 
 const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
     const dispatch = useDispatch();
+    const categories = useSelector((state) => state.menu.categories);
     const isEditMode = editable != null; 
     
     const { register, handleSubmit, control, reset, setValue } = useForm({
@@ -108,10 +109,11 @@ const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
                         <div className='inline-input-wrapper'>
                             <div className='inline-input-group'>
                                 <span className='input-title'>Категория</span>
-                                <select {...register('category')}  className='input-field'>
-                                    <option value="Закуска">Закуска</option>
-                                    <option value="Основное блюдо">Основное блюдо</option>
-                                    <option value="Десерт">Десерт</option>
+                                <select {...register('category')} className='input-field'>
+                                    <option value="" disabled selected={!isEditMode}>{isEditMode ? editable.category : 'Выберите категорию'}</option>
+                                    {categories.map(category => (
+                                        <option key={category.id} value={category.name}>{category.name}</option>
+                                    ))}
                                 </select>
                             </div>
                             <div className='inline-input-group'>

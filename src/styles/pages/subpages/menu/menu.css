@@ -23,6 +23,7 @@
 .category {
     position: relative;
     display: flex;
+    align-items: center;
     width: 151px;
     height: 60px;
     padding: 0px 20px;
@@ -120,7 +121,7 @@
 }
 
 .category-create-btn:hover {
-    background-color: #bfbdc1;
+    background-color: #c8c6ca;
 
 }
 

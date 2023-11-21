@@ -53,6 +53,10 @@
     margin-right: 10px;
 }
 
+.menu-item .category{
+    cursor: default;
+}
+
 .more-button {
     display: flex;
     align-items: center;

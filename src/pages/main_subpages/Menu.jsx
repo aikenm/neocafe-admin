@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ContentHeader from '../../components/ContentHeader';
 import Pagination from '../../components/Pagination';
@@ -29,6 +29,7 @@ const Menu = () => {
     const [isCategoryCreateModalOpen, setIsCategoryCreateModalOpen] = useState(false);
     const [isCategoryDeleteModalOpen, setIsCategoryDeleteModalOpen] = useState(false);
     const [categoryToDelete, setCategoryToDelete] = useState(null);
+    const dropdownRef = useRef(null);
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
@@ -97,12 +98,23 @@ const Menu = () => {
             }
         }
     };
-    
 
     const handleCancelDeleteCategory = () => {
         setIsCategoryDeleteModalOpen(false);
         setCategoryToDelete(null);
     };
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [dropdownRef]);
 
     return (
         <div className="menu-container">
@@ -128,7 +140,7 @@ const Menu = () => {
                     <span className='menu-content-header-subtitle name'>
                         Наименование
                     </span>
-                    <span className={`menu-content-header-subtitle category ${isDropdownOpen ? 'category-open' : 'category-closed'}`} onClick={toggleDropdown}>
+                    <span className={`menu-content-header-subtitle category ${isDropdownOpen ? 'category-open' : 'category-closed'}`} onClick={toggleDropdown} ref={dropdownRef}>
                         {selectedCategory === 'all' ? 'Категория' : selectedCategory}
                         <img src={isDropdownOpen ? dropOpen : dropClosed} alt='drop-down' className='drop-down-icon' />                   
                         {isDropdownOpen && (
