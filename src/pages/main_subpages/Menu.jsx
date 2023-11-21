@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ContentHeader from '../../components/ContentHeader';
+import Pagination from '../../components/Pagination';
 import MenuItem from '../../components/menu/MenuItem';
 import MenuItemModal from '../../components/menu/MenuItemModal';
 import DeleteModal from '../../components/DeleteModal';
@@ -14,6 +15,16 @@ const Menu = () => {
     const [editableItem, setEditableItem] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 6;
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = menuItems.slice(indexOfFirstItem, indexOfLastItem);
+
+    const totalPages = Math.ceil(menuItems.length / itemsPerPage);
+
 
     const handleEdit = (item) => {
         setEditableItem(item);
@@ -83,17 +94,22 @@ const Menu = () => {
                         Ред.
                     </span>
                 </div>
-                {menuItems.map((item, index) => (
+                {currentItems.map((item, index) => (
                     <MenuItem 
                         key={item.id}
                         item={item} 
-                        index={index} 
+                        index={indexOfFirstItem + index} 
                         onMoreClick={() => {}}
                         onEdit={handleEdit} 
                         onDelete={() => handleDeleteInitiated(item)} 
                     />
                 ))}
             </div>
+            <Pagination    
+                currentPage={currentPage} 
+                totalPages={totalPages} 
+                paginate={setCurrentPage} 
+            />
         </div>
     );
 };
