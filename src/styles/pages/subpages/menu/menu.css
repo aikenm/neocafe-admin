@@ -27,7 +27,7 @@
     width: 151px;
     height: 60px;
     padding: 0px 20px;
-    margin-left: 75px;
+    margin-left: 45px;
     cursor: pointer;
 }
 
@@ -146,10 +146,10 @@
 
 .price {
     width: 200px;
-    margin-left: 55px;
+    margin-left: 105px;
 }
 
 .edit {
-    margin-left: 55px;
+    margin-left: 35px;
 }
 
