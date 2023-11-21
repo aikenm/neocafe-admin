@@ -8,6 +8,8 @@ const MenuItem = ({ item, index, onMoreClick, onEdit, onDelete }) => {
     const [showOptions, setShowOptions] = useState(false);
     const optionsRef = useRef(null);
 
+    const ingredientsText = item.ingredients.map(ing => `${ing.name} (${ing.amount}${ing.unit})`).join(', ');
+
     const handleMoreClick = (e) => {
         e.stopPropagation(); 
         setShowOptions(!showOptions);
@@ -33,9 +35,7 @@ const MenuItem = ({ item, index, onMoreClick, onEdit, onDelete }) => {
             <span className='menu-item-card name'>{item.name}</span>
             <span className='menu-item-card category'>{item.category}</span>
             <span className='menu-item-card ingredients'>
-                {item.ingredients.map((ing, i) => (
-                    <span key={i}>{`${ing.name} (${ing.amount}${ing.unit}), `}</span>
-                ))}
+                {ingredientsText}
             </span>
             <span className='menu-item-card price'>{item.price} сом</span>
             <button onClick={handleMoreClick} className='more-button'><img src={moreIcon} alt='more-icon' /></button>

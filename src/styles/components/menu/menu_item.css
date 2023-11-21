@@ -69,6 +69,13 @@
     margin-left: 55px;
 }
 
+.menu-item-card.ingredients {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
 .more-button:hover {
     scale: 1.3;
 }
