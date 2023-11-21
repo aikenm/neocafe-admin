@@ -53,40 +53,6 @@
     margin-right: 10px;
 }
 
-.id {
-    width: 50px;
-    color: #00315D;
-}
-
-.name {
-    width: 200px;
-    margin-left: 25px;
-}
-
-.category {
-    width: 200px;
-    margin-left: 25px;
-}
-
-.ingredients {
-    text-overflow: ellipsis;
-    align-items: center;
-    width: 350px;
-    height: 22px;
-    overflow-x: auto;
-    margin-left: 25px;
-}
-
-.price {
-    width: 200px;
-    margin-left: 55px;
-}
-
-.branch {
-    width: 200px;
-    margin-left: 40px;
-}
-
 .more-button {
     display: flex;
     align-items: center;
@@ -96,6 +62,7 @@
     background: none;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-left: 55px;
 }
 
 .more-button:hover {

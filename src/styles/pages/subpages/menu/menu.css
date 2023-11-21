@@ -10,3 +10,145 @@
 .menu-content-header-subtitle {
     align-items: center;
 }
+
+.id {
+    width: 50px;
+}
+
+.name {
+    width: 200px;
+    margin-left: 75px;
+}
+
+.category {
+    position: relative;
+    display: flex;
+    width: 151px;
+    height: 60px;
+    padding: 0px 20px;
+    margin-left: 75px;
+    cursor: pointer;
+}
+
+.category-dropdown {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    width: 191px;
+    top: 53px; 
+    left: 0;
+    z-index: 1;
+    background-color: #E3E3E3;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.category-open {
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    background-color: #E3E3E3;
+}
+
+.drop-down-icon {
+    margin-left: auto;
+}
+
+.categories-wrapper {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.category-option {
+    display: flex;
+    padding: 0px 20px;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    position: relative;
+    border: none; 
+    transition: all 0.2s ease;
+}
+
+.category-option:hover {
+    color: #FF4B4B;
+    background-color: #bfbdc1;
+}
+
+.category-delete-btn {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    right: 10px;
+    opacity: 0; 
+    transition: all 0.2s ease; 
+}
+
+.category-option:hover .category-delete-btn {
+    opacity: 1;
+}
+
+.category-delete-btn:hover {
+    scale: 1.2;
+}
+
+.category-create-btn {
+    height: 50px;
+    padding: 0px 20px;
+    text-align: start;
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
+    color: #00315D;
+    border: none;
+    background: none;
+    position: relative;
+    cursor: pointer;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.category-create-btn:hover {
+    background-color: #bfbdc1;
+
+}
+
+.category-create-icon {
+    position: absolute;
+    right: 20px;
+    transition: all 0.2s ease;
+}
+
+.category-create-btn:hover .category-create-icon{
+    scale: 1.2;
+}
+
+.ingredients {
+    text-overflow: ellipsis;
+    align-items: center;
+    width: 350px;
+    height: 22px;
+    overflow-x: auto;
+    margin-left: 75px;
+}
+
+.price {
+    width: 200px;
+    margin-left: 55px;
+}
+
+.edit {
+    margin-left: 55px;
+}
+

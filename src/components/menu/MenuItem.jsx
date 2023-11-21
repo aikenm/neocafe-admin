@@ -38,7 +38,6 @@ const MenuItem = ({ item, index, onMoreClick, onEdit, onDelete }) => {
                 ))}
             </span>
             <span className='menu-item-card price'>{item.price} сом</span>
-            <span className='menu-item-card branch'>Главный филиал</span>
             <button onClick={handleMoreClick} className='more-button'><img src={moreIcon} alt='more-icon' /></button>
             {showOptions && (
                 <div className="options-window" ref={optionsRef}>

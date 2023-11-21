@@ -4,8 +4,12 @@ export const menuSlice = createSlice({
   name: 'menu',
   initialState: {
     items: [],
+    categories: [],
   },
   reducers: {
+
+    // Item
+
     addItem: (state, action) => {
       state.items.push(action.payload);
     },
@@ -19,8 +23,18 @@ export const menuSlice = createSlice({
     deleteItem: (state, action) => {
         state.items = state.items.filter(item => item.id !== action.payload);
     },
+
+    // Category
+
+    addCategory: (state, action) => {
+        state.categories.push(action.payload);
+    },
+  
+    deleteCategory: (state, action) => {
+        state.categories = state.categories.filter(category => category.id !== action.payload);
+    },
   },
 });
 
-export const { addItem, editItem, deleteItem } = menuSlice.actions;
+export const { addItem, editItem, deleteItem, addCategory, deleteCategory } = menuSlice.actions;
 export default menuSlice.reducer;
