@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../styles/components/content_header.css'
 
-const ContentHeader = ({ title, onCreate }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-
+const ContentHeader = ({ title, onCreate, searchTerm, onSearch }) => {
   return (
     <div className="content-header">
       <h1 className='content-header-title'>{title}</h1>
@@ -12,7 +10,7 @@ const ContentHeader = ({ title, onCreate }) => {
           type="text"
           placeholder="Поиск"
           value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
+          onChange={(e) => onSearch(e.target.value)}
           className='search-bar'
         />
         <button onClick={onCreate} className='create-button'>Создать</button>

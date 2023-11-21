@@ -38,6 +38,12 @@ const Menu = () => {
     const currentItems = menuItems.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(menuItems.length / itemsPerPage);
 
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const filteredItems = menuItems.filter(item => 
+        item.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+    );
+
     const handleEdit = (item) => {
         setEditableItem(item);
         setModalOpen(true);
@@ -118,7 +124,11 @@ const Menu = () => {
 
     return (
         <div className="menu-container">
-            <ContentHeader title="Меню" onCreate={() => setModalOpen(true)} />
+            <ContentHeader 
+                title="Меню" 
+                onCreate={() => setModalOpen(true)} 
+                onSearch={setSearchTerm}
+            />
             {modalOpen && (
                 <MenuItemModal 
                     isOpen={modalOpen} 
@@ -182,7 +192,7 @@ const Menu = () => {
                         Ред.
                     </span>
                 </div>
-                {currentItems.map((item, index) => (
+                {filteredItems.map((item, index) => (
                     <MenuItem 
                         key={item.id}
                         item={item} 
