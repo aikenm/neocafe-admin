@@ -153,3 +153,11 @@
     margin-left: 35px;
 }
 
+.no-results-message {
+    position: absolute;
+    top: 50%;
+    margin-left: 30%;
+    font-size: 18px;
+    color:#bfbdc1;
+}
+

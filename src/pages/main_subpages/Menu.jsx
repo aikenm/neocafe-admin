@@ -26,6 +26,7 @@ const Menu = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const [internalSelectedCategory, setInternalSelectedCategory] = useState('Все');
     const [isCategoryCreateModalOpen, setIsCategoryCreateModalOpen] = useState(false);
     const [isCategoryDeleteModalOpen, setIsCategoryDeleteModalOpen] = useState(false);
     const [categoryToDelete, setCategoryToDelete] = useState(null);
@@ -35,14 +36,17 @@ const Menu = () => {
     const itemsPerPage = 6;
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = menuItems.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(menuItems.length / itemsPerPage);
-
+    
     const [searchTerm, setSearchTerm] = useState('');
 
-    const filteredItems = menuItems.filter(item => 
-        item.name.toLowerCase().startsWith(searchTerm.toLowerCase())
-    );
+    const filteredItems = menuItems.filter(item => {
+        const matchesSearchTerm = item.name.toLowerCase().startsWith(searchTerm.toLowerCase());
+        const matchesCategory = internalSelectedCategory === 'Все' || item.category === internalSelectedCategory;
+        return matchesSearchTerm && matchesCategory;
+    });
+
+    const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+    const paginatedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
     const handleEdit = (item) => {
         setEditableItem(item);
@@ -83,7 +87,13 @@ const Menu = () => {
     };
 
     const handleCategorySelect = (category) => {
-        setSelectedCategory(category);
+        if (category === 'Все') {
+            setSelectedCategory('Категории');
+            setInternalSelectedCategory('Все');
+        } else {
+            setSelectedCategory(category);
+            setInternalSelectedCategory(category);
+        }
         setIsDropdownOpen(false);
     };
 
@@ -155,18 +165,23 @@ const Menu = () => {
                         <img src={isDropdownOpen ? dropOpen : dropClosed} alt='drop-down' className='drop-down-icon' />                   
                         {isDropdownOpen && (
                             <div className="category-dropdown">
+                                <div className='categories-wrapper'>
+                                    <span onClick={() => handleCategorySelect('Все')} className='category-option'>
+                                        Все
+                                    </span>
+                                </div>
                                 {categories.map(category => (
                                     <div key={category.id} className='categories-wrapper'>
-                                        <span  onClick={() => handleCategorySelect(category.name)} className='category-option'>
-                                                {category.name}
-                                                <button onClick={() => handleDeleteCategoryInitiated(category.id)} className='category-delete-btn'>
-                                                    <img src={categoryDelete} alt='delete-icon' className='category-delete-icon' />
-                                                </button>
+                                        <span onClick={() => handleCategorySelect(category.name)} className='category-option'>
+                                            {category.name}
+                                            <button onClick={() => handleDeleteCategoryInitiated(category.id)} className='category-delete-btn'>
+                                                <img src={categoryDelete} alt='delete-icon' className='category-delete-icon' />
+                                            </button>
                                         </span>
                                     </div>
                                 ))}
-                                <button onClick={handleCreateCategory} className='category-create-btn'>Добавить <img src={plusSign} alt='more-icon' className='category-create-icon' /></button>
-                            </div>
+                            <button onClick={handleCreateCategory} className='category-create-btn'>Добавить <img src={plusSign} alt='more-icon' className='category-create-icon' /></button>
+                        </div>
                     )}
                     </span>
                     {isCategoryCreateModalOpen && (
@@ -192,21 +207,27 @@ const Menu = () => {
                         Ред.
                     </span>
                 </div>
-                {filteredItems.map((item, index) => (
-                    <MenuItem 
-                        key={item.id}
-                        item={item} 
-                        index={indexOfFirstItem + index} 
+                {paginatedItems.length > 0 ? (
+                    paginatedItems.map((item, index) => (
+                        <MenuItem 
+                            key={item.id}
+                            item={item}
+                            index={indexOfFirstItem + index} 
                         onMoreClick={() => {}}
                         onEdit={handleEdit} 
                         onDelete={() => handleDeleteInitiated(item)} 
-                    />
-                ))}
+                        />
+                        ))
+                    ) : (
+                        <div className="no-results-message">
+                            Нет элементов, соответствующих критериям поиска.
+                        </div>
+                    )}
             </div>
-            <Pagination    
-                currentPage={currentPage} 
-                totalPages={totalPages} 
-                paginate={setCurrentPage} 
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                paginate={setCurrentPage}
             />
         </div>
     );
