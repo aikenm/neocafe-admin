@@ -1,0 +1,47 @@
+.stock-subpages-header {
+    display: flex;
+    border-bottom: 1px solid #EAEAEA;
+    padding-left: 25px;
+}
+
+.stock-subpage-button {
+    padding: 15px 40px;
+    margin-right: 40px;
+    font-size: 18px;
+    font-weight: 700;
+    height: 70px;
+    font-family: 'Nunito', sans-serif;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    color: #C1C1C3;
+    background: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.stock-subpage-button:hover {
+    color: #00315D;
+    border-bottom: 2px solid #00315D;
+}
+
+.expiring-products {
+    color: #FFA7A7;
+}
+
+.expiring-products:hover {
+    color: #FF4B4B;
+    border-bottom: 2px solid #FF4B4B;
+}
+
+.active-subpage-button {
+    color: #00315D;
+    border-bottom: 2px solid #00315D;
+    cursor: default;
+}
+
+.active-expiring-products {
+    color: #FF4B4B;
+    border-bottom: 2px solid #FF4B4B;
+    cursor: default;
+}

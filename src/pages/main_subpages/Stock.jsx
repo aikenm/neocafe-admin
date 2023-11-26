@@ -1,17 +1,16 @@
-// Stock.jsx
 import React, { useState } from 'react';
 import ContentHeader from '../../components/ContentHeader';
+import '../../styles/pages/subpages/stock/stock.css';
 
 const Stock = () => {
   const [selectedStock, setSelectedStock] = useState('stock1');
-  const [items, setItems] = useState([]); // This will store items for the selected stock
+  const [selectedSubpage, setSelectedSubpage] = useState('finishedGoods'); // 'finishedGoods', 'rawMaterials', 'expiringProducts'
+//   const [items, setItems] = useState([]);
 
-  // Sample data for stocks
   const stocks = [
     { id: 'stock1', name: 'Stock 1' },
     { id: 'stock2', name: 'Stock 2' },
     { id: 'stock3', name: 'Stock 3' },
-    // Add more stocks as needed
   ];
 
   const handleStockSearch = (searchTerm) => {
@@ -23,6 +22,19 @@ const Stock = () => {
     // Fetch items for the selected stock and update `items`
   };
 
+  const renderSubpageContent = () => {
+    switch (selectedSubpage) {
+      case 'finishedGoods':
+        return <div>Готовая продукция</div>;
+      case 'rawMaterials':
+        return <div>Сырье</div>;
+      case 'expiringProducts':
+        return <div>Заканчивающиеся продукты</div>;
+      default:
+        return <div>Готовая продукция</div>;
+    }
+  };
+
   return (
     <div className="stock-container">
       <ContentHeader 
@@ -32,8 +44,25 @@ const Stock = () => {
         selectedStock={selectedStock}
         onSelectStock={handleSelectStock}
       />
+      <div className="stock-subpages-header">
+        <button 
+          onClick={() => setSelectedSubpage('finishedGoods')} 
+          className={`stock-subpage-button ${selectedSubpage === 'finishedGoods' ? 'active-subpage-button' : ''}`}>
+          Готовая продукция
+        </button>
+        <button 
+          onClick={() => setSelectedSubpage('rawMaterials')} 
+          className={`stock-subpage-button ${selectedSubpage === 'rawMaterials' ? 'active-subpage-button' : ''}`}>
+          Сырье
+        </button>
+        <button 
+          onClick={() => setSelectedSubpage('expiringProducts')} 
+          className={`stock-subpage-button expiring-products ${selectedSubpage === 'expiringProducts' ? 'active-expiring-products' : ''}`}>
+          Заканчивающиеся продукты
+        </button>
+      </div>
       <div className="stock-content">
-        {/* Render items for the selected stock */}
+        {renderSubpageContent()}
       </div>
     </div>
   );
