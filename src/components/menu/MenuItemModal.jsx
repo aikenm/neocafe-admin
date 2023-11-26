@@ -8,6 +8,7 @@ import '../../styles/components/menu/menu_modal.css';
 
 const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
     const dispatch = useDispatch();
+    const menuItems = useSelector((state) => state.menu.items);
     const categories = useSelector((state) => state.menu.categories);
     const isEditMode = editable != null; 
     
@@ -27,22 +28,41 @@ const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
     });
     const [selectedImage, setSelectedImage] = useState(null);
 
+    //localstorage temp
     const handleImageChange = (e) => {
         if (e.target.files && e.target.files[0]) {
-            setSelectedImage(URL.createObjectURL(e.target.files[0]));
-            setValue('image', e.target.files[0]);
+            const file = e.target.files[0];
+            const reader = new FileReader();
+    
+            reader.onloadend = () => {
+                setSelectedImage(reader.result);
+                setValue('image', reader.result);
+            };
+    
+            reader.readAsDataURL(file);
         }
     };
+    
 
+    //localstorage temp
     const onDrop = (e) => {
         e.preventDefault();
         const files = e.dataTransfer.files;
         if (files && files[0]) {
-            setSelectedImage(URL.createObjectURL(files[0]));
-            setValue('image', files[0]);
+            const file = files[0];
+            const reader = new FileReader();
+    
+            reader.onloadend = () => {
+                setSelectedImage(reader.result); 
+                setValue('image', reader.result);
+            };
+    
+            reader.readAsDataURL(file);
         }
     };
+    
 
+    //localstorage temp
     const onSubmit = (data) => {
         const formData = {
             ...data,
@@ -51,13 +71,24 @@ const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
     
         if (isEditMode) {
             dispatch(editItem({ ...formData, id: editable.id }));
+    
+            // Update localStorage for editItem
+            const updatedItems = menuItems.map(item => 
+                item.id === editable.id ? { ...formData, id: editable.id } : item
+            );
+            localStorage.setItem('items', JSON.stringify(updatedItems));
         } else {
             dispatch(addItem({ ...formData, id: Date.now() }));
+            
+            // Update localStorage for addItem
+            const updatedItems = [...menuItems, { ...formData, id: Date.now() }];
+            localStorage.setItem('items', JSON.stringify(updatedItems));
         }
         toggleModal();
         reset();
         setSelectedImage(null);
     };
+      
        
     
     const handleCloseModal = () => {

@@ -54,12 +54,13 @@ const CategoryCreateModal = ({ isOpen, toggleModal, onCreate }) => {
                         <h3 className='category-subtitle'>Добавьте изображение к категории</h3>
                         <div className="image-input-wrapper" onDrop={onDrop} onDragOver={(e) => e.preventDefault()}>
                             <div className='image-input-block'>
+                            {/* <img src={selectedImage || ImageIcon} alt='Uploaded' className='uploaded-image' /> */}
                                 {selectedImage ? (
                                     <img src={selectedImage} alt='Uploaded' className='uploaded-image' />
                                 ) : (
                                     <img src={ImageIcon} alt='upload-icon' className='image-input-icon' />
                                 )}
-                                <input type="file" id="image-upload" className='image-input' onChange={handleImageChange} required/>
+                                <input type="file" id="image-upload" className='image-input' onChange={handleImageChange} aria-required/>
                                 <span className='image-input-text'>Перетащите изображение для добавления или <label htmlFor="image-upload" className='category-view-button'>обзор</label></span>
                             </div>
                         </div>

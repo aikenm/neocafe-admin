@@ -33,8 +33,20 @@ export const menuSlice = createSlice({
     deleteCategory: (state, action) => {
         state.categories = state.categories.filter(category => category.id !== action.payload);
     },
+    
+    //localstorage temp
+    initializeCategories: (state, action) => {
+        state.categories = action.payload;
+      },
+      initializeItems: (state, action) => {
+        state.items = action.payload;
+    },
   },
 });
 
-export const { addItem, editItem, deleteItem, addCategory, deleteCategory } = menuSlice.actions;
+export const {
+    addItem, editItem, deleteItem, 
+    addCategory, deleteCategory, 
+    initializeCategories, initializeItems  
+  } = menuSlice.actions;
 export default menuSlice.reducer;
