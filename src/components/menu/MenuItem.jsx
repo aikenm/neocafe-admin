@@ -31,13 +31,13 @@ const MenuItem = ({ item, index, onMoreClick, onEdit, onDelete }) => {
 
     return (
         <div className="menu-item">
-            <span className='menu-item-card id'>№{index + 1}</span>
-            <span className='menu-item-card name'>{item.name}</span>
-            <span className='menu-item-card category'>{item.category}</span>
-            <span className='menu-item-card ingredients'>
+            <span className='menu-item-card menu-id'>№{index + 1}</span>
+            <span className='menu-item-card menu-name'>{item.name}</span>
+            <span className='menu-item-card menu-category'>{item.category}</span>
+            <span className='menu-item-card menu-ingredients'>
                 {ingredientsText}
             </span>
-            <span className='menu-item-card price'>{item.price} сом</span>
+            <span className='menu-item-card menu-price'>{item.price} сом</span>
             <button onClick={handleMoreClick} className='more-button'><img src={moreIcon} alt='more-icon' /></button>
             {showOptions && (
                 <div className="options-window" ref={optionsRef}>

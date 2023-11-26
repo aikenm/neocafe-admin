@@ -11,16 +11,16 @@
     align-items: center;
 }
 
-.id {
+.menu-id {
     width: 50px;
 }
 
-.name {
+.menu-name {
     width: 200px;
     margin-left: 75px;
 }
 
-.category {
+.menu-category {
     position: relative;
     display: flex;
     align-items: center;
@@ -135,7 +135,7 @@
     scale: 1.2;
 }
 
-.ingredients {
+.menu-ingredients {
     text-overflow: ellipsis;
     align-items: center;
     width: 350px;
@@ -144,12 +144,12 @@
     margin-left: 75px;
 }
 
-.price {
+.menu-price {
     width: 200px;
     margin-left: 105px;
 }
 
-.edit {
+.menu-edit {
     margin-left: 35px;
 }
 

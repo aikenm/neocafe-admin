@@ -187,13 +187,13 @@ const Menu = () => {
             />
             <div className="menu-content">
                 <div className='menu-content-header'>
-                    <span className='menu-content-header-subtitle id'>
+                    <span className='menu-content-header-subtitle menu-id'>
                         №
                     </span>
-                    <span className='menu-content-header-subtitle name'>
+                    <span className='menu-content-header-subtitle menu-name'>
                         Наименование
                     </span>
-                    <span className={`menu-content-header-subtitle category ${isDropdownOpen ? 'category-open' : 'category-closed'}`} onClick={toggleDropdown} ref={dropdownRef}>
+                    <span className={`menu-content-header-subtitle menu-category ${isDropdownOpen ? 'category-open' : 'category-closed'}`} onClick={toggleDropdown} ref={dropdownRef}>
                         {selectedCategory === 'all' ? 'Категория' : selectedCategory}
                         <img src={isDropdownOpen ? dropOpen : dropClosed} alt='drop-down' className='drop-down-icon' />                   
                         {isDropdownOpen && (
@@ -230,13 +230,13 @@ const Menu = () => {
                         onConfirm={handleConfirmDeleteCategory} 
                         onCancel={handleCancelDeleteCategory} 
                     />
-                    <span className='menu-content-header-subtitle ingredients'>
+                    <span className='menu-content-header-subtitle menu-ingredients'>
                         Состав блюда и граммовка
                     </span>
-                    <span className='menu-content-header-subtitle price'>
+                    <span className='menu-content-header-subtitle menu-price'>
                         Стоимость
                     </span>
-                    <span className='menu-content-header-subtitle edit'>
+                    <span className='menu-content-header-subtitle menu-edit'>
                         Ред.
                     </span>
                 </div>

@@ -62,6 +62,26 @@ const Stock = () => {
         </button>
       </div>
       <div className="stock-content">
+            <div className='stock-content-header'>
+                    <span className='stock-content-header-subtitle stock-id'>
+                        №
+                    </span>
+                    <span className='stock-content-header-subtitle stock-name'>
+                        Наименование
+                    </span>
+                    <span className='stock-content-header-subtitle stock-amount'>
+                        Количество
+                    </span>
+                    <span className='stock-content-header-subtitle stock-limit'>
+                        Лимит
+                    </span>
+                    <span className='stock-content-header-subtitle stock-date'>
+                        Дата прихода
+                    </span>
+                    <span className='stock-content-header-subtitle stock-edit'>
+                        Ред.
+                    </span>
+                </div>
         {renderSubpageContent()}
       </div>
     </div>

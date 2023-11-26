@@ -45,3 +45,45 @@
     border-bottom: 2px solid #FF4B4B;
     cursor: default;
 }
+
+.stock-content-header {
+    display: flex;
+    height: 42px;
+    align-items: center;
+    border-bottom: 2px solid black;
+    padding-left: 25px;
+    font-size: 18px;
+}
+
+.stock-content-header-subtitle {
+    align-items: center;
+}
+
+.stock-id {
+
+}
+
+.stock-name {
+    width: 200px;
+    margin-left: 105px;
+}
+
+.stock-amount {
+    width: 200px;
+    margin-left: 105px;
+}
+
+.stock-limit {
+    width: 200px;
+    margin-left: 105px;
+}
+
+.stock-date {
+    width: 200px;
+    margin-left: 105px;
+}
+
+.stock-edit {
+    width: 200px;
+    margin-left: 105px;
+}
