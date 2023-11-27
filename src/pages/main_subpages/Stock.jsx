@@ -110,6 +110,10 @@ const Stock = () => {
   };
 
   const renderSubpageContent = () => {
+    if (paginatedItems.length === 0) {
+      return <div className="no-results-message">Нет элементов, соответствующих критериям поиска.</div>;
+    }
+
     return paginatedItems.map((item, index) => (
       <StockItem 
         key={item.id} 
