@@ -7,6 +7,7 @@ import Employees from './main_subpages/Employees';
 import DeleteModal from '../components/DeleteModal';
 import '../styles/pages/main_page.css';
 import logo from '../images/logo.svg';
+import signoutIcon from '../images/signout.svg';
 import notificationsIcon from '../images/notifications.svg';
 
 const MainPage = () => {
@@ -70,7 +71,7 @@ const MainPage = () => {
                         className={`side-bar-button ${activeComponent === 'employees' ? 'active-button' : ''}`}>
                             Сотрудники
                     </button>
-                    <button onClick={handleLogOut} className='side-bar-button log-out-button'>Выход</button>
+                    <button onClick={handleLogOut} className='side-bar-button log-out-button'>Выход <img src={signoutIcon} alt='sign-out' className='signout-icon'/></button>
                 </div>
             </div>
             <div className="content">

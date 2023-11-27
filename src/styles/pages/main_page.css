@@ -71,5 +71,17 @@
 }
 
 .log-out-button {
+    display: flex;
     margin-top: auto;
+    transition: all 0.2s ease-out;
+}
+
+.log-out-button:hover {
+    color: #00315D;
+    border-bottom: 2px solid transparent;
+    scale: 1.15;
+}
+
+.signout-icon {
+    margin-left: 10px;
 }
