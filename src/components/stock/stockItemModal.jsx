@@ -5,30 +5,32 @@ import { addStockItem, editStockItem } from '../../store/stockSlice';
 import CloseIcon from '../../images/close-icon.svg';
 import '../../styles/components/stock/stock_modal.css';
 
-const defaultValues = {
-    name: '',
-    category: '',
-    amount: '',
-    unit: 'г',
-    minLimit: '',
-    arrivalDate: ''
-};
-
-const StockItemModal = ({ isOpen, toggleModal, editable }) => {
+const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
     const dispatch = useDispatch();
-    const { register, handleSubmit, reset } = useForm({ defaultValues });
+    const { register, handleSubmit, reset } = useForm();
 
     useEffect(() => {
         if (!editable && isOpen) {
-            reset(defaultValues);
+            reset({
+                name: '',
+                category: '',
+                amount: '',
+                unit: 'г',
+                minLimit: '',
+                arrivalDate: '',
+                stockId: selectedStock, 
+            });
         }
-    }, [editable, isOpen, reset]);
+    }, [editable, isOpen, reset, selectedStock]);
 
     useEffect(() => {
         if (editable && isOpen) {
-            reset(editable);
+            reset({
+                ...editable,
+                stockId: editable.stockId || selectedStock, 
+            });
         }
-    }, [editable, isOpen, reset]);
+    }, [editable, isOpen, reset, selectedStock]);
 
     const onSubmit = (data) => {
         const itemData = { ...data, id: editable ? editable.id : Date.now() };
@@ -41,7 +43,7 @@ const StockItemModal = ({ isOpen, toggleModal, editable }) => {
     };
 
     const handleCloseModal = () => {
-        reset(defaultValues);
+        reset();
         toggleModal();
     };
 

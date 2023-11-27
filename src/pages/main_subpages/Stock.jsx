@@ -38,16 +38,24 @@ const Stock = () => {
   };
 
   const filteredItems = stockItems.filter(item => {
+    const isCorrectStock = item.stockId === selectedStock; 
+    let isCorrectCategory = true; 
+
     switch (selectedSubpage) {
       case 'finishedGoods':
-        return item.category === 'finishedGoods';
+        isCorrectCategory = item.category === 'finishedGoods';
+        break;
       case 'rawMaterials':
-        return item.category === 'rawMaterials';
+        isCorrectCategory = item.category === 'rawMaterials';
+        break;
       case 'expiringProducts':
-        return item.amount <= item.minLimit;
+        isCorrectCategory = item.amount <= item.minLimit;
+        break;
       default:
-        return true;
+        break;
     }
+
+    return isCorrectStock && isCorrectCategory;
   });
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -109,7 +117,7 @@ const Stock = () => {
         </button>
         <button 
           onClick={() => handleSubpageChange('expiringProducts')}
-          className={`stock-subpage-button ${selectedSubpage === 'expiringProducts' ? 'active-subpage-button' : ''}`}>
+          className={`stock-subpage-button expiring-products ${selectedSubpage === 'expiringProducts' ? 'active-expiring-products' : ''}`}>
             Заканчивающиеся продукты
         </button>
       </div>
@@ -134,6 +142,7 @@ const Stock = () => {
           isOpen={modalOpen}
           toggleModal={handleCloseModal}
           editable={editableItem}
+          selectedStock={selectedStock}
         />
       )}
     </div>

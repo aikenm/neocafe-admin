@@ -22,4 +22,5 @@ export const stockSlice = createSlice({
 });
 
 export const { addStockItem, editStockItem, deleteStockItem } = stockSlice.actions;
+
 export default stockSlice.reducer;
