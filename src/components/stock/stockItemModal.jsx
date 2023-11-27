@@ -18,14 +18,12 @@ const StockItemModal = ({ isOpen, toggleModal, editable }) => {
     const dispatch = useDispatch();
     const { register, handleSubmit, reset } = useForm({ defaultValues });
 
-    // Reset form to initial values when opening the modal for a new item
     useEffect(() => {
         if (!editable && isOpen) {
             reset(defaultValues);
         }
     }, [editable, isOpen, reset]);
 
-    // Update form values when editing an existing item
     useEffect(() => {
         if (editable && isOpen) {
             reset(editable);
@@ -54,7 +52,7 @@ const StockItemModal = ({ isOpen, toggleModal, editable }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h2 className='modal-title'>{editable ? 'Edit Stock Item' : 'New Stock Item'}</h2>
+                        <h2 className='modal-title'>{editable ? 'Редактирование' : 'Новая продукция'}</h2>
                         <button type="button" className="close-button" onClick={handleCloseModal}>
                             <img src={CloseIcon} alt='close-icon' />
                         </button>
@@ -120,7 +118,7 @@ const StockItemModal = ({ isOpen, toggleModal, editable }) => {
                     </div>
                     <div className="modal-actions">
                     <button type="button" className="cancel-button button" onClick={handleCloseModal}>Отмена</button>
-                    <button type="submit" className="save-button button">{editable ? 'Save' : 'Create'}</button>                    </div>
+                    <button type="submit" className="save-button button">{editable ? 'Сохранить' : 'Создать'}</button>                    </div>
                 </div>
             </form>
         </div>

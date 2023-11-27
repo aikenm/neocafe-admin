@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ContentHeader from '../../components/ContentHeader';
 import StockItem from '../../components/stock/StockItem';
 import StockItemModal from '../../components/stock/StockItemModal';
+import Pagination from '../../components/Pagination';
 import { useSelector, useDispatch } from 'react-redux';
 import '../../styles/pages/subpages/stock/stock.css';
 
@@ -19,6 +20,9 @@ const Stock = () => {
     { id: 'stock3', name: 'Филиал 3' },
   ];
 
+  const itemsPerPage = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+
   const handleStockSearch = (searchTerm) => {
     // Implement search logic
   };
@@ -35,11 +39,16 @@ const Stock = () => {
       case 'rawMaterials':
         return item.category === 'rawMaterials';
       case 'expiringProducts':
-        return item.amount <= item.minLimit; 
+        return item.amount <= item.minLimit;
       default:
         return true;
     }
   });
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const paginatedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
   const handleEditItem = (item) => {
     setEditableItem(item);
@@ -48,25 +57,24 @@ const Stock = () => {
 
   const handleDeleteItem = (itemId) => {
     // Dispatch an action to delete the item
-    // Update local storage or handle it as per your application logic
   };
 
   const handleCreateNewItem = () => {
-    setEditableItem(null); 
+    setEditableItem(null);
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setEditableItem(null); 
+    setEditableItem(null);
     setModalOpen(false);
   };
 
   const renderSubpageContent = () => {
-    return filteredItems.map((item, index) => (
+    return paginatedItems.map((item, index) => (
       <StockItem 
         key={item.id} 
         item={item}
-        index={index}
+        index={indexOfFirstItem + index}
         onEdit={() => handleEditItem(item)}
         onDelete={() => handleDeleteItem(item.id)}
       />
@@ -111,6 +119,11 @@ const Stock = () => {
         </div>
         {renderSubpageContent()}
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        paginate={setCurrentPage}
+      />
       {modalOpen && (
         <StockItemModal
           isOpen={modalOpen}

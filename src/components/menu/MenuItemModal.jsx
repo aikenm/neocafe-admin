@@ -109,7 +109,7 @@ const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h2 className='modal-title'>Новая позиция</h2>
+                    <h2 className='modal-title'>{editable ? 'Редактирование' : 'Новая позиция'}</h2>
                         <button type="button" className="close-button" onClick={handleCloseModal}>
                             <img src={CloseIcon} alt='close-icon' />
                         </button>
