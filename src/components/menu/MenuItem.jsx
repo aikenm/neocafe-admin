@@ -38,7 +38,7 @@ const MenuItem = ({ item, index, onMoreClick, onEdit, onDelete }) => {
                 {ingredientsText}
             </span>
             <span className='menu-item-card menu-price'>{item.price} сом</span>
-            <button onClick={handleMoreClick} className='more-button'><img src={moreIcon} alt='more-icon' /></button>
+            <button onClick={handleMoreClick} className='menu-more-button'><img src={moreIcon} alt='more-icon' /></button>
             {showOptions && (
                 <div className="options-window" ref={optionsRef}>
                     <div className="options-window" ref={optionsRef}>

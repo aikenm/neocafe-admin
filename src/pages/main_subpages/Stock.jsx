@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ContentHeader from '../../components/ContentHeader';
 import StockItem from '../../components/stock/StockItem';
 import StockItemModal from '../../components/stock/StockItemModal';
@@ -40,7 +40,6 @@ const Stock = () => {
         return true;
     }
   });
-  
 
   const handleEditItem = (item) => {
     setEditableItem(item);
@@ -52,7 +51,16 @@ const Stock = () => {
     // Update local storage or handle it as per your application logic
   };
 
-  // Render content based on selected subpage
+  const handleCreateNewItem = () => {
+    setEditableItem(null); 
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setEditableItem(null); 
+    setModalOpen(false);
+  };
+
   const renderSubpageContent = () => {
     return filteredItems.map((item, index) => (
       <StockItem 
@@ -69,7 +77,7 @@ const Stock = () => {
     <div className="stock-container">
       <ContentHeader 
         title="Склад"
-        onCreate={() => setModalOpen(true)} 
+        onCreate={handleCreateNewItem}
         onSearch={handleStockSearch}
         stocks={stocks}
         selectedStock={selectedStock}
@@ -94,31 +102,19 @@ const Stock = () => {
       </div>
       <div className="stock-content">
         <div className='stock-content-header'>
-            <span className='stock-content-header-subtitle stock-id'>
-                №
-            </span>
-            <span className='stock-content-header-subtitle stock-name'>
-                Наименование
-            </span>
-            <span className='stock-content-header-subtitle stock-amount'>
-                Количество
-            </span>
-            <span className='stock-content-header-subtitle stock-limit'>
-                Лимит
-            </span>
-            <span className='stock-content-header-subtitle stock-date'>
-                Дата прихода
-            </span>
-            <span className='stock-content-header-subtitle stock-edit'>
-                Ред.
-            </span>
+            <span className='stock-content-header-subtitle stock-id'>№</span>
+            <span className='stock-content-header-subtitle stock-name'>Наименование</span>
+            <span className='stock-content-header-subtitle stock-amount'>Количество</span>
+            <span className='stock-content-header-subtitle stock-limit'>Лимит</span>
+            <span className='stock-content-header-subtitle stock-date'>Дата прихода</span>
+            <span className='stock-content-header-subtitle stock-edit'>Ред.</span>
         </div>
         {renderSubpageContent()}
       </div>
       {modalOpen && (
         <StockItemModal
           isOpen={modalOpen}
-          toggleModal={() => setModalOpen(false)}
+          toggleModal={handleCloseModal}
           editable={editableItem}
         />
       )}
@@ -127,4 +123,3 @@ const Stock = () => {
 };
 
 export default Stock;
-

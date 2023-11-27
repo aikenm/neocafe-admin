@@ -9,3 +9,18 @@
     font-size: 18px;
 }
 
+.stock-more-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 103px;
+}
+
+.stock-more-button:hover {
+    scale: 1.3;
+}

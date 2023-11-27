@@ -33,7 +33,7 @@ const StockItem = ({ item, index, onEdit, onDelete }) => {
             <span className='stock-item-card stock-amount'>{item.amount} {item.unit}</span>
             <span className='stock-item-card stock-limit'>{item.minLimit} {item.unit}</span>
             <span className='stock-item-card stock-date'>{item.arrivalDate}</span>
-            <button onClick={handleMoreClick} className='more-button'><img src={moreIcon} alt='more-icon' /></button>
+            <button onClick={handleMoreClick} className='stock-more-button'><img src={moreIcon} alt='more-icon' /></button>
             {showOptions && (
                 <div className="options-window" ref={optionsRef}>
                     <button onClick={() => { onEdit(item); setShowOptions(false); }} className='option-button'><img src={editIcon} alt='edit-icon' className='option-icon' /> Редактировать</button>

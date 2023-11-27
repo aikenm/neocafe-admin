@@ -18,9 +18,19 @@ const StockItemModal = ({ isOpen, toggleModal, editable }) => {
     const dispatch = useDispatch();
     const { register, handleSubmit, reset } = useForm({ defaultValues });
 
+    // Reset form to initial values when opening the modal for a new item
     useEffect(() => {
-        reset(editable ? editable : defaultValues);
-    }, [editable, reset, isOpen]);
+        if (!editable && isOpen) {
+            reset(defaultValues);
+        }
+    }, [editable, isOpen, reset]);
+
+    // Update form values when editing an existing item
+    useEffect(() => {
+        if (editable && isOpen) {
+            reset(editable);
+        }
+    }, [editable, isOpen, reset]);
 
     const onSubmit = (data) => {
         const itemData = { ...data, id: editable ? editable.id : Date.now() };

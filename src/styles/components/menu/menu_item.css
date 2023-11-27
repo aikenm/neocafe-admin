@@ -57,7 +57,13 @@
     cursor: default;
 }
 
-.more-button {
+.menu-item-card.ingredients {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.menu-more-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,13 +75,6 @@
     margin-left: 35px;
 }
 
-.menu-item-card.ingredients {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-
-.more-button:hover {
+.menu-more-button:hover {
     scale: 1.3;
 }
