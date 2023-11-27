@@ -111,6 +111,7 @@ const Menu = () => {
             setInternalSelectedCategory(category);
         }
         setIsDropdownOpen(false);
+        setCurrentPage(1);
     };
 
     const handleDeleteCategoryInitiated = (categoryId) => {
@@ -135,7 +136,6 @@ const Menu = () => {
             }
         }
     };
-    
 
     const handleCancelDeleteCategory = () => {
         setIsCategoryDeleteModalOpen(false);

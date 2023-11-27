@@ -18,9 +18,9 @@ const Stock = () => {
   const itemsPerPage = 5;
 
   const stocksData = [
-    { id: 'stock1', name: 'Филиал 1' },
-    { id: 'stock2', name: 'Филиал 2' },
-    { id: 'stock3', name: 'Филиал 3' },
+    { id: 'stock1', name: 'NeoCafe Dzerzhinka' },
+    { id: 'stock2', name: 'NeoCafe Karpinka' },
+    { id: 'stock3', name: 'NeoCafe Filarmonia' },
   ];
 
   const handleStockSearch = (searchTerm) => {
