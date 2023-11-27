@@ -32,12 +32,11 @@ const Stock = () => {
   const filteredItems = stockItems.filter(item => {
     switch (selectedSubpage) {
       case 'finishedGoods':
-        return item.category === 'готовая продукция';
+        return item.category === 'finishedGoods';
       case 'rawMaterials':
-        return item.category === 'Сырье';
+        return item.category === 'rawMaterials';
       case 'expiringProducts':
-        // Example condition, replace with your actual logic
-        return item.amount <= item.minLimit; // Items with amount less or equal to minLimit
+        return item.amount <= item.minLimit; 
       default:
         return true;
     }

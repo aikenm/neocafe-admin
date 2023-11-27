@@ -61,9 +61,9 @@ const StockItemModal = ({ isOpen, toggleModal, editable }) => {
                     <div className="modal-body">
                         <input {...register('name')} placeholder="Item Name" className='input-field'/>
                         <select {...register('category')} className='input-field'>
-                            <option value="">Select Category</option>
-                            <option value="Сырье">Сырье</option>
-                            <option value="готовая продукция">готовая продукция</option>
+                            <option value="">Выберите категорию</option>
+                            <option value="rawMaterials">Сырье</option>
+                            <option value="finishedGoods">Готовая продукция</option>
                         </select>
                         <input {...register('amount', { valueAsNumber: true })} placeholder="Amount" type="number" className='input-field'/>
                         <input {...register('unit')} placeholder="Unit (e.g., kg, pcs)" className='input-field'/>
