@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import ContentHeader from '../../components/ContentHeader';
 import StockItem from '../../components/stock/StockItem';
 import StockItemModal from '../../components/stock/StockItemModal';
+import DeleteModal from '../../components/DeleteModal';
 import Pagination from '../../components/Pagination';
 import { useSelector, useDispatch } from 'react-redux';
+import { deleteStockItem } from '../../store/stockSlice'; 
 import '../../styles/pages/subpages/stock/stock.css';
 
 const Stock = () => {
@@ -13,18 +15,22 @@ const Stock = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editableItem, setEditableItem] = useState(null);
   const stockItems = useSelector((state) => state.stock.items);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const dispatch = useDispatch();
 
   const itemsPerPage = 5;
 
   const stocksData = [
-    { id: 'stock1', name: 'NeoCafe Dzerzhinka' },
-    { id: 'stock2', name: 'NeoCafe Karpinka' },
-    { id: 'stock3', name: 'NeoCafe Filarmonia' },
+    { id: 'stock1', name: 'Дзержинка' },
+    { id: 'stock2', name: 'Карпинка' },
+    { id: 'stock3', name: 'Филармония' },
   ];
 
-  const handleStockSearch = (searchTerm) => {
-    // Implement search logic
+  const handleStockSearch = (term) => {
+    setSearchTerm(term);
+    setCurrentPage(1); 
   };
 
   const handleSelectStock = (stockId) => {
@@ -38,7 +44,7 @@ const Stock = () => {
   };
 
   const filteredItems = stockItems.filter(item => {
-    const isCorrectStock = item.stockId === selectedStock; 
+    const matchesSearchTerm = item.name.toLowerCase().startsWith(searchTerm.toLowerCase());    const isCorrectStock = item.stockId === selectedStock; 
     let isCorrectCategory = true; 
 
     switch (selectedSubpage) {
@@ -55,7 +61,7 @@ const Stock = () => {
         break;
     }
 
-    return isCorrectStock && isCorrectCategory;
+    return matchesSearchTerm && isCorrectStock && isCorrectCategory;
   });
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -68,10 +74,6 @@ const Stock = () => {
     setModalOpen(true);
   };
 
-  const handleDeleteItem = (itemId) => {
-    // Dispatch an action to delete the item
-  };
-
   const handleCreateNewItem = () => {
     setEditableItem(null);
     setModalOpen(true);
@@ -80,6 +82,31 @@ const Stock = () => {
   const handleCloseModal = () => {
     setEditableItem(null);
     setModalOpen(false);
+  };
+
+  const handleDeleteItem = (itemId) => {
+    const item = stockItems.find((item) => item.id === itemId);
+    setItemToDelete(item);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteInitiated = (itemId) => {
+    const item = stockItems.find((item) => item.id === itemId);
+    setItemToDelete(item);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (itemToDelete) {
+      dispatch(deleteStockItem(itemToDelete.id)); 
+    }
+    setIsDeleteModalOpen(false);
+    setItemToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setItemToDelete(null);
   };
 
   const renderSubpageContent = () => {
@@ -143,6 +170,14 @@ const Stock = () => {
           toggleModal={handleCloseModal}
           editable={editableItem}
           selectedStock={selectedStock}
+        />
+      )}
+      {isDeleteModalOpen && (
+        <DeleteModal 
+          isOpen={isDeleteModalOpen}
+          message="Вы действительно хотите удалить этот товар?" 
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
         />
       )}
     </div>
