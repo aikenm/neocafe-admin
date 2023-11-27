@@ -31,8 +31,8 @@ const StockItem = ({ item, index, onEdit, onDelete }) => {
             <span className='stock-item-card stock-id'>№{index + 1}</span>
             <span className='stock-item-card stock-name'>{item.name}</span>
             <span className='stock-item-card stock-amount'>{item.amount} {item.unit}</span>
-            <span className='stock-item-card stock-limit'>Limit: {item.minLimit}</span>
-            <span className='stock-item-card stock-date'>{item.date}</span>
+            <span className='stock-item-card stock-limit'>{item.minLimit} {item.unit}</span>
+            <span className='stock-item-card stock-date'>{item.arrivalDate}</span>
             <button onClick={handleMoreClick} className='more-button'><img src={moreIcon} alt='more-icon' /></button>
             {showOptions && (
                 <div className="options-window" ref={optionsRef}>

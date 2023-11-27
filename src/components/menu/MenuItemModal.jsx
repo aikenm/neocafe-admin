@@ -88,8 +88,6 @@ const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
         reset();
         setSelectedImage(null);
     };
-      
-       
     
     const handleCloseModal = () => {
         reset();

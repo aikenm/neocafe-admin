@@ -13,11 +13,10 @@ const Stock = () => {
   const stockItems = useSelector((state) => state.stock.items);
   const dispatch = useDispatch();
 
-  // Sample stocks data
   const stocks = [
-    { id: 'stock1', name: 'Stock 1' },
-    { id: 'stock2', name: 'Stock 2' },
-    { id: 'stock3', name: 'Stock 3' },
+    { id: 'stock1', name: 'Филиал 1' },
+    { id: 'stock2', name: 'Филиал 2' },
+    { id: 'stock3', name: 'Филиал 3' },
   ];
 
   const handleStockSearch = (searchTerm) => {

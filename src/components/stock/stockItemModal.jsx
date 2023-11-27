@@ -1,48 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { addStockItem, editStockItem } from '../../store/stockSlice';
 import CloseIcon from '../../images/close-icon.svg';
 import '../../styles/components/stock/stock_modal.css';
 
+const defaultValues = {
+    name: '',
+    category: '',
+    amount: '',
+    unit: 'г',
+    minLimit: '',
+    arrivalDate: ''
+};
+
 const StockItemModal = ({ isOpen, toggleModal, editable }) => {
     const dispatch = useDispatch();
-    const stockItems = useSelector((state) => state.stock.items);
-    const isEditMode = editable != null;
+    const { register, handleSubmit, reset } = useForm({ defaultValues });
 
-    const { register, handleSubmit, reset } = useForm({
-        defaultValues: isEditMode ? editable : {
-            name: '',
-            category: '',
-            amount: 0,
-            unit: '',
-            minLimit: 0
-        }
-    });
+    useEffect(() => {
+        reset(editable ? editable : defaultValues);
+    }, [editable, reset, isOpen]);
 
     const onSubmit = (data) => {
-        if (isEditMode) {
-            dispatch(editStockItem({ ...data, id: editable.id }));
-
-            // Update local storage for editStockItem
-            const updatedItems = stockItems.map(item => 
-                item.id === editable.id ? { ...data, id: editable.id } : item
-            );
-            localStorage.setItem('stockItems', JSON.stringify(updatedItems));
+        const itemData = { ...data, id: editable ? editable.id : Date.now() };
+        if (editable) {
+            dispatch(editStockItem(itemData));
         } else {
-            const newItem = { ...data, id: Date.now() };
-            dispatch(addStockItem(newItem));
-
-            // Update local storage for addStockItem
-            const updatedItems = [...stockItems, newItem];
-            localStorage.setItem('stockItems', JSON.stringify(updatedItems));
+            dispatch(addStockItem(itemData));
         }
         toggleModal();
-        reset();
     };
 
     const handleCloseModal = () => {
-        reset();
+        reset(defaultValues);
         toggleModal();
     };
 
@@ -53,26 +44,73 @@ const StockItemModal = ({ isOpen, toggleModal, editable }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h2 className='modal-title'>{isEditMode ? 'Edit Stock Item' : 'New Stock Item'}</h2>
+                        <h2 className='modal-title'>{editable ? 'Edit Stock Item' : 'New Stock Item'}</h2>
                         <button type="button" className="close-button" onClick={handleCloseModal}>
                             <img src={CloseIcon} alt='close-icon' />
                         </button>
                     </div>
                     <div className="modal-body">
-                        <input {...register('name')} placeholder="Item Name" className='input-field'/>
-                        <select {...register('category')} className='input-field'>
-                            <option value="">Выберите категорию</option>
-                            <option value="rawMaterials">Сырье</option>
-                            <option value="finishedGoods">Готовая продукция</option>
-                        </select>
-                        <input {...register('amount', { valueAsNumber: true })} placeholder="Amount" type="number" className='input-field'/>
-                        <input {...register('unit')} placeholder="Unit (e.g., kg, pcs)" className='input-field'/>
-                        <input {...register('minLimit', { valueAsNumber: true })} placeholder="Minimal Limit" type="number" className='input-field'/>
+                        <h3 className='section-title'>Наименование, категория и количество</h3>
+                        <span className='input-title'>Наименование</span>
+                        <input 
+                            {...register('name')} 
+                            placeholder="Введите название" 
+                            className='input-field'
+                        />
+                        <div className="inline-input-wrapper">
+                            <div className='inline-input-group'>
+                                <span className='input-title'>Категория</span>
+                                <select {...register('category')} className='input-field'>
+                                    <option value="">Выберите категорию</option>
+                                    <option value="finishedGoods">Готовая продукция</option>
+                                    <option value="rawMaterials">Сырье</option>
+                                </select>
+                            </div>
+                            <div className='inline-input-group amount-unit-group'>
+                                <div className='amount-input-wrapper'>
+                                    <span className='input-title'>Кол-во (в гр, мл, л, кг)</span>
+                                    <input 
+                                        {...register('amount', 
+                                        { valueAsNumber: true })} 
+                                        placeholder="Количество" 
+                                        type="number" 
+                                        className='input-field'
+                                    />
+                                </div>
+                                <div className='unit-input-wrapper'>
+                                    <select {...register('unit')} className='input-field'>
+                                        <option value="г">г</option>
+                                        <option value="мл">мл</option>
+                                        <option value="шт">шт</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="inline-input-wrapper">
+                            <div className='inline-input-group'>
+                                <span className='input-title'>Минимальный лимит</span>
+                                <input 
+                                    {...register('minLimit', 
+                                    { valueAsNumber: true })} 
+                                    placeholder="Например: 2кг" 
+                                    type="number" 
+                                    className='input-field'
+                                />
+                            </div>
+                            <div className='inline-input-group'>
+                                <span className='input-title'>Дата прихода</span>
+                                <input 
+                                    {...register('arrivalDate')} 
+                                    type="date" 
+                                    placeholder="Arrival Date" 
+                                    className='input-field' 
+                                />
+                            </div>
+                        </div>
                     </div>
                     <div className="modal-actions">
-                        <button type="button" className="cancel-button button" onClick={handleCloseModal}>Cancel</button>
-                        <button type="submit" className="save-button button">{isEditMode ? 'Save' : 'Create'}</button>
-                    </div>
+                    <button type="button" className="cancel-button button" onClick={handleCloseModal}>Отмена</button>
+                    <button type="submit" className="save-button button">{editable ? 'Save' : 'Create'}</button>                    </div>
                 </div>
             </form>
         </div>

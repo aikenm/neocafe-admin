@@ -1,0 +1,11 @@
+.stock-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+    height: 86px;
+    background-color: #F9F9F9;
+    border-bottom: 2px solid #cdd3dd;
+    font-size: 18px;
+}
+
