@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ContentHeader from '../../components/ContentHeader';
+import StockItem from '../../components/stock/StockItem';
 import StockItemModal from '../../components/stock/StockItemModal';
 import { useSelector, useDispatch } from 'react-redux';
 import '../../styles/pages/subpages/stock/stock.css';
@@ -29,29 +30,40 @@ const Stock = () => {
   };
 
   const filteredItems = stockItems.filter(item => {
-    if (selectedSubpage === 'finishedGoods') {
-      return item.category === 'готовая продукция';
-    } else if (selectedSubpage === 'rawMaterials') {
-      return item.category === 'сырье';
+    switch (selectedSubpage) {
+      case 'finishedGoods':
+        return item.category === 'готовая продукция';
+      case 'rawMaterials':
+        return item.category === 'Сырье';
+      case 'expiringProducts':
+        // Example condition, replace with your actual logic
+        return item.amount <= item.minLimit; // Items with amount less or equal to minLimit
+      default:
+        return true;
     }
-    // Add more conditions as needed
-    return true;
   });
+  
 
   const handleEditItem = (item) => {
     setEditableItem(item);
     setModalOpen(true);
   };
 
+  const handleDeleteItem = (itemId) => {
+    // Dispatch an action to delete the item
+    // Update local storage or handle it as per your application logic
+  };
+
   // Render content based on selected subpage
   const renderSubpageContent = () => {
-    // Map through filtered items and display them
     return filteredItems.map((item, index) => (
-      <div key={index}>
-        {item.name}
-        {/* Add more item details */}
-        <button onClick={() => handleEditItem(item)}>Edit</button>
-      </div>
+      <StockItem 
+        key={item.id} 
+        item={item}
+        index={index}
+        onEdit={() => handleEditItem(item)}
+        onDelete={() => handleDeleteItem(item.id)}
+      />
     ));
   };
 
@@ -59,16 +71,28 @@ const Stock = () => {
     <div className="stock-container">
       <ContentHeader 
         title="Склад"
-        onCreate={() => setModalOpen(true)} // Open modal for creating a new item
+        onCreate={() => setModalOpen(true)} 
         onSearch={handleStockSearch}
         stocks={stocks}
         selectedStock={selectedStock}
         onSelectStock={handleSelectStock}
       />
       <div className="stock-subpages-header">
-        <button onClick={() => setSelectedSubpage('finishedGoods')} className='stock-subpage-button'>Готовая продукция</button>
-        <button onClick={() => setSelectedSubpage('rawMaterials')} className='stock-subpage-button'>Сырье</button>
-        <button onClick={() => setSelectedSubpage('expiringProducts')} className='stock-subpage-button expiringProducts'>Заканчивающиеся продукты</button>
+        <button 
+          onClick={() => setSelectedSubpage('finishedGoods')} 
+          className={`stock-subpage-button ${selectedSubpage === 'finishedGoods' ? 'active-subpage-button' : ''}`}>
+            Готовая продукция
+        </button>
+        <button 
+          onClick={() => setSelectedSubpage('rawMaterials')} 
+          className={`stock-subpage-button ${selectedSubpage === 'rawMaterials' ? 'active-subpage-button' : ''}`}>
+            Сырье
+        </button>
+        <button 
+          onClick={() => setSelectedSubpage('expiringProducts')} 
+          className={`stock-subpage-button expiring-products ${selectedSubpage === 'expiringProducts' ? 'active-expiring-products' : ''}`}>
+            Заканчивающиеся продукты
+        </button>
       </div>
       <div className="stock-content">
         <div className='stock-content-header'>

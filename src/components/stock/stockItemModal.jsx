@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { addStockItem, editStockItem } from '../../store/stockslice';
+import { addStockItem, editStockItem } from '../../store/stockSlice';
 import CloseIcon from '../../images/close-icon.svg';
 import '../../styles/components/stock/stock_modal.css';
 
@@ -60,7 +60,11 @@ const StockItemModal = ({ isOpen, toggleModal, editable }) => {
                     </div>
                     <div className="modal-body">
                         <input {...register('name')} placeholder="Item Name" className='input-field'/>
-                        <input {...register('category')} placeholder="Category" className='input-field'/>
+                        <select {...register('category')} className='input-field'>
+                            <option value="">Select Category</option>
+                            <option value="Сырье">Сырье</option>
+                            <option value="готовая продукция">готовая продукция</option>
+                        </select>
                         <input {...register('amount', { valueAsNumber: true })} placeholder="Amount" type="number" className='input-field'/>
                         <input {...register('unit')} placeholder="Unit (e.g., kg, pcs)" className='input-field'/>
                         <input {...register('minLimit', { valueAsNumber: true })} placeholder="Minimal Limit" type="number" className='input-field'/>
