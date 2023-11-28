@@ -90,7 +90,9 @@ const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
                                 <div className='unit-input-wrapper'>
                                     <select {...register('unit')} className='input-field'>
                                         <option value="г">г</option>
+                                        <option value="г">кг</option>
                                         <option value="мл">мл</option>
+                                        <option value="мл">л</option>
                                         <option value="шт">шт</option>
                                     </select>
                                 </div>

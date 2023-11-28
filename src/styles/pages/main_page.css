@@ -68,6 +68,7 @@
 
 .active-button {
     border-bottom: 2px solid #00315D;
+    cursor: default;
 }
 
 .log-out-button {

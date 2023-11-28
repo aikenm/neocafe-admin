@@ -32,6 +32,7 @@
     font-weight: 700;
     transition: background-color 0.2s ease;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 .page-link:hover {
@@ -44,6 +45,11 @@
     border-top-right-radius: 4px;
     color: #00315D;
     border-bottom: 2px solid #00315D;
+    cursor: default;
+}
+
+.page-link.active:hover {
+    background-color: #F9F9F9;
 }
 
 .arrow-button {
@@ -54,11 +60,16 @@
     width: 50px;
     background: none;
     border: none;
+    cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .arrow-button:disabled {
-    background-color: #eaeaea;
+    cursor: default;
+}
+
+.arrow-button:disabled:hover {
+    background-color: #F9F9F9;
 }
 
 .arrow-button:hover {

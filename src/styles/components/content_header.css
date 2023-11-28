@@ -17,8 +17,14 @@
     font-family: 'Nunito', sans-serif;
     font-weight: 700;
     height: 60px;
-    margin-left: 10px;
+    margin-left: 15px;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.stock-select:hover {
+    color: #00315D;
+    scale: 0.98;
 }
 
 .content-header-title {
@@ -37,6 +43,26 @@
     border: none;
     background-color: #E7E7E7;
     outline: none;
+    font-family: 'Nunito', sans-serif;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar {
+    padding-left: 45px; 
+}
+
+.search-icon {
+    position: absolute;
+    left: 37px;
+}
+
+.search-bar::placeholder {
+    color: #C1C1C3;
 }
 
 .create-button {
