@@ -4,6 +4,7 @@ import BranchItemModal from '../../components/branches/BranchItemModal';
 import '../../styles/pages/subpages/branches/branches.css';
 
 const Branches = () => {
+  // ... existing states
   const [modalOpen, setModalOpen] = useState(false);
   const [editableBranch, setEditableBranch] = useState(null);
 
@@ -21,6 +22,8 @@ const Branches = () => {
     setModalOpen(true);
   };
 
+  // ... rest of the Branches component
+
   return (
     <div className="branches-container">
       <ContentHeader title="Филиалы" onSearch={handleBranchesSearch} onCreate={handleCreateNewBranch} />
@@ -29,16 +32,16 @@ const Branches = () => {
                 <span className='branches-content-header-subtitle branch-id'>
                     №
                 </span>
-                <span className='branches-content-header-subtitle branch-name'>
+                <span className='branches-content-header-subtitle branch-id'>
                     Название кофейни
                 </span>
-                <span className='branches-content-header-subtitle branch-address'>
+                <span className='branches-content-header-subtitle branch-id'>
                     Адрес
                 </span>
-                <span className='branches-content-header-subtitle branch-hours'>
+                <span className='branches-content-header-subtitle'>
                     Время работы
                 </span>
-                <span className='branches-content-header-subtitle branch-edit'>
+                <span className='branches-content-header-subtitle'>
                     Ред.
                 </span>
             </div>

@@ -15,8 +15,11 @@ export const branchSlice = createSlice({
         state.branches[index] = action.payload;
       }
     },
+    deleteBranch: (state, action) => {
+        state.branches = state.branches.filter(branch => branch.id !== action.payload);
+      }
   }
 });
 
-export const { addBranch, editBranch } = branchSlice.actions;
+export const { addBranch, editBranch, deleteBranch } = branchSlice.actions;
 export default branchSlice.reducer;

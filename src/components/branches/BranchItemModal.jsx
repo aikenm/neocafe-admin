@@ -1,26 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
-const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
-  const { register, handleSubmit, reset, control, setValue } = useForm();
+const BranchItemModal = ({ isOpen, toggleModal, editable, onSubmit }) => {
+  const { register, handleSubmit, reset } = useForm();
   const [selectedImage, setSelectedImage] = useState(null);
 
   const daysOfWeek = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
 
-  // Handle image upload
-  const handleImageChange = (e) => {
-    // Implement the image change logic
-  };
-
-  const onSubmit = (data) => {
-    // Handle form submission
-    toggleModal();
-    reset();
-  };
-
   useEffect(() => {
     if (editable) {
-      // Set form values for editing
       reset(editable);
       setSelectedImage(editable.imageUrl);
     } else {

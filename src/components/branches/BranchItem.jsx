@@ -4,33 +4,23 @@ import editIcon from '../../images/edit-icon.svg';
 import deleteIcon from '../../images/delete-icon.svg';
 
 const BranchItem = ({ branch, onEdit, onDelete }) => {
-    const [showOptions, setShowOptions] = useState(false);
-    const optionsRef = useRef(null);
+  const [showOptions, setShowOptions] = useState(false);
+  const optionsRef = useRef(null);
 
-    // Function to toggle options menu
-    const handleMoreClick = (e) => {
-        e.stopPropagation();
-        setShowOptions(!showOptions);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (optionsRef.current && !optionsRef.current.contains(event.target)) {
+        setShowOptions(false);
+      }
     };
 
-    // Close options menu when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (optionsRef.current && !optionsRef.current.contains(event.target)) {
-                setShowOptions(false);
-            }
-        };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [optionsRef]);
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [optionsRef]);
-
-    // Format working hours for display
-    const formatWorkingHours = (hours) => {
-        return hours.map((day) => `${day.day}: ${day.open} - ${day.close}`).join(', ');
-    };
+  const formatWorkingHours = (hours) => {
+    return hours.map((day) => `${day.day}: ${day.open} - ${day.close}`).join(', ');
+  };
 
     return (
         <div className="branch-item">
@@ -38,9 +28,9 @@ const BranchItem = ({ branch, onEdit, onDelete }) => {
             <span className='branch-item-card branch-name'>{branch.name}</span>
             <span className='branch-item-card branch-address'>{branch.address}</span>
             <span className='branch-item-card branch-hours'>{formatWorkingHours(branch.workingHours)}</span>
-            <button onClick={handleMoreClick} className='branch-more-button'>
+            {/* <button onClick={handleMoreClick} className='branch-more-button'>
                 <img src={moreIcon} alt='more-icon' />
-            </button>
+            </button> */}
             {showOptions && (
                 <div className="options-window" ref={optionsRef}>
                     <button onClick={() => { onEdit(branch); setShowOptions(false); }} className='option-button'>
