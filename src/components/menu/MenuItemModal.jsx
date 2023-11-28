@@ -105,9 +105,9 @@ const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
     if (!isOpen) return null;
     
     return (
-        <div className="modal">
+        <div className="menu-modal">
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="modal-content">
+                <div className="menu-modal-content">
                     <div className="modal-header">
                     <h2 className='modal-title'>{editable ? 'Редактирование' : 'Новая позиция'}</h2>
                         <button type="button" className="close-button" onClick={handleCloseModal}>

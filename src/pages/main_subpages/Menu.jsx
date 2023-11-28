@@ -114,7 +114,8 @@ const Menu = () => {
         setCurrentPage(1);
     };
 
-    const handleDeleteCategoryInitiated = (categoryId) => {
+    const handleDeleteCategoryInitiated = (event, categoryId) => {
+        event.stopPropagation();
         const category = categories.find(cat => cat.id === categoryId);
         setCategoryToDelete(category);
         setIsCategoryDeleteModalOpen(true);
@@ -207,7 +208,7 @@ const Menu = () => {
                                     <div key={category.id} className='categories-wrapper'>
                                         <span onClick={() => handleCategorySelect(category.name)} className='category-option'>
                                             {category.name}
-                                            <button onClick={() => handleDeleteCategoryInitiated(category.id)} className='category-delete-btn'>
+                                            <button onClick={(event) => handleDeleteCategoryInitiated(event, category.id)} className='category-delete-btn'>
                                                 <img src={categoryDelete} alt='delete-icon' className='category-delete-icon' />
                                             </button>
                                         </span>

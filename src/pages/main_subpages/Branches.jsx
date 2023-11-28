@@ -4,7 +4,6 @@ import BranchItemModal from '../../components/branches/BranchItemModal';
 import '../../styles/pages/subpages/branches/branches.css';
 
 const Branches = () => {
-  // ... existing states
   const [modalOpen, setModalOpen] = useState(false);
   const [editableBranch, setEditableBranch] = useState(null);
 
@@ -21,8 +20,6 @@ const Branches = () => {
     setEditableBranch(branch);
     setModalOpen(true);
   };
-
-  // ... rest of the Branches component
 
   return (
     <div className="branches-container">

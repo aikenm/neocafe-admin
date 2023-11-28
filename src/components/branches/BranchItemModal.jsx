@@ -39,7 +39,6 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
           <h3 className='section-title'>Информация о филиале</h3>
           <div className="branch-info">
             <div className="image-upload">
-              {/* Implement drag and drop image upload */}
             </div>
             <input {...register('name')} placeholder="Название кофейни" />
             <input {...register('address')} placeholder="Адрес" />

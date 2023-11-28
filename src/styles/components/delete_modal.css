@@ -50,8 +50,10 @@
 
 .delete-message {
     font-size: 19px;
-    margin-bottom: 35px;
+    margin-bottom: 40px;
 }
+
+.delete-actions {}
 
 .cancel-btn {
     flex: 1;

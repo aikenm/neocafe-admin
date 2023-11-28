@@ -50,9 +50,9 @@ const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="modal">
+        <div className="stock-modal">
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="modal-content">
+                <div className="stock-modal-content">
                     <div className="modal-header">
                         <h2 className='modal-title'>{editable ? 'Редактирование' : 'Новая продукция'}</h2>
                         <button type="button" className="close-button" onClick={handleCloseModal}>
@@ -120,7 +120,7 @@ const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="modal-actions">
+                    <div className="stock-actions">
                     <button type="button" className="cancel-button button" onClick={handleCloseModal}>Отмена</button>
                     <button type="submit" className="save-button button">{editable ? 'Сохранить' : 'Создать'}</button>                    </div>
                 </div>
