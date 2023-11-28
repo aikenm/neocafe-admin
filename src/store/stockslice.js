@@ -18,9 +18,11 @@ export const stockSlice = createSlice({
         deleteStockItem: (state, action) => {
             state.items = state.items.filter(item => item.id !== action.payload);
         },
+        initializeStockItems: (state, action) => {
+            state.items = action.payload;
+        },
     },
 });
 
-export const { addStockItem, editStockItem, deleteStockItem } = stockSlice.actions;
-
+export const { addStockItem, editStockItem, deleteStockItem, initializeStockItems } = stockSlice.actions;
 export default stockSlice.reducer;

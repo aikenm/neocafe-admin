@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ContentHeader from '../../components/ContentHeader';
 import StockItem from '../../components/stock/StockItem';
 import StockItemModal from '../../components/stock/StockItemModal';
 import DeleteModal from '../../components/DeleteModal';
 import Pagination from '../../components/Pagination';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteStockItem } from '../../store/stockSlice'; 
+import { deleteStockItem, initializeStockItems } from '../../store/stockSlice'; 
 import '../../styles/pages/subpages/stock/stock.css';
 
 const Stock = () => {
@@ -72,6 +72,9 @@ const Stock = () => {
   const handleEditItem = (item) => {
     setEditableItem(item);
     setModalOpen(true);
+    // Update local storage for edit
+    const updatedItems = stockItems.map(it => it.id === item.id ? item : it);
+    localStorage.setItem('stockItems', JSON.stringify(updatedItems));
   };
 
   const handleCreateNewItem = () => {
@@ -90,15 +93,12 @@ const Stock = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteInitiated = (itemId) => {
-    const item = stockItems.find((item) => item.id === itemId);
-    setItemToDelete(item);
-    setIsDeleteModalOpen(true);
-  };
-
   const handleConfirmDelete = () => {
     if (itemToDelete) {
       dispatch(deleteStockItem(itemToDelete.id)); 
+      // Update local storage
+      const updatedItems = stockItems.filter(item => item.id !== itemToDelete.id);
+      localStorage.setItem('stockItems', JSON.stringify(updatedItems));
     }
     setIsDeleteModalOpen(false);
     setItemToDelete(null);
@@ -124,6 +124,16 @@ const Stock = () => {
       />
     ));
   };
+
+  useEffect(() => {
+    // Load stock items from local storage on component mount
+    const savedStockItems = JSON.parse(localStorage.getItem('stockItems')) || [];
+    dispatch(initializeStockItems(savedStockItems));
+  }, [dispatch]);
+
+  useEffect(() => {
+    localStorage.setItem('stockItems', JSON.stringify(stockItems));
+  }, [stockItems]);
 
   return (
     <div className="stock-container">
