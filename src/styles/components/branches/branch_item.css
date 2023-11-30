@@ -1,0 +1,26 @@
+.branch-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+    height: 86px;
+    background-color: #F9F9F9;
+    border-bottom: 2px solid #cdd3dd;
+    font-size: 18px;
+}
+
+.branch-more-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 103px;
+}
+
+.stock-more-button:hover {
+    scale: 1.3;
+}

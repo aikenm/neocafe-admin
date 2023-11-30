@@ -1,194 +1,278 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useForm, useFieldArray } from 'react-hook-form';
-import { addItem, editItem } from '../../store/menuSlice';
-import CloseIcon from '../../images/close-icon.svg';
-import ImageIcon from '../../images/image-input.svg';
-import '../../styles/components/menu/menu_modal.css';
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm, useFieldArray } from "react-hook-form";
+import { addItem, editItem } from "../../store/menuSlice";
+import CloseIcon from "../../images/close-icon.svg";
+import ImageIcon from "../../images/image-input.svg";
+import "../../styles/components/menu/menu_modal.css";
 
 const MenuItemModal = ({ isOpen, toggleModal, editable }) => {
-    const dispatch = useDispatch();
-    const menuItems = useSelector((state) => state.menu.items);
-    const categories = useSelector((state) => state.menu.categories);
-    const isEditMode = editable != null; 
-    
-    const { register, handleSubmit, control, reset, setValue } = useForm({
-        defaultValues: isEditMode ? editable : {
-          name: '',
-          description: '',
-          category: '',
-          price: '',
-          ingredients: [{ id: Date.now(), name: '', amount: '', unit: 'г' }],
-        }
-    });
+  const dispatch = useDispatch();
+  const menuItems = useSelector((state) => state.menu.items);
+  const categories = useSelector((state) => state.menu.categories);
+  const isEditMode = editable != null;
 
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: "ingredients"
-    });
-    const [selectedImage, setSelectedImage] = useState(null);
+  const { register, handleSubmit, control, reset, setValue } = useForm({
+    defaultValues: isEditMode
+      ? editable
+      : {
+          name: "",
+          description: "",
+          category: "",
+          price: "",
+          ingredients: [{ id: Date.now(), name: "", amount: "", unit: "г" }],
+        },
+  });
 
-    //localstorage temp
-    const handleImageChange = (e) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-    
-            reader.onloadend = () => {
-                setSelectedImage(reader.result);
-                setValue('image', reader.result);
-            };
-    
-            reader.readAsDataURL(file);
-        }
-    };
-    
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "ingredients",
+  });
+  const [selectedImage, setSelectedImage] = useState(null);
 
-    //localstorage temp
-    const onDrop = (e) => {
-        e.preventDefault();
-        const files = e.dataTransfer.files;
-        if (files && files[0]) {
-            const file = files[0];
-            const reader = new FileReader();
-    
-            reader.onloadend = () => {
-                setSelectedImage(reader.result); 
-                setValue('image', reader.result);
-            };
-    
-            reader.readAsDataURL(file);
-        }
-    };
-    
+  //localstorage temp
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
 
-    //localstorage temp
-    const onSubmit = (data) => {
-        const formData = {
-            ...data,
-            image: selectedImage, 
-        };
-    
-        if (isEditMode) {
-            dispatch(editItem({ ...formData, id: editable.id }));
-    
-            // Update localStorage for editItem
-            const updatedItems = menuItems.map(item => 
-                item.id === editable.id ? { ...formData, id: editable.id } : item
-            );
-            localStorage.setItem('items', JSON.stringify(updatedItems));
-        } else {
-            dispatch(addItem({ ...formData, id: Date.now() }));
-            
-            // Update localStorage for addItem
-            const updatedItems = [...menuItems, { ...formData, id: Date.now() }];
-            localStorage.setItem('items', JSON.stringify(updatedItems));
-        }
-        toggleModal();
-        reset();
-        setSelectedImage(null);
-    };
-    
-    const handleCloseModal = () => {
-        reset();
-        toggleModal();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+        setValue("image", reader.result);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
+  //localstorage temp
+  const onDrop = (e) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files && files[0]) {
+      const file = files[0];
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+        setValue("image", reader.result);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
+  //localstorage temp
+  const onSubmit = (data) => {
+    const formData = {
+      ...data,
+      image: selectedImage,
     };
 
-    useEffect(() => {
-        if (isOpen && editable && editable.image) {
-            setSelectedImage(editable.image);
-        } else {
-            setSelectedImage(null);
-        }
-    }, [isOpen, editable]);
+    if (isEditMode) {
+      dispatch(editItem({ ...formData, id: editable.id }));
 
-    if (!isOpen) return null;
-    
-    return (
-        <div className="menu-modal">
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="menu-modal-content">
-                    <div className="modal-header">
-                    <h2 className='modal-title'>{editable ? 'Редактирование' : 'Новая позиция'}</h2>
-                        <button type="button" className="close-button" onClick={handleCloseModal}>
-                            <img src={CloseIcon} alt='close-icon' />
-                        </button>
-                    </div>
-                    <div className="modal-body">
-                        <h3 className='section-title'>Добавьте фотографию к позиции</h3>
-                        <div className="image-input-wrapper" onDrop={onDrop} onDragOver={(e) => e.preventDefault()}>
-                            <div className='image-input-block'>
-                                {selectedImage ? (
-                                    <img src={selectedImage} alt='Uploaded' className='uploaded-image' />
-                                ) : (
-                                    <img src={ImageIcon} alt='upload-icon' className='image-input-icon' />
-                                )}
-                                <input type="file" id="image-upload" className='image-input' {...register('image')} onChange={handleImageChange}/>
-                                <span className='image-input-text'>Перетащите изображение для добавления или <label htmlFor="image-upload" className='view-button'>обзор</label></span>
-                            </div>
-                        </div>
+      // Update localStorage for editItem
+      const updatedItems = menuItems.map((item) =>
+        item.id === editable.id ? { ...formData, id: editable.id } : item
+      );
+      localStorage.setItem("items", JSON.stringify(updatedItems));
+    } else {
+      dispatch(addItem({ ...formData, id: Date.now() }));
 
-                        <h3 className='section-title'>Наименование, категория и стоимость</h3>
+      // Update localStorage for addItem
+      const updatedItems = [...menuItems, { ...formData, id: Date.now() }];
+      localStorage.setItem("items", JSON.stringify(updatedItems));
+    }
+    toggleModal();
+    reset();
+    setSelectedImage(null);
+  };
 
-                        <span className='input-title'>Наименование</span>
-                        <input {...register('name')} placeholder="Введите название новой позиции" className='input-field'/>
-                        <span className='input-title'>Описание</span>
-                        <textarea {...register('description')} placeholder="Введите описание" className='input-field description-field'/>
-                        
-                        <div className='inline-input-wrapper'>
-                            <div className='inline-input-group'>
-                                <span className='input-title'>Категория</span>
-                                <select {...register('category')} className='input-field'>
-                                    <option value="" disabled selected={!isEditMode}>{isEditMode ? editable.category : 'Выберите категорию'}</option>
-                                    {categories.map(category => (
-                                        <option key={category.id} value={category.name}>{category.name}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className='inline-input-group'>
-                                <span className='input-title'>Стоимость</span>
-                                <input {...register('price', { valueAsNumber: true })} placeholder="Введите стоимость" type="number" className='input-field'/>
-                            </div>
-                        </div>
+  const handleCloseModal = () => {
+    reset();
+    toggleModal();
+  };
 
-                        <h3 className='section-title'>Состав блюда и граммовка</h3>
-                        
-                        {fields.map((field, index) => (
-                            <div key={field.id} className="inline-input-wrapper">
-                                <button type="button" onClick={() => remove(index)} className='ingredients-remove-button'>
-                                    <img src={CloseIcon} alt='remove-icon' className='ingredients-close-icon'/>
-                                </button>
-                                <div className='inline-input-group'>
-                                    <span className='input-title'>Наименование</span>
-                                    <input {...register(`ingredients[${index}].name`)} placeholder="Ингредиент" className='input-field'/>
-                                </div>
-                                <div className='inline-input-group amount-unit-group'>
-                                    <div className='amount-input-wrapper'>
-                                        <span className='input-title'>Кол-во (в гр, мл, л, кг)</span>
-                                        <input {...register(`ingredients[${index}].amount`)} placeholder="Количество" type="number" className='input-field'/>
-                                    </div>
-                                    <div className='unit-input-wrapper'>
-                                        <select {...register(`ingredients[${index}].unit`)} className='input-field'>
-                                            <option value="г">г</option>
-                                            <option value="мл">мл</option>
-                                            <option value="шт">шт</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                        <button type="button" onClick={() => append({ id: Date.now(), name: '', amount: '', unit: 'г' })} className='add-more-button button'>
-                            Добавить еще <span className='plus-sign'>+</span>
-                        </button>
-                    </div>
-                    <div className="modal-actions">
-                        <button type="button" className="cancel-button button" onClick={handleCloseModal}>Отмена</button>
-                        <button type="submit" className="save-button button">{isEditMode ? 'Сохранить' : 'Создать'}</button>
-                    </div>
+  useEffect(() => {
+    if (isOpen && editable && editable.image) {
+      setSelectedImage(editable.image);
+    } else {
+      setSelectedImage(null);
+    }
+  }, [isOpen, editable]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="menu-modal">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="menu-modal-content">
+          <div className="modal-header">
+            <h2 className="modal-title">
+              {editable ? "Редактирование" : "Новая позиция"}
+            </h2>
+            <button
+              type="button"
+              className="close-button"
+              onClick={handleCloseModal}
+            >
+              <img src={CloseIcon} alt="close-icon" />
+            </button>
+          </div>
+          <div className="modal-body">
+            <h3 className="section-title">Добавьте фотографию к позиции</h3>
+            <div
+              className="image-input-wrapper"
+              onDrop={onDrop}
+              onDragOver={(e) => e.preventDefault()}
+            >
+              <div className="image-input-block">
+                {selectedImage ? (
+                  <img
+                    src={selectedImage}
+                    alt="Uploaded"
+                    className="uploaded-image"
+                  />
+                ) : (
+                  <img
+                    src={ImageIcon}
+                    alt="upload-icon"
+                    className="image-input-icon"
+                  />
+                )}
+                <input
+                  type="file"
+                  id="image-upload"
+                  className="image-input"
+                  {...register("image")}
+                  onChange={handleImageChange}
+                />
+                <span className="image-input-text">
+                  Перетащите изображение для добавления или{" "}
+                  <label htmlFor="image-upload" className="view-button">
+                    обзор
+                  </label>
+                </span>
+              </div>
+            </div>
+
+            <h3 className="section-title">
+              Наименование, категория и стоимость
+            </h3>
+
+            <span className="input-title">Наименование</span>
+            <input
+              {...register("name")}
+              placeholder="Введите название новой позиции"
+              className="input-field"
+            />
+            <span className="input-title">Описание</span>
+            <textarea
+              {...register("description")}
+              placeholder="Введите описание"
+              className="input-field description-field"
+            />
+
+            <div className="inline-input-wrapper">
+              <div className="inline-input-group">
+                <span className="input-title">Категория</span>
+                <select {...register("category")} className="input-field">
+                  <option value="" disabled selected={!isEditMode}>
+                    {isEditMode ? editable.category : "Выберите категорию"}
+                  </option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="inline-input-group">
+                <span className="input-title">Стоимость</span>
+                <input
+                  {...register("price", { valueAsNumber: true })}
+                  placeholder="Введите стоимость"
+                  type="number"
+                  className="input-field"
+                />
+              </div>
+            </div>
+
+            <h3 className="section-title">Состав блюда и граммовка</h3>
+
+            {fields.map((field, index) => (
+              <div key={field.id} className="inline-input-wrapper">
+                <button
+                  type="button"
+                  onClick={() => remove(index)}
+                  className="ingredients-remove-button"
+                >
+                  <img
+                    src={CloseIcon}
+                    alt="remove-icon"
+                    className="ingredients-close-icon"
+                  />
+                </button>
+                <div className="inline-input-group">
+                  <span className="input-title">Наименование</span>
+                  <input
+                    {...register(`ingredients[${index}].name`)}
+                    placeholder="Ингредиент"
+                    className="input-field"
+                  />
                 </div>
-            </form>
+                <div className="inline-input-group amount-unit-group">
+                  <div className="amount-input-wrapper">
+                    <span className="input-title">
+                      Кол-во (в гр, мл, л, кг)
+                    </span>
+                    <input
+                      {...register(`ingredients[${index}].amount`)}
+                      placeholder="Количество"
+                      type="number"
+                      className="input-field"
+                    />
+                  </div>
+                  <div className="unit-input-wrapper">
+                    <select
+                      {...register(`ingredients[${index}].unit`)}
+                      className="input-field"
+                    >
+                      <option value="г">г</option>
+                      <option value="мл">мл</option>
+                      <option value="шт">шт</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() =>
+                append({ id: Date.now(), name: "", amount: "", unit: "г" })
+              }
+              className="add-more-button button"
+            >
+              Добавить еще <span className="plus-sign">+</span>
+            </button>
+          </div>
+          <div className="modal-actions">
+            <button
+              type="button"
+              className="cancel-button button"
+              onClick={handleCloseModal}
+            >
+              Отмена
+            </button>
+            <button type="submit" className="save-button button">
+              {isEditMode ? "Сохранить" : "Создать"}
+            </button>
+          </div>
         </div>
-    );
+      </form>
+    </div>
+  );
 };
 
 export default MenuItemModal;

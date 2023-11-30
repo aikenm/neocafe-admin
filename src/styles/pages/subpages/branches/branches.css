@@ -1,12 +1,38 @@
 .branches-content-header {
     display: flex;
-    justify-content: space-between;
     height: 42px;
     align-items: center;
     border-bottom: 2px solid black;
+    padding-left: 25px;
+    font-size: 18px;
 }
 
 .branches-content-header-subtitle {
-    margin-left: 25px;
-    margin-right: 8%;
+    align-items: center;
+    font-weight: 700;
+}
+
+.branch-id {
+    text-align: center;
+    width: 30px;
+    color: #00315D;
+    margin-right: 30px;
+}
+
+.branch-name {
+    width: 390px;
+}
+
+.branch-adress {
+    width: 311px;
+    margin-left: 35px;
+}
+
+.branch-schedule {
+    width: 370px;
+    margin-left: 45px;
+}
+
+.branch-edit {
+    margin-left: 95px;
 }
