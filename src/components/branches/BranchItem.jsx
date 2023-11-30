@@ -3,9 +3,13 @@ import moreIcon from '../../images/more-icon.svg';
 import editIcon from '../../images/edit-icon.svg';
 import deleteIcon from '../../images/delete-icon.svg';
 
-const BranchItem = ({ branch, onEdit, onDelete }) => {
+const BranchItem = ({ branch, index, onEdit, onDelete }) => {
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef(null);
+
+  const handleMoreClick = () => {
+    setShowOptions(!showOptions);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -18,31 +22,38 @@ const BranchItem = ({ branch, onEdit, onDelete }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [optionsRef]);
 
-  const formatWorkingHours = (hours) => {
-    return hours.map((day) => `${day.day}: ${day.open} - ${day.close}`).join(', ');
+  const formatWorkingHours = (workingHours) => {
+    const daysEnabled = Object.entries(workingHours)
+      .filter(([_, data]) => data.enabled)
+      .map(([day, data]) => `${day.substring(0, 2)} с ${data.from} до ${data.to}`);
+    
+    if (daysEnabled.length === 7) {
+      return 'Каждый день ' + daysEnabled[0].slice(3);
+    }
+    return daysEnabled.join(', ') || 'Время работы не установлено';
   };
 
-    return (
-        <div className="branch-item">
-            <span className='branch-item-card branch-id'>№{branch.id}</span>
-            <span className='branch-item-card branch-name'>{branch.name}</span>
-            <span className='branch-item-card branch-address'>{branch.address}</span>
-            <span className='branch-item-card branch-hours'>{formatWorkingHours(branch.workingHours)}</span>
-            {/* <button onClick={handleMoreClick} className='branch-more-button'>
-                <img src={moreIcon} alt='more-icon' />
-            </button> */}
-            {showOptions && (
-                <div className="options-window" ref={optionsRef}>
-                    <button onClick={() => { onEdit(branch); setShowOptions(false); }} className='option-button'>
-                        <img src={editIcon} alt='edit-icon' className='option-icon' /> Редактировать
-                    </button>
-                    <button onClick={() => { onDelete(branch.id); setShowOptions(false); }} className='option-button'>
-                        <img src={deleteIcon} alt='delete-icon' className='option-icon' /> Удалить
-                    </button>
-                </div>
-            )}
+  return (
+    <div className="stock-item"> 
+      <span className='stock-item-card stock-id'>№{index + 1}</span>
+      <span className='stock-item-card stock-name'>{branch.name}</span>
+      <span className='stock-item-card stock-address'>{branch.address}</span>
+      <span className='stock-item-card stock-hours'>{formatWorkingHours(branch.workingHours)}</span>
+      <button onClick={handleMoreClick} className='stock-more-button'>
+        <img src={moreIcon} alt='more-icon' />
+      </button>
+      {showOptions && (
+        <div className="options-window" ref={optionsRef}>
+          <button onClick={() => onEdit(branch)} className='option-button'>
+            <img src={editIcon} alt='edit-icon' /> Редактировать
+          </button>
+          <button onClick={() => onDelete(branch.id)} className='option-button'>
+            <img src={deleteIcon} alt='delete-icon' /> Удалить
+          </button>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default BranchItem;
