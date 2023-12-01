@@ -17,20 +17,28 @@ const BranchItem = ({
 
   const handleMoreClick = () => {
     setShowOptions(!showOptions);
-    setMoreOptionsVisible(!showOptions);
+  };
+
+  const handleEditClick = () => {
+    onEdit(branch);
+    setShowOptions(false);
+  };
+
+  const handleDeleteClick = () => {
+    onDeleteInitiated(branch.id);
+    setShowOptions(false);
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (optionsRef.current && !optionsRef.current.contains(event.target)) {
         setShowOptions(false);
-        setMoreOptionsVisible(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [optionsRef, setMoreOptionsVisible]);
+  }, [optionsRef]);
 
   const formatWorkingHours = (workingHours) => {
     const dayAbbreviations = {
@@ -78,24 +86,10 @@ const BranchItem = ({
       </button>
       {showOptions && (
         <div className="options-window" ref={optionsRef}>
-          <button
-            onClick={() => {
-              onEdit(branch);
-              setShowOptions(false);
-              setMoreOptionsVisible(false);
-            }}
-            className="option-button"
-          >
+          <button onClick={handleEditClick} className="option-button">
             <img src={editIcon} alt="edit-icon" /> Редактировать
           </button>
-          <button
-            onClick={() => {
-              onDeleteInitiated(branch.id);
-              setShowOptions(false);
-              setMoreOptionsVisible(false);
-            }}
-            className="option-button"
-          >
+          <button onClick={handleDeleteClick} className="option-button">
             <img src={deleteIcon} alt="delete-icon" /> Удалить
           </button>
         </div>
