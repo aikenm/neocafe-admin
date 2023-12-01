@@ -15,20 +15,13 @@ const defaultWorkingHours = {
 };
 
 const BranchItemModal = ({ isOpen, toggleModal, editable, onSubmit }) => {
-  const { register, handleSubmit, reset, watch, setValue } = useForm({
-    defaultValues: defaultWorkingHours,
-  });
+  const { register, handleSubmit, reset, watch, setValue } = useForm();
   const [selectedImage, setSelectedImage] = useState(null);
 
   const daysOfWeek = Object.keys(defaultWorkingHours);
 
   const handleCloseModal = () => {
     reset();
-    toggleModal();
-  };
-
-  const handleFormSubmit = (data) => {
-    onSubmit(data);
     toggleModal();
   };
 
@@ -63,15 +56,25 @@ const BranchItemModal = ({ isOpen, toggleModal, editable, onSubmit }) => {
     }
   };
 
+  const handleFormSubmit = (data) => {
+    onSubmit(data);
+    toggleModal();
+  };
+
   useEffect(() => {
     if (editable) {
       reset(editable);
-      setSelectedImage(editable.imageUrl);
     } else {
-      reset(defaultWorkingHours);
-      setSelectedImage(null);
+      reset({
+        name: "",
+        address: "",
+        phone: "",
+        link: "",
+        image: null,
+        workingHours: defaultWorkingHours,
+      });
     }
-  }, [editable, reset]);
+  }, [isOpen, editable, reset]);
 
   if (!isOpen) return null;
 
