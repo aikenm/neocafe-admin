@@ -3,6 +3,7 @@ import ContentHeader from "../../components/ContentHeader";
 import BranchItemModal from "../../components/branches/BranchItemModal";
 import DeleteModal from "../../components/DeleteModal";
 import BranchItem from "../../components/branches/BranchItem";
+import Pagination from "../../components/Pagination"; // Import Pagination
 import { useSelector, useDispatch } from "react-redux";
 import { addBranch, editBranch, deleteBranch } from "../../store/branchSlice";
 import "../../styles/pages/subpages/branches/branches.css";
@@ -14,6 +15,8 @@ const Branches = () => {
   const [editableBranch, setEditableBranch] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [branchToDelete, setBranchToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // Add current page state
+  const branchesPerPage = 6; // Number of branches to display per page
 
   const handleBranchesSearch = (searchTerm) => {
     // Implement search logic
@@ -48,14 +51,10 @@ const Branches = () => {
     setModalOpen(false);
   };
 
-  // useEffect(() => {
-  //     const savedBranches = JSON.parse(localStorage.getItem('branches')) || [];
-  //     savedBranches.forEach(branch => dispatch(addBranch(branch)));
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //     localStorage.setItem('branches', JSON.stringify(branches));
-  // }, [branches]);
+  // Paginate branches based on current page
+  const indexOfLastBranch = currentPage * branchesPerPage;
+  const indexOfFirstBranch = indexOfLastBranch - branchesPerPage;
+  const currentBranches = branches.slice(indexOfFirstBranch, indexOfLastBranch);
 
   return (
     <div className="branches-container">
@@ -80,16 +79,21 @@ const Branches = () => {
             Ред.
           </span>
         </div>
-        {branches.map((branch, index) => (
+        {currentBranches.map((branch, index) => (
           <BranchItem
             key={branch.id}
             branch={branch}
-            index={index}
+            index={index + indexOfFirstBranch}
             onEdit={() => handleEditBranch(branch)}
             onDeleteInitiated={handleDeleteInitiated}
           />
         ))}
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(branches.length / branchesPerPage)}
+        paginate={setCurrentPage}
+      />
       <BranchItemModal
         isOpen={modalOpen}
         toggleModal={() => setModalOpen(false)}

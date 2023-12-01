@@ -106,7 +106,7 @@ const BranchItemModal = ({ isOpen, toggleModal, editable, onSubmit }) => {
                   <img
                     src={selectedImage}
                     alt="Uploaded"
-                    className="uploaded-image"
+                    className="branches-uploaded-image"
                   />
                 ) : (
                   <img

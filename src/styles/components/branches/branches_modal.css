@@ -21,6 +21,13 @@
   border-radius: 30px;
 }
 
+.branches-uploaded-image {
+    width: 187px;
+    height: 95px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
 .branch-info {
   display: flex;
   flex-direction: column;
@@ -32,6 +39,7 @@
 }
 
 .schedule-info {
+    
 }
 
 .schedule-title-wrapper {
