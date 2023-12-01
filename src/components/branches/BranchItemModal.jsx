@@ -43,6 +43,8 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
     isEditMode ? editable.image : null
   );
 
+  const workingHours = watch("workingHours");
+
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -81,14 +83,12 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
 
     if (isEditMode) {
       dispatch(editBranch({ ...formData, id: editable.id }));
-      // Update localStorage for editBranch
       const updatedBranches = branches.map((branch) =>
         branch.id === editable.id ? { ...formData, id: editable.id } : branch
       );
       localStorage.setItem("branches", JSON.stringify(updatedBranches));
     } else {
       dispatch(addBranch({ ...formData, id: Date.now() }));
-      // Update localStorage for addBranch
       const updatedBranches = [...branches, { ...formData, id: Date.now() }];
       localStorage.setItem("branches", JSON.stringify(updatedBranches));
     }
@@ -103,12 +103,36 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
   };
 
   useEffect(() => {
-    if (isOpen && editable && editable.image) {
+    if (isOpen && editable) {
       setSelectedImage(editable.image);
+      setValue("image", editable.image);
+      setValue("name", editable.name);
+      setValue("address", editable.address);
+      setValue("phone", editable.phone);
+      setValue("link", editable.link);
+
+      Object.keys(defaultWorkingHours).forEach((day) => {
+        setValue(
+          `workingHours.${day}.enabled`,
+          editable.workingHours[day].enabled
+        );
+        setValue(`workingHours.${day}.from`, editable.workingHours[day].from);
+        setValue(`workingHours.${day}.to`, editable.workingHours[day].to);
+      });
     } else {
       setSelectedImage(null);
+      setValue("image", null);
+
+      reset({
+        name: "",
+        address: "",
+        phone: "",
+        link: "",
+        image: null,
+        workingHours: defaultWorkingHours,
+      });
     }
-  }, [isOpen, editable]);
+  }, [isOpen, editable, setValue, reset]);
 
   if (!isOpen) return null;
 
@@ -221,7 +245,7 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
                         type="text"
                         defaultValue="11:00"
                         {...register(`workingHours.${day}.from`)}
-                        disabled={!watch(`workingHours.${day}.enabled`)}
+                        disabled={!watch(`workingHours.${day}`)?.enabled}
                         className="working-hours"
                       />
                       <span> - </span>
@@ -229,7 +253,7 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
                         type="text"
                         defaultValue="22:00"
                         {...register(`workingHours.${day}.to`)}
-                        disabled={!watch(`workingHours.${day}.enabled`)}
+                        disabled={!watch(`workingHours.${day}`)?.enabled}
                         className="working-hours"
                       />
                     </div>

@@ -51,7 +51,7 @@ const MenuItem = ({ item, index, onMoreClick, onEdit, onDelete }) => {
               }}
               className="option-button"
             >
-              <img src={editIcon} alt="edit-icon" className="option-icon" />{" "}
+              <img src={editIcon} alt="edit-icon" className="option-icon" />
               Редактировать
             </button>
             <button
@@ -61,7 +61,7 @@ const MenuItem = ({ item, index, onMoreClick, onEdit, onDelete }) => {
               }}
               className="option-button"
             >
-              <img src={deleteIcon} alt="delete-icon" className="option-icon" />{" "}
+              <img src={deleteIcon} alt="delete-icon" className="option-icon" />
               Удалить
             </button>
           </div>

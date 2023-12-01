@@ -15,7 +15,8 @@ const BranchItem = ({
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef(null);
 
-  const handleMoreClick = () => {
+  const handleMoreClick = (e) => {
+    e.stopPropagation();
     setShowOptions(!showOptions);
   };
 
@@ -28,17 +29,6 @@ const BranchItem = ({
     onDeleteInitiated(branch.id);
     setShowOptions(false);
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (optionsRef.current && !optionsRef.current.contains(event.target)) {
-        setShowOptions(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [optionsRef]);
 
   const formatWorkingHours = (workingHours) => {
     const dayAbbreviations = {
@@ -70,6 +60,17 @@ const BranchItem = ({
     return daysEnabled.join(", ") || "";
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (optionsRef.current && !optionsRef.current.contains(event.target)) {
+        setShowOptions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [optionsRef]);
+
   return (
     <div className="branch-item">
       <span className="branch-item-card branch-id">№{index + 1}</span>
@@ -87,10 +88,12 @@ const BranchItem = ({
       {showOptions && (
         <div className="options-window" ref={optionsRef}>
           <button onClick={handleEditClick} className="option-button">
-            <img src={editIcon} alt="edit-icon" /> Редактировать
+            <img src={editIcon} alt="edit-icon" className="option-icon" />{" "}
+            Редактировать
           </button>
           <button onClick={handleDeleteClick} className="option-button">
-            <img src={deleteIcon} alt="delete-icon" /> Удалить
+            <img src={deleteIcon} alt="delete-icon" className="option-icon" />{" "}
+            Удалить
           </button>
         </div>
       )}
