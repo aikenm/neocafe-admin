@@ -4,24 +4,33 @@ import moreIcon from "../../images/more-icon.svg";
 import editIcon from "../../images/edit-icon.svg";
 import deleteIcon from "../../images/delete-icon.svg";
 
-const BranchItem = ({ branch, index, onEdit, onDeleteInitiated }) => {
+const BranchItem = ({
+  branch,
+  index,
+  onEdit,
+  onDeleteInitiated,
+  moreOptionsVisible,
+  setMoreOptionsVisible,
+}) => {
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef(null);
 
   const handleMoreClick = () => {
     setShowOptions(!showOptions);
+    setMoreOptionsVisible(!showOptions);
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (optionsRef.current && !optionsRef.current.contains(event.target)) {
         setShowOptions(false);
+        setMoreOptionsVisible(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [optionsRef]);
+  }, [optionsRef, setMoreOptionsVisible]);
 
   const formatWorkingHours = (workingHours) => {
     const dayAbbreviations = {
@@ -69,11 +78,22 @@ const BranchItem = ({ branch, index, onEdit, onDeleteInitiated }) => {
       </button>
       {showOptions && (
         <div className="options-window" ref={optionsRef}>
-          <button onClick={() => onEdit(branch)} className="option-button">
+          <button
+            onClick={() => {
+              onEdit(branch);
+              setShowOptions(false);
+              setMoreOptionsVisible(false);
+            }}
+            className="option-button"
+          >
             <img src={editIcon} alt="edit-icon" /> Редактировать
           </button>
           <button
-            onClick={() => onDeleteInitiated(branch.id)}
+            onClick={() => {
+              onDeleteInitiated(branch.id);
+              setShowOptions(false);
+              setMoreOptionsVisible(false);
+            }}
             className="option-button"
           >
             <img src={deleteIcon} alt="delete-icon" /> Удалить

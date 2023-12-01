@@ -1,91 +1,131 @@
-import React, { useState } from 'react';
-import ImageIcon from '../../images/image-input.svg';
-import '../../styles/modal_windows/category_create.css'
-import CloseIcon from '../../images/close-icon.svg'; 
+import React, { useState } from "react";
+import ImageIcon from "../../images/image-input.svg";
+import "../../styles/modal_windows/category_create.css";
+import CloseIcon from "../../images/close-icon.svg";
 
 const CategoryCreateModal = ({ isOpen, toggleModal, onCreate }) => {
-    const [categoryName, setCategoryName] = useState('');
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [imageFile, setImageFile] = useState(null); 
+  const [categoryName, setCategoryName] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setSelectedImage(URL.createObjectURL(file));
-            setImageFile(file); 
-        }
-    };
-
-    const onDrop = (e) => {
-        e.preventDefault();
-        const file = e.dataTransfer.files[0];
-        if (file) {
-            setSelectedImage(URL.createObjectURL(file));
-            setImageFile(file); 
-        }
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onCreate({ 
-            id: Date.now(), 
-            name: categoryName, 
-            image: imageFile
-        });
-        setCategoryName('');
-        setSelectedImage(null);
-        setImageFile(null); 
-        toggleModal();
-    };
-
-    if (!isOpen) {
-        return null;
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(URL.createObjectURL(file));
+      setImageFile(file);
     }
+  };
 
-    return (
-        <div className="category-modal">
-            <div className="category-modal-content">
-                <button type="button" className="delete-close-button" onClick={toggleModal}>
-                    <img src={CloseIcon} alt='close-icon' />
-                </button>
-                <form onSubmit={handleSubmit}>
-                    <h2 className='category-title'>Новая категория</h2>
-                    <div className="form-group">
-                        <h3 className='category-subtitle'>Добавьте изображение к категории</h3>
-                        <div className="image-input-wrapper" onDrop={onDrop} onDragOver={(e) => e.preventDefault()}>
-                            <div className='image-input-block'>
-                            {/* <img src={selectedImage || ImageIcon} alt='Uploaded' className='uploaded-image' /> */}
-                                {selectedImage ? (
-                                    <img src={selectedImage} alt='Uploaded' className='uploaded-image' />
-                                ) : (
-                                    <img src={ImageIcon} alt='upload-icon' className='image-input-icon' />
-                                )}
-                                <input type="file" id="image-upload" className='image-input' onChange={handleImageChange} aria-required/>
-                                <span className='image-input-text'>Перетащите изображение для добавления или <label htmlFor="image-upload" className='category-view-button'>обзор</label></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <h3 className='category-subtitle'>Наименование</h3>
-                        <span className='input-title'>Наименование</span>
-                        <input 
-                            type="text" 
-                            id="category-name" 
-                            value={categoryName} 
-                            onChange={(e) => setCategoryName(e.target.value)} 
-                            required 
-                            className='input-field'
-                            placeholder='Введите название категории'
-                        />
-                    </div>
-                    <div className='category-actions'>
-                        <button type="button" onClick={toggleModal} className="cancel-btn button">Отмена</button>
-                        <button type="submit" className="confirm-btn button">Создать</button>
-                    </div>
-                </form>
+  const onDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      setSelectedImage(URL.createObjectURL(file));
+      setImageFile(file);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onCreate({
+      id: Date.now(),
+      name: categoryName,
+      image: imageFile,
+    });
+    setCategoryName("");
+    setSelectedImage(null);
+    setImageFile(null);
+    toggleModal();
+  };
+
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <div className="category-modal">
+      <div className="category-modal-content">
+        <button
+          type="button"
+          className="delete-close-button"
+          onClick={toggleModal}
+        >
+          <img src={CloseIcon} alt="close-icon" />
+        </button>
+        <form onSubmit={handleSubmit}>
+          <h2 className="category-title">Новая категория</h2>
+          <div className="form-group">
+            <h3 className="category-subtitle">
+              Добавьте изображение к категории
+            </h3>
+            <div
+              className="image-input-wrapper"
+              onDrop={onDrop}
+              onDragOver={(e) => e.preventDefault()}
+            >
+              <div className="image-input-block">
+                {/* <img src={selectedImage || ImageIcon} alt='Uploaded' className='uploaded-image' /> */}
+                {selectedImage ? (
+                  <img
+                    src={selectedImage}
+                    alt="Uploaded"
+                    className="uploaded-image"
+                  />
+                ) : (
+                  <img
+                    src={ImageIcon}
+                    alt="upload-icon"
+                    className="image-input-icon"
+                  />
+                )}
+                <input
+                  type="file"
+                  id="image-upload"
+                  className="image-input"
+                  onChange={handleImageChange}
+                  aria-required
+                />
+                <span className="image-input-text">
+                  Перетащите изображение для добавления или{" "}
+                  <label
+                    htmlFor="image-upload"
+                    className="category-view-button"
+                  >
+                    обзор
+                  </label>
+                </span>
+              </div>
             </div>
-        </div>
-    );
+          </div>
+          <div className="form-group">
+            <h3 className="category-subtitle">Наименование</h3>
+            <span className="input-title">Наименование</span>
+            <input
+              type="text"
+              id="category-name"
+              value={categoryName}
+              onChange={(e) => setCategoryName(e.target.value)}
+              required
+              className="input-field"
+              placeholder="Введите название категории"
+            />
+          </div>
+          <div className="category-actions">
+            <button
+              type="button"
+              onClick={toggleModal}
+              className="cancel-btn button"
+            >
+              Отмена
+            </button>
+            <button type="submit" className="confirm-btn button">
+              Создать
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default CategoryCreateModal;

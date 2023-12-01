@@ -1,36 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import ContentHeader from '../../components/ContentHeader';
-import StockItem from '../../components/stock/StockItem';
-import StockItemModal from '../../components/stock/StockItemModal';
-import DeleteModal from '../../components/DeleteModal';
-import Pagination from '../../components/Pagination';
-import { useSelector, useDispatch } from 'react-redux';
-import { deleteStockItem, initializeStockItems } from '../../store/stockSlice'; 
-import '../../styles/pages/subpages/stock/stock.css';
+import React, { useState, useEffect } from "react";
+import ContentHeader from "../../components/ContentHeader";
+import StockItem from "../../components/stock/StockItem";
+import StockItemModal from "../../components/stock/StockItemModal";
+import DeleteModal from "../../components/DeleteModal";
+import Pagination from "../../components/Pagination";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteStockItem, initializeStockItems } from "../../store/stockSlice";
+import "../../styles/pages/subpages/stock/stock.css";
 
 const Stock = () => {
-  const [selectedStock, setSelectedStock] = useState('stock1');
-  const [selectedSubpage, setSelectedSubpage] = useState('finishedGoods');
+  const [selectedStock, setSelectedStock] = useState("stock1");
+  const [selectedSubpage, setSelectedSubpage] = useState("finishedGoods");
   const [currentPage, setCurrentPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [editableItem, setEditableItem] = useState(null);
   const stockItems = useSelector((state) => state.stock.items);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
 
   const itemsPerPage = 5;
 
   const stocksData = [
-    { id: 'stock1', name: 'Дзержинка' },
-    { id: 'stock2', name: 'Карпинка' },
-    { id: 'stock3', name: 'Филармония' },
+    { id: "stock1", name: "Дзержинка" },
+    { id: "stock2", name: "Карпинка" },
+    { id: "stock3", name: "Филармония" },
   ];
 
   const handleStockSearch = (term) => {
     setSearchTerm(term);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const handleSelectStock = (stockId) => {
@@ -40,21 +40,24 @@ const Stock = () => {
 
   const handleSubpageChange = (subpage) => {
     setSelectedSubpage(subpage);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
-  const filteredItems = stockItems.filter(item => {
-    const matchesSearchTerm = item.name.toLowerCase().startsWith(searchTerm.toLowerCase());    const isCorrectStock = item.stockId === selectedStock; 
-    let isCorrectCategory = true; 
+  const filteredItems = stockItems.filter((item) => {
+    const matchesSearchTerm = item.name
+      .toLowerCase()
+      .startsWith(searchTerm.toLowerCase());
+    const isCorrectStock = item.stockId === selectedStock;
+    let isCorrectCategory = true;
 
     switch (selectedSubpage) {
-      case 'finishedGoods':
-        isCorrectCategory = item.category === 'finishedGoods';
+      case "finishedGoods":
+        isCorrectCategory = item.category === "finishedGoods";
         break;
-      case 'rawMaterials':
-        isCorrectCategory = item.category === 'rawMaterials';
+      case "rawMaterials":
+        isCorrectCategory = item.category === "rawMaterials";
         break;
-      case 'expiringProducts':
+      case "expiringProducts":
         isCorrectCategory = item.amount <= item.minLimit;
         break;
       default:
@@ -73,8 +76,10 @@ const Stock = () => {
     setEditableItem(item);
     setModalOpen(true);
     // Update local storage for edit
-    const updatedItems = stockItems.map(it => it.id === item.id ? item : it);
-    localStorage.setItem('stockItems', JSON.stringify(updatedItems));
+    const updatedItems = stockItems.map((it) =>
+      it.id === item.id ? item : it
+    );
+    localStorage.setItem("stockItems", JSON.stringify(updatedItems));
   };
 
   const handleCreateNewItem = () => {
@@ -95,10 +100,12 @@ const Stock = () => {
 
   const handleConfirmDelete = () => {
     if (itemToDelete) {
-      dispatch(deleteStockItem(itemToDelete.id)); 
+      dispatch(deleteStockItem(itemToDelete.id));
       // Update local storage
-      const updatedItems = stockItems.filter(item => item.id !== itemToDelete.id);
-      localStorage.setItem('stockItems', JSON.stringify(updatedItems));
+      const updatedItems = stockItems.filter(
+        (item) => item.id !== itemToDelete.id
+      );
+      localStorage.setItem("stockItems", JSON.stringify(updatedItems));
     }
     setIsDeleteModalOpen(false);
     setItemToDelete(null);
@@ -115,8 +122,8 @@ const Stock = () => {
     }
 
     return paginatedItems.map((item, index) => (
-      <StockItem 
-        key={item.id} 
+      <StockItem
+        key={item.id}
         item={item}
         index={indexOfFirstItem + index}
         onEdit={() => handleEditItem(item)}
@@ -127,17 +134,18 @@ const Stock = () => {
 
   useEffect(() => {
     // Load stock items from local storage on component mount
-    const savedStockItems = JSON.parse(localStorage.getItem('stockItems')) || [];
+    const savedStockItems =
+      JSON.parse(localStorage.getItem("stockItems")) || [];
     dispatch(initializeStockItems(savedStockItems));
   }, [dispatch]);
 
   useEffect(() => {
-    localStorage.setItem('stockItems', JSON.stringify(stockItems));
+    localStorage.setItem("stockItems", JSON.stringify(stockItems));
   }, [stockItems]);
 
   return (
     <div className="stock-container">
-      <ContentHeader 
+      <ContentHeader
         title="Склад"
         onCreate={handleCreateNewItem}
         onSearch={handleStockSearch}
@@ -146,30 +154,49 @@ const Stock = () => {
         onSelectStock={handleSelectStock}
       />
       <div className="stock-subpages-header">
-        <button 
-          onClick={() => handleSubpageChange('finishedGoods')}
-          className={`stock-subpage-button ${selectedSubpage === 'finishedGoods' ? 'active-subpage-button' : ''}`}>
-            Готовая продукция
+        <button
+          onClick={() => handleSubpageChange("finishedGoods")}
+          className={`stock-subpage-button ${
+            selectedSubpage === "finishedGoods" ? "active-subpage-button" : ""
+          }`}
+        >
+          Готовая продукция
         </button>
-        <button 
-          onClick={() => handleSubpageChange('rawMaterials')}
-          className={`stock-subpage-button ${selectedSubpage === 'rawMaterials' ? 'active-subpage-button' : ''}`}>
-            Сырье
+        <button
+          onClick={() => handleSubpageChange("rawMaterials")}
+          className={`stock-subpage-button ${
+            selectedSubpage === "rawMaterials" ? "active-subpage-button" : ""
+          }`}
+        >
+          Сырье
         </button>
-        <button 
-          onClick={() => handleSubpageChange('expiringProducts')}
-          className={`stock-subpage-button expiring-products ${selectedSubpage === 'expiringProducts' ? 'active-expiring-products' : ''}`}>
-            Заканчивающиеся продукты
+        <button
+          onClick={() => handleSubpageChange("expiringProducts")}
+          className={`stock-subpage-button expiring-products ${
+            selectedSubpage === "expiringProducts"
+              ? "active-expiring-products"
+              : ""
+          }`}
+        >
+          Заканчивающиеся продукты
         </button>
       </div>
       <div className="stock-content">
-        <div className='stock-content-header'>
-            <span className='stock-content-header-subtitle stock-id'>№</span>
-            <span className='stock-content-header-subtitle stock-name'>Наименование</span>
-            <span className='stock-content-header-subtitle stock-amount'>Количество</span>
-            <span className='stock-content-header-subtitle stock-limit'>Лимит</span>
-            <span className='stock-content-header-subtitle stock-date'>Дата прихода</span>
-            <span className='stock-content-header-subtitle stock-edit'>Ред.</span>
+        <div className="stock-content-header">
+          <span className="stock-content-header-subtitle stock-id">№</span>
+          <span className="stock-content-header-subtitle stock-name">
+            Наименование
+          </span>
+          <span className="stock-content-header-subtitle stock-amount">
+            Количество
+          </span>
+          <span className="stock-content-header-subtitle stock-limit">
+            Лимит
+          </span>
+          <span className="stock-content-header-subtitle stock-date">
+            Дата прихода
+          </span>
+          <span className="stock-content-header-subtitle stock-edit">Ред.</span>
         </div>
         {renderSubpageContent()}
       </div>
@@ -187,9 +214,9 @@ const Stock = () => {
         />
       )}
       {isDeleteModalOpen && (
-        <DeleteModal 
+        <DeleteModal
           isOpen={isDeleteModalOpen}
-          message="Вы действительно хотите удалить этот товар?" 
+          message="Вы действительно хотите удалить этот товар?"
           onConfirm={handleConfirmDelete}
           onCancel={handleCancelDelete}
         />
