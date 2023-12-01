@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm, useFieldArray } from "react-hook-form";
+import { addBranch, editBranch } from "../../store/branchSlice";
 import CloseIcon from "../../images/close-icon.svg";
 import ImageIcon from "../../images/image-input.svg";
-import { useForm } from "react-hook-form";
 import "../../styles/components/branches/branches_modal.css";
 
 const defaultWorkingHours = {
@@ -14,16 +16,32 @@ const defaultWorkingHours = {
   Воскресенье: { enabled: false, from: "08:00", to: "17:00" },
 };
 
-const BranchItemModal = ({ isOpen, toggleModal, editable, onSubmit }) => {
-  const { register, handleSubmit, reset, watch, setValue } = useForm();
-  const [selectedImage, setSelectedImage] = useState(null);
-
+const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
+  const dispatch = useDispatch();
+  const branches = useSelector((state) => state.branch.branches);
+  const isEditMode = editable != null;
   const daysOfWeek = Object.keys(defaultWorkingHours);
 
-  const handleCloseModal = () => {
-    reset();
-    toggleModal();
-  };
+  const { register, handleSubmit, control, reset, setValue, watch } = useForm({
+    defaultValues: isEditMode
+      ? editable
+      : {
+          name: "",
+          address: "",
+          phone: "",
+          link: "",
+          image: null,
+          workingHours: defaultWorkingHours,
+        },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "workingHours",
+  });
+  const [selectedImage, setSelectedImage] = useState(
+    isEditMode ? editable.image : null
+  );
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -39,7 +57,6 @@ const BranchItemModal = ({ isOpen, toggleModal, editable, onSubmit }) => {
     }
   };
 
-  //localstorage temp
   const onDrop = (e) => {
     e.preventDefault();
     const files = e.dataTransfer.files;
@@ -56,31 +73,48 @@ const BranchItemModal = ({ isOpen, toggleModal, editable, onSubmit }) => {
     }
   };
 
-  const handleFormSubmit = (data) => {
-    onSubmit(data);
+  const onSubmit = (data) => {
+    const formData = {
+      ...data,
+      image: selectedImage,
+    };
+
+    if (isEditMode) {
+      dispatch(editBranch({ ...formData, id: editable.id }));
+      // Update localStorage for editBranch
+      const updatedBranches = branches.map((branch) =>
+        branch.id === editable.id ? { ...formData, id: editable.id } : branch
+      );
+      localStorage.setItem("branches", JSON.stringify(updatedBranches));
+    } else {
+      dispatch(addBranch({ ...formData, id: Date.now() }));
+      // Update localStorage for addBranch
+      const updatedBranches = [...branches, { ...formData, id: Date.now() }];
+      localStorage.setItem("branches", JSON.stringify(updatedBranches));
+    }
+    toggleModal();
+    reset();
+    setSelectedImage(null);
+  };
+
+  const handleCloseModal = () => {
+    reset();
     toggleModal();
   };
 
   useEffect(() => {
-    if (editable) {
-      reset(editable);
+    if (isOpen && editable && editable.image) {
+      setSelectedImage(editable.image);
     } else {
-      reset({
-        name: "",
-        address: "",
-        phone: "",
-        link: "",
-        image: null,
-        workingHours: defaultWorkingHours,
-      });
+      setSelectedImage(null);
     }
-  }, [isOpen, editable, reset]);
+  }, [isOpen, editable]);
 
   if (!isOpen) return null;
 
   return (
     <div className="branches-modal">
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="branches-modal-content">
           <div className="modal-header">
             <h2 className="modal-title">
