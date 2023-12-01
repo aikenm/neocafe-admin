@@ -24,15 +24,32 @@ const BranchItem = ({ branch, index, onEdit, onDeleteInitiated }) => {
   }, [optionsRef]);
 
   const formatWorkingHours = (workingHours) => {
+    const dayAbbreviations = {
+      Понедельник: "Пн",
+      Вторник: "Вт",
+      Среда: "Ср",
+      Четверг: "Чт",
+      Пятница: "Пт",
+      Суббота: "Сб",
+      Воскресенье: "Вс",
+    };
+
     const daysEnabled = Object.entries(workingHours)
       .filter(([_, data]) => data.enabled)
       .map(
-        ([day, data]) => `${day.substring(0, 2)} с ${data.from} до ${data.to}`
+        ([day, data]) => dayAbbreviations[day] + ` с ${data.from} до ${data.to}`
       );
 
     if (daysEnabled.length === 7) {
       return "Каждый день " + daysEnabled[0].slice(3);
+    } else if (
+      daysEnabled.length === 5 &&
+      !workingHours["Суббота"].enabled &&
+      !workingHours["Воскресенье"].enabled
+    ) {
+      return "Пн-Пт с 11:00 до 22:00";
     }
+
     return daysEnabled.join(", ") || "";
   };
 
