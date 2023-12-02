@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addStockItem, editStockItem } from "../../store/stockSlice";
 import CloseIcon from "../../images/close-icon.svg";

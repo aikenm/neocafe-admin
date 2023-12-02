@@ -1,4 +1,4 @@
-.branch-item {
+.employee-item {
     position: relative;
     display: flex;
     align-items: center;
@@ -9,7 +9,7 @@
     font-size: 18px;
 }
 
-.branch-more-button {
+.employee-more-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -21,6 +21,6 @@
     margin-left: 103px;
 }
 
-.branch-more-button:hover {
+.employee-more-button:hover {
     scale: 1.3;
 }

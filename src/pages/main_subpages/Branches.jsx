@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ContentHeader from "../../components/ContentHeader";
 import BranchItemModal from "../../components/branches/BranchItemModal";
 import DeleteModal from "../../components/DeleteModal";
