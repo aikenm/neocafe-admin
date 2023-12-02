@@ -17,39 +17,32 @@
     width: 30px;
     color: #00315D;
     margin-right: 30px;
-    background-color: #00315D;
 }
 
 .employee-name {
     width: 250px;
-    background-color: #00315D;
 }
 
 .employee-position {
     width: 200px;
     margin-left: 35px;
-    background-color: #00315D;
 }
 
 .employee-branch {
     width: 200px;
     margin-left: 35px;
-    background-color: #00315D;
 }
 
 .employee-phone {
     width: 200px;
     margin-left: 35px;
-    background-color: #00315D;
 }
 
 .employee-schedule {
     width: 180px;
     margin-left: 45px;
-    background-color: #00315D;
 }
 
 .employee-edit {
     margin-left: 95px;
-    background-color: #00315D;
 }

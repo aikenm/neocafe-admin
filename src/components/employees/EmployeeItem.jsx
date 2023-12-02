@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import "../../styles/components/stock/stock_item.css";
+import "../../styles/components/employees/employee_item.css";
 import moreIcon from "../../images/more-icon.svg";
 import editIcon from "../../images/edit-icon.svg";
 import deleteIcon from "../../images/delete-icon.svg";
 
-const EmployeeItem = ({ employee, index, onEdit, onDelete }) => {
+const EmployeeItem = ({ employee, branches, index, onEdit, onDelete }) => {
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef(null);
 
@@ -13,20 +13,13 @@ const EmployeeItem = ({ employee, index, onEdit, onDelete }) => {
     setShowOptions(!showOptions);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (optionsRef.current && !optionsRef.current.contains(event.target)) {
-        setShowOptions(false);
-      }
-    };
+  const getBranchName = (branchId) => {
+    const branch = branches.find((b) => b.id === branchId);
+    return branch ? branch.name : "Unknown Branch";
+  };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [optionsRef]);
+  const branchName = getBranchName(employee.branch); // Change to employee.branch
 
-  // Function to format working days
   const formatWorkingDays = (workingHours) => {
     const dayAbbreviations = {
       Понедельник: "Пн",
@@ -43,17 +36,29 @@ const EmployeeItem = ({ employee, index, onEdit, onDelete }) => {
       .map(([day, _]) => dayAbbreviations[day])
       .join(", ");
   };
+  console.log(employee);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (optionsRef.current && !optionsRef.current.contains(event.target)) {
+        setShowOptions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [optionsRef]);
 
   return (
     <div className="employee-item">
       <span className="employee-item-card employee-id">№{index + 1}</span>
       <span className="employee-item-card employee-name">{employee.name}</span>
       <span className="employee-item-card employee-position">
-        {employee.position}
+        {employee.role}
       </span>
-      <span className="employee-item-card employee-branch">
-        {employee.branch}
-      </span>
+      <span className="employee-item-card employee-branch">{branchName}</span>
       <span className="employee-item-card employee-phone">
         {employee.phone}
       </span>

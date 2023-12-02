@@ -15,6 +15,7 @@ import "../../styles/pages/subpages/employees/employees.css";
 const Employees = () => {
   const dispatch = useDispatch();
   const employees = useSelector((state) => state.employee.employees);
+  const branches = useSelector((state) => state.branch.branches);
   const [modalOpen, setModalOpen] = useState(false);
   const [editableEmployee, setEditableEmployee] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -97,6 +98,7 @@ const Employees = () => {
           <EmployeeItem
             key={employee.id}
             employee={employee}
+            branches={branches}
             index={index + indexOfFirstEmployee}
             onEdit={() => handleEditEmployee(employee)}
             onDeleteInitiated={handleDeleteInitiated}

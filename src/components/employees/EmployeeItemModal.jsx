@@ -40,17 +40,12 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
     control,
     name: "workingHours",
   });
-  const [selectedImage, setSelectedImage] = useState(
-    isEditMode ? editable.image : null
-  );
 
   const workingHours = watch("workingHours");
 
   const onSubmit = (data) => {
     const formData = {
       ...data,
-      // Remove or replace branch-specific data with employee-specific data
-      // For example, remove 'image' if it's not used for employees
     };
 
     if (isEditMode) {
@@ -71,12 +66,13 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
 
   useEffect(() => {
     if (isOpen && editable) {
-      setSelectedImage(editable.image);
-      setValue("image", editable.image);
+      setValue("login", editable.login);
+      setValue("password", editable.password);
       setValue("name", editable.name);
-      setValue("address", editable.address);
+      setValue("role", editable.role);
+      setValue("dob", editable.dob);
       setValue("phone", editable.phone);
-      setValue("link", editable.link);
+      setValue("branchId", editable.branchId);
 
       Object.keys(defaultWorkingHours).forEach((day) => {
         setValue(
@@ -87,15 +83,14 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
         setValue(`workingHours.${day}.to`, editable.workingHours[day].to);
       });
     } else {
-      setSelectedImage(null);
-      setValue("image", null);
-
       reset({
+        login: "",
+        password: "",
         name: "",
-        address: "",
+        role: "",
+        dob: "",
         phone: "",
-        link: "",
-        image: null,
+        branchId: "",
         workingHours: defaultWorkingHours,
       });
     }
@@ -155,7 +150,7 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
                 className="input-field"
               />
               <span className="input-title">Филиал</span>
-              <select {...register("branchId")} className="input-field">
+              <select {...register("branch")} className="input-field">
                 {branches.map((branch) => (
                   <option key={branch.id} value={branch.id}>
                     {branch.name}
