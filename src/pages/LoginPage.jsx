@@ -1,11 +1,15 @@
+import axios from "axios";
 import "../styles/pages/login_page.css";
 import eyeOpen from "../images/eye-open.svg";
 import eyeClosed from "../images/eye-closed.svg";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../store/adminSlice";
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
   const { register, handleSubmit, clearErrors } = useForm();
   const [inputError, setInputError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -15,12 +19,31 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  const handleLogin = (data) => {
-    if (data.username !== "admin" || data.password !== "admin") {
+  const handleLogin = async (data) => {
+    try {
+      const response = await axios.post(
+        "https://www.ishak-backender.org.kg/api-admin/admin/login/",
+        {
+          login: data.username,
+          password: data.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        dispatch(loginSuccess(response.data.token));
+        navigate("/main");
+      } else {
+        throw new Error("Login failed");
+      }
+    } catch (error) {
       setInputError(true);
-      setErrorMessage("Логин или пароль неверный, попробуйте еще раз");
-    } else {
-      navigate("/main");
+      setErrorMessage(error.response?.data?.message || error.message);
     }
   };
 

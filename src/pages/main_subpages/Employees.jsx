@@ -81,6 +81,8 @@ const Employees = () => {
     indexOfLastEmployee
   );
 
+  const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
+
   useEffect(() => {
     // Load employees from local storage
     const savedBranches = JSON.parse(localStorage.getItem("branches")) || [];
@@ -137,7 +139,7 @@ const Employees = () => {
       </div>
       <Pagination
         currentPage={currentPage}
-        totalPages={Math.ceil(employees.length / employeesPerPage)}
+        totalPages={totalPages}
         paginate={setCurrentPage}
       />
       <EmployeeItemModal

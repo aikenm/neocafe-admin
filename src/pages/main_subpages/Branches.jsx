@@ -79,6 +79,8 @@ const Branches = () => {
     indexOfLastBranch
   );
 
+  const totalPages = Math.ceil(filteredBranches.length / branchesPerPage);
+
   useEffect(() => {
     // Load branches from local storage
     const savedBranches = JSON.parse(localStorage.getItem("branches")) || [];
@@ -124,7 +126,7 @@ const Branches = () => {
       </div>
       <Pagination
         currentPage={currentPage}
-        totalPages={Math.ceil(branches.length / branchesPerPage)}
+        totalPages={totalPages}
         paginate={setCurrentPage}
       />
       <BranchItemModal

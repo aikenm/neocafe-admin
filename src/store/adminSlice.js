@@ -9,9 +9,10 @@ const adminSlice = createSlice({
   name: 'admin',
   initialState,
   reducers: {
-    loginSuccess: (state) => {
+    loginSuccess: (state, action) => {
       state.isLoggedIn = true;
       state.error = null;
+      localStorage.setItem('token', action.payload); 
     },
     loginFailed: (state, action) => {
       state.isLoggedIn = false;
