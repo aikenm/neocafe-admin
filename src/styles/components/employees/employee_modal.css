@@ -20,15 +20,11 @@
     border-radius: 5px;
     border-radius: 30px;
   }
-  
-  .branch-info {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .branches-section-title {
+
+.employee-section-title{
     font-size: 22px;
     font-weight: 500;
+    margin-top: -30px;
   }
   
   .schedule-title-wrapper {

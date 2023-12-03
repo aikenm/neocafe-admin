@@ -120,37 +120,43 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
               <span className="input-title">Логин</span>
               <input
                 {...register("login")}
-                placeholder="Логин"
+                placeholder="Придумайте логин"
                 className="input-field"
               />
               <span className="input-title">Пароль</span>
               <input
                 {...register("password")}
-                placeholder="Пароль"
+                placeholder="Придумайте пароль"
                 className="input-field"
                 type="password"
               />
               <span className="input-title">Имя</span>
               <input
                 {...register("name")}
-                placeholder="Имя сотрудника"
+                placeholder="Как зовут сотрудника"
                 className="input-field"
               />
               <span className="input-title">Должность</span>
               <select {...register("role")} className="input-field">
-                <option value="barista">Бариста</option>
-                <option value="waiter">Официант</option>
+                <option value="" disabled selected>
+                  Выберите должность
+                </option>
+                <option value="Бариста">Бариста</option>
+                <option value="Официант">Официант</option>
               </select>
               <span className="input-title">Дата рождения</span>
               <input {...register("dob")} type="date" className="input-field" />
               <span className="input-title">Номер телефона</span>
               <input
                 {...register("phone")}
-                placeholder="Номер телефона"
+                placeholder="Введите номер телефона"
                 className="input-field"
               />
               <span className="input-title">Филиал</span>
               <select {...register("branch")} className="input-field">
+                <option value="" disabled selected>
+                  Выберите филиал
+                </option>
                 {branches.map((branch) => (
                   <option key={branch.id} value={branch.id}>
                     {branch.name}

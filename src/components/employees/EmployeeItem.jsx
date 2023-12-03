@@ -14,12 +14,10 @@ const EmployeeItem = ({ employee, branches, index, onEdit, onDelete }) => {
   };
 
   const getBranchName = (branchId) => {
-    // Convert branchId to a number for comparison
     const numericBranchId = Number(branchId);
 
-    // Find the branch using the numeric ID
     const branch = branches.find((b) => b.id === numericBranchId);
-    return branch ? branch.name : "Unknown Branch";
+    return branch ? branch.name : "Филиал не выбран";
   };
 
   const branchName = getBranchName(employee.branch);
