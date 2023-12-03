@@ -25,8 +25,11 @@ const Employees = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const employeesPerPage = 6;
 
-  const handleEmployeesSearch = (searchTerm) => {
-    // Implement search logic
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleEmployeesSearch = (term) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
   };
 
   const handleCreateNewEmployee = () => {
@@ -65,9 +68,15 @@ const Employees = () => {
     setModalOpen(false);
   };
 
+  const filteredEmployees = searchTerm
+    ? employees.filter((employee) =>
+        employee.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+      )
+    : employees;
+
   const indexOfLastEmployee = currentPage * employeesPerPage;
   const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
-  const currentEmployees = employees.slice(
+  const currentEmployees = filteredEmployees.slice(
     indexOfFirstEmployee,
     indexOfLastEmployee
   );
@@ -111,16 +120,20 @@ const Employees = () => {
             Ред.
           </span>
         </div>
-        {currentEmployees.map((employee, index) => (
-          <EmployeeItem
-            key={employee.id}
-            employee={employee}
-            branches={branches}
-            index={index + indexOfFirstEmployee}
-            onEdit={() => handleEditEmployee(employee)}
-            onDelete={() => handleDeleteInitiated(employee.id)}
-          />
-        ))}
+        {currentEmployees.length > 0 ? (
+          currentEmployees.map((employee, index) => (
+            <EmployeeItem
+              key={employee.id}
+              employee={employee}
+              branches={branches}
+              index={index + indexOfFirstEmployee}
+              onEdit={() => handleEditEmployee(employee)}
+              onDelete={() => handleDeleteInitiated(employee.id)}
+            />
+          ))
+        ) : (
+          <div className="no-results-message">Нет филиалов</div>
+        )}
       </div>
       <Pagination
         currentPage={currentPage}
