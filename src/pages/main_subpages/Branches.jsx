@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ContentHeader from "../../components/ContentHeader";
 import BranchItemModal from "../../components/branches/BranchItemModal";
 import DeleteModal from "../../components/DeleteModal";
 import BranchItem from "../../components/branches/BranchItem";
 import Pagination from "../../components/Pagination";
 import { useSelector, useDispatch } from "react-redux";
-import { addBranch, editBranch, deleteBranch } from "../../store/branchSlice";
+import {
+  addBranch,
+  editBranch,
+  deleteBranch,
+  initializeBranches,
+} from "../../store/branchSlice";
 import "../../styles/pages/subpages/branches/branches.css";
 
 const Branches = () => {
@@ -39,6 +44,13 @@ const Branches = () => {
 
   const handleConfirmDelete = () => {
     dispatch(deleteBranch(branchToDelete));
+
+    // Update local storage after state update
+    const updatedBranches = branches.filter(
+      (branch) => branch.id !== branchToDelete
+    );
+    localStorage.setItem("branches", JSON.stringify(updatedBranches));
+
     setIsDeleteModalOpen(false);
   };
 
@@ -54,6 +66,12 @@ const Branches = () => {
   const indexOfLastBranch = currentPage * branchesPerPage;
   const indexOfFirstBranch = indexOfLastBranch - branchesPerPage;
   const currentBranches = branches.slice(indexOfFirstBranch, indexOfLastBranch);
+
+  useEffect(() => {
+    // Load branches from local storage
+    const savedBranches = JSON.parse(localStorage.getItem("branches")) || [];
+    dispatch(initializeBranches(savedBranches));
+  }, [dispatch]);
 
   return (
     <div className="branches-container">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import Menu from "./main_subpages/Menu";
 import Stock from "./main_subpages/Stock";
 import Branches from "./main_subpages/Branches";
@@ -11,12 +11,17 @@ import signoutIcon from "../images/signout.svg";
 import notificationsIcon from "../images/notifications.svg";
 
 const MainPage = () => {
-  const [activeComponent, setActiveComponent] = useState("menu");
+  const savedActiveComponent = localStorage.getItem("activeComponent");
+  const [activeComponent, setActiveComponent] = useState(
+    savedActiveComponent || "menu"
+  );
+
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const navigate = useNavigate();
 
   const handleSetActiveComponent = (newComponent) => {
     setActiveComponent(newComponent);
+    localStorage.setItem("activeComponent", newComponent);
   };
 
   const handleLogOut = () => {
@@ -24,6 +29,7 @@ const MainPage = () => {
   };
 
   const confirmLogout = () => {
+    localStorage.removeItem("activeComponent");
     navigate("/");
   };
 

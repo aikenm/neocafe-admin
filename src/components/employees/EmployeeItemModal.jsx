@@ -18,6 +18,7 @@ const defaultWorkingHours = {
 const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
   const dispatch = useDispatch();
   const branches = useSelector((state) => state.branch.branches);
+  const employees = useSelector((state) => state.employee.employees);
   const isEditMode = editable != null;
   const daysOfWeek = Object.keys(defaultWorkingHours);
 
@@ -44,16 +45,17 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
   const workingHours = watch("workingHours");
 
   const onSubmit = (data) => {
-    const formData = {
-      ...data,
-    };
-
     if (isEditMode) {
-      dispatch(editEmployee({ ...formData, id: editable.id }));
-      // Update local
+      dispatch(editEmployee({ ...data, id: editable.id }));
+      const updatedEmployees = employees.map((emp) =>
+        emp.id === editable.id ? { ...data, id: editable.id } : emp
+      );
+      localStorage.setItem("employees", JSON.stringify(updatedEmployees));
     } else {
-      dispatch(addEmployee({ ...formData, id: Date.now() }));
-      // Update local
+      const newEmployee = { ...data, id: Date.now() };
+      dispatch(addEmployee(newEmployee));
+      const updatedEmployees = [...employees, newEmployee];
+      localStorage.setItem("employees", JSON.stringify(updatedEmployees));
     }
     toggleModal();
     reset();

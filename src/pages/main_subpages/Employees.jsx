@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ContentHeader from "../../components/ContentHeader";
 import EmployeeItemModal from "../../components/employees/EmployeeItemModal";
 import DeleteModal from "../../components/DeleteModal";
@@ -9,7 +9,9 @@ import {
   addEmployee,
   editEmployee,
   deleteEmployee,
+  initializeEmployees,
 } from "../../store/employeeSlice";
+import { initializeBranches } from "../../store/branchSlice";
 import "../../styles/pages/subpages/employees/employees.css";
 
 const Employees = () => {
@@ -44,6 +46,13 @@ const Employees = () => {
 
   const handleConfirmDelete = () => {
     dispatch(deleteEmployee(employeeToDelete));
+
+    // Update local storage after state update
+    const updatedEmployees = employees.filter(
+      (employee) => employee.id !== employeeToDelete
+    );
+    localStorage.setItem("employees", JSON.stringify(updatedEmployees));
+
     setIsDeleteModalOpen(false);
   };
 
@@ -62,6 +71,14 @@ const Employees = () => {
     indexOfFirstEmployee,
     indexOfLastEmployee
   );
+
+  useEffect(() => {
+    // Load employees from local storage
+    const savedBranches = JSON.parse(localStorage.getItem("branches")) || [];
+    dispatch(initializeBranches(savedBranches));
+    const savedEmployees = JSON.parse(localStorage.getItem("employees")) || [];
+    dispatch(initializeEmployees(savedEmployees));
+  }, [dispatch]);
 
   return (
     <div className="employees-container">
