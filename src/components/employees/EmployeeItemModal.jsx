@@ -31,7 +31,7 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
           role: "",
           dob: "",
           phone: "",
-          branchId: "",
+          branch: "",
           workingHours: defaultWorkingHours,
         },
   });
@@ -50,10 +50,10 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
 
     if (isEditMode) {
       dispatch(editEmployee({ ...formData, id: editable.id }));
-      // Update your local storage or state logic accordingly
+      // Update local
     } else {
       dispatch(addEmployee({ ...formData, id: Date.now() }));
-      // Update your local storage or state logic accordingly
+      // Update local
     }
     toggleModal();
     reset();
@@ -72,7 +72,7 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
       setValue("role", editable.role);
       setValue("dob", editable.dob);
       setValue("phone", editable.phone);
-      setValue("branchId", editable.branchId);
+      setValue("branch", editable.branch);
 
       Object.keys(defaultWorkingHours).forEach((day) => {
         setValue(
@@ -90,7 +90,7 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
         role: "",
         dob: "",
         phone: "",
-        branchId: "",
+        branch: "",
         workingHours: defaultWorkingHours,
       });
     }

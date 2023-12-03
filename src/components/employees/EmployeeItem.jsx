@@ -14,11 +14,15 @@ const EmployeeItem = ({ employee, branches, index, onEdit, onDelete }) => {
   };
 
   const getBranchName = (branchId) => {
-    const branch = branches.find((b) => b.id === branchId);
+    // Convert branchId to a number for comparison
+    const numericBranchId = Number(branchId);
+
+    // Find the branch using the numeric ID
+    const branch = branches.find((b) => b.id === numericBranchId);
     return branch ? branch.name : "Unknown Branch";
   };
 
-  const branchName = getBranchName(employee.branch); // Change to employee.branch
+  const branchName = getBranchName(employee.branch);
 
   const formatWorkingDays = (workingHours) => {
     const dayAbbreviations = {

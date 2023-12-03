@@ -101,7 +101,7 @@ const Employees = () => {
             branches={branches}
             index={index + indexOfFirstEmployee}
             onEdit={() => handleEditEmployee(employee)}
-            onDeleteInitiated={handleDeleteInitiated}
+            onDelete={() => handleDeleteInitiated(employee.id)}
           />
         ))}
       </div>
