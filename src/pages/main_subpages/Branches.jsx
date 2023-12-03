@@ -23,8 +23,11 @@ const Branches = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const branchesPerPage = 6;
 
-  const handleBranchesSearch = (searchTerm) => {
-    // Implement search logic
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleBranchesSearch = (term) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
   };
 
   const handleCreateNewBranch = () => {
@@ -63,9 +66,18 @@ const Branches = () => {
     setModalOpen(false);
   };
 
+  const filteredBranches = searchTerm
+    ? branches.filter((branch) =>
+        branch.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+      )
+    : branches;
+
   const indexOfLastBranch = currentPage * branchesPerPage;
   const indexOfFirstBranch = indexOfLastBranch - branchesPerPage;
-  const currentBranches = branches.slice(indexOfFirstBranch, indexOfLastBranch);
+  const currentBranches = filteredBranches.slice(
+    indexOfFirstBranch,
+    indexOfLastBranch
+  );
 
   useEffect(() => {
     // Load branches from local storage
@@ -96,15 +108,19 @@ const Branches = () => {
             Ред.
           </span>
         </div>
-        {currentBranches.map((branch, index) => (
-          <BranchItem
-            key={branch.id}
-            branch={branch}
-            index={index + indexOfFirstBranch}
-            onEdit={() => handleEditBranch(branch)}
-            onDeleteInitiated={handleDeleteInitiated}
-          />
-        ))}
+        {currentBranches.length > 0 ? (
+          currentBranches.map((branch, index) => (
+            <BranchItem
+              key={branch.id}
+              branch={branch}
+              index={index + indexOfFirstBranch}
+              onEdit={() => handleEditBranch(branch)}
+              onDeleteInitiated={() => handleDeleteInitiated(branch.id)}
+            />
+          ))
+        ) : (
+          <div className="no-results-message">Нет филиалов</div>
+        )}
       </div>
       <Pagination
         currentPage={currentPage}
