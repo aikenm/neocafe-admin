@@ -4,12 +4,93 @@
     padding-left: 25px;
 }
 
+.stock-branch {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 200px;
+    height: 70px;
+    padding: 0px 20px;
+    margin-right: 30px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    margin-left: -2px;
+    color: #00315D;
+}
+
+.stock-dropdown-scrollable {
+    max-height: 150px;
+    padding-top: 150px; 
+    overflow-y: auto;
+}  
+
+.stock-dropdown {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    width: 240px;
+    top: 53px; 
+    left: 0;
+    z-index: 1;
+    background-color: #E3E3E3;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.stock-open {
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    background-color: #E3E3E3;
+}
+
+.drop-down-icon {
+    margin-left: auto;
+}
+
+.stock-wrapper {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.stock-option {
+    display: flex;
+    padding: 0px 20px;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    position: relative;
+    border: none; 
+    transition: all 0.2s ease;
+}
+
+.stock-option:hover {
+    color: #FF4B4B;
+    background-color: #bfbdc1;
+}
+
+.stock-dropdown .stock-wrapper:last-child .stock-option:hover {
+    color: #FF4B4B;
+    background-color: #bfbdc1;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}  
+
 .stock-subpage-button {
     padding: 15px 40px;
     margin-right: 40px;
     font-size: 18px;
     font-weight: 700;
-    height: 70px;
+    height: 71px;
     font-family: 'Nunito', sans-serif;
     border: none;
     border-bottom: 2px solid transparent;

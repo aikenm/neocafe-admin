@@ -6,6 +6,8 @@ import DeleteModal from "../../components/DeleteModal";
 import Pagination from "../../components/Pagination";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteStockItem, initializeStockItems } from "../../store/stockSlice";
+import dropClosed from "../../images/down-closed.svg";
+import dropOpen from "../../images/drop-down-open.svg";
 import "../../styles/pages/subpages/stock/stock.css";
 
 const Stock = () => {
@@ -22,20 +24,31 @@ const Stock = () => {
 
   const itemsPerPage = 5;
 
-  const stocksData = [
-    { id: "stock1", name: "Дзержинка" },
-    { id: "stock2", name: "Карпинка" },
-    { id: "stock3", name: "Филармония" },
-  ];
+  const branches = useSelector((state) => state.branch.branches);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [displayedStockName, setDisplayedStockName] =
+    useState("Выберите склад");
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   const handleStockSearch = (term) => {
     setSearchTerm(term);
     setCurrentPage(1);
   };
 
-  const handleSelectStock = (stockId) => {
-    setSelectedStock(stockId);
-    // Fetch items for the selected stock and update `items`
+  const handleSelectStock = (stockName) => {
+    const selectedStock = branches.find((b) => b.name === stockName);
+    if (selectedStock) {
+      setSelectedStock(String(selectedStock.id));
+      setDisplayedStockName(selectedStock.name);
+    } else {
+      setSelectedStock("all");
+      setDisplayedStockName("Выберите склад");
+    }
+    setIsDropdownOpen(false);
   };
 
   const handleSubpageChange = (subpage) => {
@@ -150,11 +163,49 @@ const Stock = () => {
         title="Склад"
         onCreate={handleCreateNewItem}
         onSearch={handleStockSearch}
-        stocks={stocksData}
-        selectedStock={selectedStock}
-        onSelectStock={handleSelectStock}
       />
       <div className="stock-subpages-header">
+        <div className="stock-branch-dropdown">
+          <span
+            className={`stock-content-header-subtitle stock-branch ${
+              isDropdownOpen ? "branch-open" : "branch-closed"
+            }`}
+            onClick={toggleDropdown}
+          >
+            {displayedStockName}
+            <img
+              src={isDropdownOpen ? dropOpen : dropClosed}
+              alt="drop-down"
+              className="drop-down-icon"
+            />
+            {isDropdownOpen && (
+              <div
+                className={`stock-dropdown ${
+                  branches.length > 6 ? "stock-dropdown-scrollable" : ""
+                }`}
+              >
+                <div className="stock-wrapper">
+                  <span
+                    onClick={() => handleSelectStock("all")}
+                    className="stock-option"
+                  >
+                    Все
+                  </span>
+                </div>
+                {branches.map((branch) => (
+                  <div key={branch.id} className="stock-wrapper">
+                    <span
+                      onClick={() => handleSelectStock(branch.name)}
+                      className="stock-option"
+                    >
+                      {branch.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </span>
+        </div>
         <button
           onClick={() => handleSubpageChange("finishedGoods")}
           className={`stock-subpage-button ${
