@@ -12,6 +12,8 @@ import {
   initializeEmployees,
 } from "../../store/employeeSlice";
 import { initializeBranches } from "../../store/branchSlice";
+import dropClosed from "../../images/down-closed.svg";
+import dropOpen from "../../images/drop-down-open.svg";
 import "../../styles/pages/subpages/employees/employees.css";
 
 const Employees = () => {
@@ -27,9 +29,31 @@ const Employees = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedBranch, setSelectedBranch] = useState("all");
+  const [displayedBranchName, setDisplayedBranchName] =
+    useState("Выберите филиал");
+
   const handleEmployeesSearch = (term) => {
     setSearchTerm(term);
     setCurrentPage(1);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleBranchSelect = (branchName) => {
+    const selectedBranch = branches.find((b) => b.name === branchName);
+    if (selectedBranch) {
+      setSelectedBranch(String(selectedBranch.id));
+      setDisplayedBranchName(selectedBranch.name);
+    } else {
+      // Handle the "all" case
+      setSelectedBranch("all");
+      setDisplayedBranchName("Выберите филиал");
+    }
+    setIsDropdownOpen(false);
   };
 
   const handleCreateNewEmployee = () => {
@@ -68,11 +92,14 @@ const Employees = () => {
     setModalOpen(false);
   };
 
-  const filteredEmployees = searchTerm
-    ? employees.filter((employee) =>
-        employee.name.toLowerCase().startsWith(searchTerm.toLowerCase())
-      )
-    : employees;
+  const filteredEmployees = employees.filter((employee) => {
+    const matchesName = searchTerm
+      ? employee.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+      : true;
+    const matchesBranch =
+      selectedBranch === "all" ? true : employee.branch === selectedBranch; // Compare as strings
+    return matchesName && matchesBranch;
+  });
 
   const indexOfLastEmployee = currentPage * employeesPerPage;
   const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
@@ -89,6 +116,8 @@ const Employees = () => {
     dispatch(initializeBranches(savedBranches));
     const savedEmployees = JSON.parse(localStorage.getItem("employees")) || [];
     dispatch(initializeEmployees(savedEmployees));
+    console.log(employees);
+    console.log(branches);
   }, [dispatch]);
 
   return (
@@ -109,8 +138,44 @@ const Employees = () => {
           <span className="employees-content-header-subtitle employee-position">
             Должность
           </span>
-          <span className="employees-content-header-subtitle employee-branch">
-            Выберите филиал
+          <span
+            className={`employees-content-header-subtitle employee-branch ${
+              isDropdownOpen ? "branch-open" : "branch-closed"
+            }`}
+            onClick={toggleDropdown}
+          >
+            {displayedBranchName}
+            <img
+              src={isDropdownOpen ? dropOpen : dropClosed}
+              alt="drop-down"
+              className="drop-down-icon"
+            />
+            {isDropdownOpen && (
+              <div
+                className={`branch-dropdown ${
+                  branches.length > 6 ? "branch-dropdown-scrollable" : ""
+                }`}
+              >
+                <div className="branches-wrapper">
+                  <span
+                    onClick={() => handleBranchSelect("all")}
+                    className="branch-option"
+                  >
+                    Все
+                  </span>
+                </div>
+                {branches.map((branch) => (
+                  <div key={branch.id} className="branches-wrapper">
+                    <span
+                      onClick={() => handleBranchSelect(branch.name)}
+                      className="branch-option"
+                    >
+                      {branch.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </span>
           <span className="employees-content-header-subtitle employee-phone">
             Телефон
@@ -134,7 +199,7 @@ const Employees = () => {
             />
           ))
         ) : (
-          <div className="no-results-message">Нет филиалов</div>
+          <div className="no-results-message">Нет сотрудников</div>
         )}
       </div>
       <Pagination

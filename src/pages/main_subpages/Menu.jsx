@@ -180,6 +180,8 @@ const Menu = () => {
 
     dispatch(initializeCategories(savedCategories));
     dispatch(initializeItems(savedItems));
+    console.log(menuItems);
+    console.log(categories);
   }, [dispatch]);
 
   return (

@@ -137,6 +137,7 @@ const Stock = () => {
     const savedStockItems =
       JSON.parse(localStorage.getItem("stockItems")) || [];
     dispatch(initializeStockItems(savedStockItems));
+    console.log(stockItems);
   }, [dispatch]);
 
   useEffect(() => {

@@ -85,6 +85,7 @@ const Branches = () => {
     // Load branches from local storage
     const savedBranches = JSON.parse(localStorage.getItem("branches")) || [];
     dispatch(initializeBranches(savedBranches));
+    console.log(branches);
   }, [dispatch]);
 
   return (

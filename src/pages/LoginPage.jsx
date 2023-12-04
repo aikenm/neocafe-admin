@@ -34,6 +34,8 @@ const LoginPage = () => {
         }
       );
 
+      console.log(response);
+
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
         dispatch(loginSuccess(response.data.token));

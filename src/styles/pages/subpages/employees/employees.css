@@ -29,9 +29,78 @@
 }
 
 .employee-branch {
+    position: relative;
+    display: flex;
+    align-items: center;
     width: 200px;
-    margin-left: 35px;
+    height: 60px;
+    padding: 0px 20px;
+    margin-left: 45px;
+    cursor: pointer;
 }
+
+.branch-dropdown-scrollable {
+    max-height: 150px;
+    padding-top: 150px; 
+    overflow-y: auto;
+}  
+
+.branch-dropdown {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    width: 240px;
+    top: 53px; 
+    left: 0;
+    z-index: 1;
+    background-color: #E3E3E3;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.branch-open {
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    background-color: #E3E3E3;
+}
+
+.drop-down-icon {
+    margin-left: auto;
+}
+
+.branches-wrapper {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.branch-option {
+    display: flex;
+    padding: 0px 20px;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    position: relative;
+    border: none; 
+    transition: all 0.2s ease;
+}
+
+.branch-option:hover {
+    color: #FF4B4B;
+    background-color: #bfbdc1;
+}
+
+.branch-dropdown .branches-wrapper:last-child .branch-option:hover {
+    color: #FF4B4B;
+    background-color: #bfbdc1;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}  
 
 .employee-phone {
     width: 200px;
@@ -44,5 +113,5 @@
 }
 
 .employee-edit {
-    margin-left: 95px;
+    margin-left: 55px;
 }
