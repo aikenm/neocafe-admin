@@ -9,17 +9,21 @@
     display: flex;
     align-items: center;
     width: 200px;
-    height: 70px;
+    height: 66px;
     padding: 0px 20px;
     margin-right: 30px;
     cursor: pointer;
     font-size: 18px;
     font-weight: 700;
     font-family: 'Nunito', sans-serif;
-    border-top-right-radius: 6px;
-    border-top-left-radius: 6px;
+    border-radius: 6px;
     margin-left: -2px;
     color: #00315D;
+    transition: all 0.2s ease;
+}
+
+.stock-branch:hover {
+    background-color: #E3E3E3;
 }
 
 .stock-dropdown-scrollable {

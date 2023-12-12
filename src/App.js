@@ -9,6 +9,7 @@ import Menu from './pages/main_subpages/Menu';
 import Stock from './pages/main_subpages/Stock';
 import Branches from './pages/main_subpages/Branches';
 import Employees from './pages/main_subpages/Employees';
+import PrivateRoute from './components/PrivateRoute';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const App = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      dispatch(loginSuccess(token)); 
+      dispatch(loginSuccess());
     }
   }, [dispatch]);
 
@@ -24,7 +25,12 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/main" element={<MainPage />} />
+        {/* <Route path="/main" element={<PrivateRoute><MainPage /></PrivateRoute>} />
+        <Route path="/menu" element={<PrivateRoute><Menu /></PrivateRoute>} />
+        <Route path="/stock" element={<PrivateRoute><Stock /></PrivateRoute>} />
+        <Route path="/branches" element={<PrivateRoute><Branches /></PrivateRoute>} />
+        <Route path="/employees" element={<PrivateRoute><Employees /></PrivateRoute>} /> */}
+        <Route path="/main" element={<MainPage />}/>
         <Route path="/menu" element={<Menu />} />
         <Route path="/stock" element={<Stock />} />
         <Route path="/branches" element={<Branches />} />

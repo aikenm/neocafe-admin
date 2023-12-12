@@ -9,17 +9,21 @@ const adminSlice = createSlice({
   name: 'admin',
   initialState,
   reducers: {
-    loginSuccess: (state, action) => {
+    loginSuccess: (state) => {
       state.isLoggedIn = true;
       state.error = null;
-      localStorage.setItem('token', action.payload); 
     },
     loginFailed: (state, action) => {
       state.isLoggedIn = false;
       state.error = action.payload;
     },
-  },
+    logout: (state) => {
+      state.isLoggedIn = false;
+      state.error = null;
+      localStorage.removeItem('token'); 
+    }
+  }
 });
 
-export const { loginSuccess, loginFailed } = adminSlice.actions;
+export const { loginSuccess, loginFailed, logout } = adminSlice.actions;
 export default adminSlice.reducer;

@@ -36,16 +36,16 @@ const LoginPage = () => {
 
       console.log(response);
 
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-        dispatch(loginSuccess(response.data.token));
+      if (response.data.access) {
+        localStorage.setItem("token", response.data.access);
+        dispatch(loginSuccess());
         navigate("/main");
       } else {
         throw new Error("Login failed");
       }
     } catch (error) {
       setInputError(true);
-      setErrorMessage(error.response?.data?.message || error.message);
+      setErrorMessage("Неверный логин или пароль");
     }
   };
 
