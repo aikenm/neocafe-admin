@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import ImageIcon from "../../images/image-input.svg";
+import { useDispatch } from "react-redux";
 import "../../styles/modal_windows/category_create.css";
 import CloseIcon from "../../images/close-icon.svg";
+import { addCategory } from "../../store/menuSlice";
+import axios from "axios";
 
 const CategoryCreateModal = ({ isOpen, toggleModal, onCreate }) => {
   const [categoryName, setCategoryName] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
+  const dispatch = useDispatch();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -27,15 +31,39 @@ const CategoryCreateModal = ({ isOpen, toggleModal, onCreate }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onCreate({
-      id: Date.now(),
-      name: categoryName,
-      image: imageFile,
-    });
-    setCategoryName("");
-    setSelectedImage(null);
-    setImageFile(null);
-    toggleModal();
+
+    const formData = new FormData();
+    formData.append("name", categoryName);
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
+    const accessToken = localStorage.getItem("token");
+
+    axios
+      .post("https://neo-cafe.org.kg/api-admin/category/", formData, {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => {
+        // Assuming response.data contains the new category
+        const newCategory = response.data;
+
+        // Dispatch an action to update the Redux state
+        dispatch(addCategory(newCategory));
+
+        // Reset the form and close the modal
+        setCategoryName("");
+        setSelectedImage(null);
+        setImageFile(null);
+        toggleModal();
+      })
+      .catch((error) => {
+        console.error("Error creating category:", error);
+      });
   };
 
   if (!isOpen) {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import ContentHeader from "../../components/ContentHeader";
 import StockItem from "../../components/stock/StockItem";
 import StockItemModal from "../../components/stock/StockItemModal";
@@ -39,11 +40,31 @@ const Stock = () => {
     setCurrentPage(1);
   };
 
+  const fetchInventoryItems = async (branchId) => {
+    try {
+      const response = await axios.get(
+        `https://neo-cafe.org.kg/api-warehouse/branches/${branchId}/inventory/`,
+        {
+          headers: {
+            accept: "application/json",
+            "X-CSRFToken":
+              "zeruwFWl4OSHaunglUEwhc0nHSKG6iBx7iSK6078MxDtAulJyFyWcXIvBZDFnxon",
+          },
+        }
+      );
+      dispatch(initializeStockItems(response.data));
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching inventory items:", error);
+    }
+  };
+
   const handleSelectStock = (stockName) => {
     const selectedStock = branches.find((b) => b.name === stockName);
     if (selectedStock) {
       setSelectedStock(String(selectedStock.id));
       setDisplayedStockName(selectedStock.name);
+      fetchInventoryItems(1);
     } else {
       setSelectedStock("all");
       setDisplayedStockName("Выберите склад");

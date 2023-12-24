@@ -22,7 +22,7 @@ const LoginPage = () => {
   const handleLogin = async (data) => {
     try {
       const response = await axios.post(
-        "https://www.ishak-backender.org.kg/api-admin/admin/login/",
+        "https://neo-cafe.org.kg/api-admin/admin/login/",
         {
           login: data.username,
           password: data.password,
@@ -36,7 +36,7 @@ const LoginPage = () => {
 
       console.log(response);
 
-      if (response.data.access) {
+      if (response.status == 200) {
         localStorage.setItem("token", response.data.access);
         dispatch(loginSuccess());
         navigate("/main");
@@ -47,6 +47,12 @@ const LoginPage = () => {
       setInputError(true);
       setErrorMessage("Неверный логин или пароль");
     }
+    // if (username == "admin" && password == "admin") {
+    //   navigate("/main");
+    // } else {
+    //   setInputError(true);
+    //   setErrorMessage("Неверный логин или пароль");
+    // }
   };
 
   const onSubmit = (data) => {

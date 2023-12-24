@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 import ContentHeader from "../../components/ContentHeader";
 import Pagination from "../../components/Pagination";
 import MenuItem from "../../components/menu/MenuItem";
@@ -11,7 +12,6 @@ import {
   addCategory,
   deleteCategory,
   initializeCategories,
-  initializeItems,
 } from "../../store/menuSlice";
 import dropClosed from "../../images/down-closed.svg";
 import dropOpen from "../../images/drop-down-open.svg";
@@ -23,12 +23,13 @@ const Menu = () => {
   const dispatch = useDispatch();
 
   const menuItems = useSelector((state) => state.menu.items);
+  const categories = useSelector((state) => state.menu.categories);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [editableItem, setEditableItem] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
 
-  const categories = useSelector((state) => state.menu.categories);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -48,6 +49,24 @@ const Menu = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
+  useEffect(() => {
+    const accessToken = localStorage.getItem("token");
+
+    axios
+      .get("https://neo-cafe.org.kg/api-admin/category/", {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => {
+        dispatch(initializeCategories(response.data));
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, [dispatch]);
+
   const filteredItems = menuItems.filter((item) => {
     const matchesSearchTerm = item.name
       .toLowerCase()
@@ -61,34 +80,21 @@ const Menu = () => {
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   const paginatedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
-  //localstorage temp
+  // Function definitions
+  // Function definitions
   const handleEdit = (updatedItem) => {
     setEditableItem(updatedItem);
     setModalOpen(true);
-
-    // Update localStorage for editItem
-    const updatedItems = menuItems.map((item) =>
-      item.id === updatedItem.id ? updatedItem : item
-    );
-    localStorage.setItem("items", JSON.stringify(updatedItems));
   };
 
-  // chnage the name to handleOpenDeleteModal
   const handleDeleteInitiated = (item) => {
     setItemToDelete(item);
     setIsDeleteModalOpen(true);
   };
 
-  //localstorage temp
   const handleConfirmDelete = () => {
     if (itemToDelete) {
       dispatch(deleteItem(itemToDelete.id));
-
-      // Update localStorage for deleteItem
-      const updatedItems = menuItems.filter(
-        (item) => item.id !== itemToDelete.id
-      );
-      localStorage.setItem("items", JSON.stringify(updatedItems));
     }
     setIsDeleteModalOpen(false);
     setItemToDelete(null);
@@ -105,21 +111,17 @@ const Menu = () => {
   };
 
   const handleCreateCategory = () => {
-    setIsDropdownOpen(true);
     setIsCategoryCreateModalOpen(true);
   };
 
-  //localstorage temp
   const handleCategoryCreation = (categoryData) => {
     dispatch(addCategory(categoryData));
-    const updatedCategories = [...categories, categoryData];
-    localStorage.setItem("categories", JSON.stringify(updatedCategories));
     setIsCategoryCreateModalOpen(false);
   };
 
   const handleCategorySelect = (category) => {
     if (category === "Все") {
-      setSelectedCategory("Категории");
+      setSelectedCategory("all");
       setInternalSelectedCategory("Все");
     } else {
       setSelectedCategory(category);
@@ -136,22 +138,34 @@ const Menu = () => {
     setIsCategoryDeleteModalOpen(true);
   };
 
-  //localstorage temp
   const handleConfirmDeleteCategory = () => {
     if (categoryToDelete) {
-      dispatch(deleteCategory(categoryToDelete.id));
+      const accessToken = localStorage.getItem("token"); // Replace 'token' with your actual token key in localStorage
 
-      // Update localStorage for deleteCategory
-      const updatedCategories = categories.filter(
-        (category) => category.id !== categoryToDelete.id
-      );
-      localStorage.setItem("categories", JSON.stringify(updatedCategories));
+      axios
+        .delete(
+          `https://neo-cafe.org.kg/api-admin/category/${categoryToDelete.id}`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        )
+        .then((response) => {
+          // Handle successful deletion
+          dispatch(deleteCategory(categoryToDelete.id));
 
-      setIsCategoryDeleteModalOpen(false);
-      setCategoryToDelete(null);
-      if (selectedCategory === categoryToDelete.name) {
-        setSelectedCategory("all");
-      }
+          setIsCategoryDeleteModalOpen(false);
+          setCategoryToDelete(null);
+          if (selectedCategory === categoryToDelete.name) {
+            setSelectedCategory("all");
+          }
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error deleting category:", error);
+        });
     }
   };
 
@@ -172,18 +186,7 @@ const Menu = () => {
     };
   }, [dropdownRef]);
 
-  //localstorage temp
-  useEffect(() => {
-    const savedCategories =
-      JSON.parse(localStorage.getItem("categories")) || [];
-    const savedItems = JSON.parse(localStorage.getItem("items")) || [];
-
-    dispatch(initializeCategories(savedCategories));
-    dispatch(initializeItems(savedItems));
-    console.log(menuItems);
-    console.log(categories);
-  }, [dispatch]);
-
+  // Component rendering logic
   return (
     <div className="menu-container">
       <ContentHeader
@@ -296,7 +299,6 @@ const Menu = () => {
               key={item.id}
               item={item}
               index={indexOfFirstItem + index}
-              onMoreClick={() => {}}
               onEdit={handleEdit}
               onDelete={() => handleDeleteInitiated(item)}
             />
