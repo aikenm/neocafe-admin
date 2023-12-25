@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm, useFieldArray } from "react-hook-form";
 import { addBranch, editBranch } from "../../store/branchSlice";
@@ -21,6 +22,7 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
   const branches = useSelector((state) => state.branch.branches);
   const isEditMode = editable != null;
   const daysOfWeek = Object.keys(defaultWorkingHours);
+  const [selectedImageFile, setSelectedImageFile] = useState(null);
 
   const { register, handleSubmit, control, reset, setValue, watch } = useForm({
     defaultValues: isEditMode
@@ -35,10 +37,11 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
         },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields } = useFieldArray({
     control,
     name: "workingHours",
   });
+
   const [selectedImage, setSelectedImage] = useState(
     isEditMode ? editable.image : null
   );
@@ -48,13 +51,13 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      setSelectedImageFile(file); // Set file object for upload
+
+      // Read the file as a data URL to use as the image source
       const reader = new FileReader();
-
       reader.onloadend = () => {
-        setSelectedImage(reader.result);
-        setValue("image", reader.result);
+        setSelectedImage(reader.result); // Update the state with the image data URL
       };
-
       reader.readAsDataURL(file);
     }
   };
@@ -76,25 +79,60 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
   };
 
   const onSubmit = (data) => {
-    const formData = {
-      ...data,
-      image: selectedImage,
+    const accessToken = localStorage.getItem("token");
+    const formData = new FormData();
+
+    // Append text fields
+    formData.append("name", data.name);
+    formData.append("address", data.address);
+    formData.append("phone_number", data.phone);
+    formData.append("map_link", data.link);
+
+    // Append working hours
+    daysOfWeek.forEach((day) => {
+      const dayLowerCase = day.toLowerCase();
+      formData.append(`${dayLowerCase}`, data.workingHours[day].enabled);
+      formData.append(
+        `${dayLowerCase}_start_time`,
+        data.workingHours[day].from
+      );
+      formData.append(`${dayLowerCase}_end_time`, data.workingHours[day].to);
+    });
+
+    if (selectedImageFile) {
+      formData.append("image", selectedImageFile);
+    }
+
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    const url = `https://neo-cafe.org.kg/api-admin/branches/${
+      isEditMode ? `${editable.id}/` : ""
+    }`;
+    const method = isEditMode ? "put" : "post";
+    const headers = {
+      accept: "application/json",
+      "X-CSRFToken":
+        "o8Y7VxZuP0yLg0cu3nfFR3UBxa0hsqCyVtNeMnSl7M6OCcij2OZl8rqoJ5j0a70Q",
+      Authorization: `Bearer ${accessToken}`,
     };
 
-    if (isEditMode) {
-      dispatch(editBranch({ ...formData, id: editable.id }));
-      const updatedBranches = branches.map((branch) =>
-        branch.id === editable.id ? { ...formData, id: editable.id } : branch
-      );
-      localStorage.setItem("branches", JSON.stringify(updatedBranches));
-    } else {
-      dispatch(addBranch({ ...formData, id: Date.now() }));
-      const updatedBranches = [...branches, { ...formData, id: Date.now() }];
-      localStorage.setItem("branches", JSON.stringify(updatedBranches));
-    }
-    toggleModal();
-    reset();
-    setSelectedImage(null);
+    axios({ url, method, headers, data: formData })
+      .then((response) => {
+        if (isEditMode) {
+          dispatch(editBranch({ ...response.data, id: editable.id }));
+        } else {
+          dispatch(addBranch({ ...response.data, id: Date.now() }));
+        }
+
+        toggleModal();
+        reset();
+        setSelectedImage(null);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const handleCloseModal = () => {
@@ -243,18 +281,16 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
                     <div className="schedule-hours">
                       <input
                         type="text"
-                        defaultValue="11:00"
                         {...register(`workingHours.${day}.from`)}
-                        disabled={!watch(`workingHours.${day}`)?.enabled}
                         className="working-hours"
+                        disabled={!watch(`workingHours.${day}.enabled`)}
                       />
                       <span> - </span>
                       <input
                         type="text"
-                        defaultValue="22:00"
                         {...register(`workingHours.${day}.to`)}
-                        disabled={!watch(`workingHours.${day}`)?.enabled}
                         className="working-hours"
+                        disabled={!watch(`workingHours.${day}.enabled`)}
                       />
                     </div>
                   </div>

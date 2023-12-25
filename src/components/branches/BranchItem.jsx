@@ -30,34 +30,52 @@ const BranchItem = ({
     setShowOptions(false);
   };
 
-  const formatWorkingHours = (workingHours) => {
-    const dayAbbreviations = {
-      Понедельник: "Пн",
-      Вторник: "Вт",
-      Среда: "Ср",
-      Четверг: "Чт",
-      Пятница: "Пт",
-      Суббота: "Сб",
-      Воскресенье: "Вс",
-    };
+  const formatWorkingHours = (branch) => {
+    const daysOfWeek = [
+      { day: "monday", label: "Пн" },
+      { day: "tuesday", label: "Вт" },
+      { day: "wednesday", label: "Ср" },
+      { day: "thursday", label: "Чт" },
+      { day: "friday", label: "Пт" },
+      { day: "saturday", label: "Сб" },
+      { day: "sunday", label: "Вс" },
+    ];
 
-    const daysEnabled = Object.entries(workingHours)
-      .filter(([_, data]) => data.enabled)
-      .map(
-        ([day, data]) => dayAbbreviations[day] + ` с ${data.from} до ${data.to}`
-      );
+    const schedule = daysOfWeek.reduce((acc, { day, label }) => {
+      const isOpen = branch[day];
+      const startTime = branch[`${day}_start_time`]?.slice(0, 5);
+      const endTime = branch[`${day}_end_time`]?.slice(0, 5);
 
-    if (daysEnabled.length === 7) {
-      return "Каждый день " + daysEnabled[0].slice(3);
-    } else if (
-      daysEnabled.length === 5 &&
-      !workingHours["Суббота"].enabled &&
-      !workingHours["Воскресенье"].enabled
-    ) {
-      return "Пн-Пт с 11:00 до 22:00";
-    }
+      if (isOpen) {
+        acc[label] = `${startTime} до ${endTime}`;
+      } else {
+        acc[label] = "Выходной";
+      }
 
-    return daysEnabled.join(", ") || "";
+      return acc;
+    }, {});
+
+    let summary = [];
+    daysOfWeek.forEach(({ label }, index) => {
+      if (
+        schedule[label] !== "Выходной" &&
+        (!summary.length ||
+          summary[summary.length - 1].hours !== schedule[label])
+      ) {
+        summary.push({ days: [label], hours: schedule[label] });
+      } else if (schedule[label] !== "Выходной") {
+        summary[summary.length - 1].days.push(label);
+      }
+    });
+
+    let formattedHours = summary
+      .map((item) => {
+        const days = item.days.join("-");
+        return `${days} с ${item.hours}`;
+      })
+      .join(", ");
+
+    return formattedHours || "Нет рабочих часов";
   };
 
   useEffect(() => {
@@ -77,7 +95,7 @@ const BranchItem = ({
       <span className="branch-item-card branch-name">{branch.name}</span>
       <span className="branch-item-card branch-adress">{branch.address}</span>
       <span className="branch-item-card branch-schedule">
-        {formatWorkingHours(branch.workingHours)}
+        {formatWorkingHours(branch)}
       </span>
       <button
         onClick={handleMoreClick}

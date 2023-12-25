@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import ContentHeader from "../../components/ContentHeader";
 import BranchItemModal from "../../components/branches/BranchItemModal";
 import DeleteModal from "../../components/DeleteModal";
@@ -47,13 +48,6 @@ const Branches = () => {
 
   const handleConfirmDelete = () => {
     dispatch(deleteBranch(branchToDelete));
-
-    // Update local storage after state update
-    const updatedBranches = branches.filter(
-      (branch) => branch.id !== branchToDelete
-    );
-    localStorage.setItem("branches", JSON.stringify(updatedBranches));
-
     setIsDeleteModalOpen(false);
   };
 
@@ -82,10 +76,21 @@ const Branches = () => {
   const totalPages = Math.ceil(filteredBranches.length / branchesPerPage);
 
   useEffect(() => {
-    // Load branches from local storage
-    const savedBranches = JSON.parse(localStorage.getItem("branches")) || [];
-    dispatch(initializeBranches(savedBranches));
-    console.log(branches);
+    const accessToken = localStorage.getItem("token");
+
+    axios
+      .get("https://neo-cafe.org.kg/api-admin/branches/", {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => {
+        dispatch(initializeBranches(response.data));
+      })
+      .catch((error) => {
+        console.error("Error fetching branches:", error);
+      });
   }, [dispatch]);
 
   return (
