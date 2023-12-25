@@ -51,12 +51,11 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setSelectedImageFile(file); // Set file object for upload
+      setSelectedImageFile(file);
 
-      // Read the file as a data URL to use as the image source
       const reader = new FileReader();
       reader.onloadend = () => {
-        setSelectedImage(reader.result); // Update the state with the image data URL
+        setSelectedImage(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -78,25 +77,32 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
     }
   };
 
+  const dayMappings = {
+    Понедельник: "monday",
+    Вторник: "tuesday",
+    Среда: "wednesday",
+    Четверг: "thursday",
+    Пятница: "friday",
+    Суббота: "saturday",
+    Воскресенье: "sunday",
+  };
+
   const onSubmit = (data) => {
     const accessToken = localStorage.getItem("token");
     const formData = new FormData();
 
-    // Append text fields
     formData.append("name", data.name);
     formData.append("address", data.address);
     formData.append("phone_number", data.phone);
     formData.append("map_link", data.link);
 
-    // Append working hours
-    daysOfWeek.forEach((day) => {
-      const dayLowerCase = day.toLowerCase();
-      formData.append(`${dayLowerCase}`, data.workingHours[day].enabled);
-      formData.append(
-        `${dayLowerCase}_start_time`,
-        data.workingHours[day].from
-      );
-      formData.append(`${dayLowerCase}_end_time`, data.workingHours[day].to);
+    Object.entries(data.workingHours).forEach(([day, values]) => {
+      const dayEnglish = dayMappings[day];
+      formData.append(dayEnglish, values.enabled);
+      if (values.enabled) {
+        formData.append(`${dayEnglish}_start_time`, values.from);
+        formData.append(`${dayEnglish}_end_time`, values.to);
+      }
     });
 
     if (selectedImageFile) {
@@ -142,25 +148,24 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
 
   useEffect(() => {
     if (isOpen && editable) {
-      setSelectedImage(editable.image);
-      setValue("image", editable.image);
-      setValue("name", editable.name);
-      setValue("address", editable.address);
-      setValue("phone", editable.phone);
-      setValue("link", editable.link);
+      setSelectedImage(editable.image || null);
+      setValue("name", editable.name || "");
+      setValue("address", editable.address || "");
+      setValue("phone", editable.phone_number || ""); // Make sure the property name matches
+      setValue("link", editable.map_link || ""); // Make sure the property name matches
 
-      Object.keys(defaultWorkingHours).forEach((day) => {
+      // Check and set the working hours values
+      const workingHoursData = editable.workingHours || defaultWorkingHours;
+      Object.keys(workingHoursData).forEach((day) => {
         setValue(
           `workingHours.${day}.enabled`,
-          editable.workingHours[day].enabled
+          workingHoursData[day]?.enabled || false
         );
-        setValue(`workingHours.${day}.from`, editable.workingHours[day].from);
-        setValue(`workingHours.${day}.to`, editable.workingHours[day].to);
+        setValue(`workingHours.${day}.from`, workingHoursData[day]?.from || "");
+        setValue(`workingHours.${day}.to`, workingHoursData[day]?.to || "");
       });
     } else {
-      setSelectedImage(null);
-      setValue("image", null);
-
+      // Reset to default values when not in edit mode
       reset({
         name: "",
         address: "",
@@ -170,7 +175,7 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
         workingHours: defaultWorkingHours,
       });
     }
-  }, [isOpen, editable, setValue, reset]);
+  }, [isOpen, editable, reset, setValue]);
 
   if (!isOpen) return null;
 

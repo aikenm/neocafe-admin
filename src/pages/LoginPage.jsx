@@ -37,6 +37,7 @@ const LoginPage = () => {
       console.log(response);
 
       if (response.status == 200) {
+        console.log(response.data);
         localStorage.setItem("token", response.data.access);
         dispatch(loginSuccess());
         navigate("/main");

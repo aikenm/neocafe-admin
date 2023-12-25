@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Menu from "./main_subpages/Menu";
 import Stock from "./main_subpages/Stock";
@@ -11,6 +12,7 @@ import signoutIcon from "../images/signout.svg";
 import notificationsIcon from "../images/notifications.svg";
 import { useDispatch } from "react-redux";
 import { logout } from "../store/adminSlice";
+import { initializeBranches } from "../store/branchSlice";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -40,6 +42,24 @@ const MainPage = () => {
   const cancelLogout = () => {
     setShowLogoutModal(false);
   };
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("token");
+
+    axios
+      .get("https://neo-cafe.org.kg/api-admin/branches/", {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => {
+        dispatch(initializeBranches(response.data));
+      })
+      .catch((error) => {
+        console.error("Error fetching branches:", error);
+      });
+  }, [dispatch]);
 
   const renderContent = () => {
     switch (activeComponent) {

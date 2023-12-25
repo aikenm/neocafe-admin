@@ -80,8 +80,6 @@ const Menu = () => {
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   const paginatedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Function definitions
-  // Function definitions
   const handleEdit = (updatedItem) => {
     setEditableItem(updatedItem);
     setModalOpen(true);
@@ -140,8 +138,7 @@ const Menu = () => {
 
   const handleConfirmDeleteCategory = () => {
     if (categoryToDelete) {
-      const accessToken = localStorage.getItem("token"); // Replace 'token' with your actual token key in localStorage
-
+      const accessToken = localStorage.getItem("token");
       axios
         .delete(
           `https://neo-cafe.org.kg/api-admin/category/${categoryToDelete.id}`,
@@ -153,7 +150,6 @@ const Menu = () => {
           }
         )
         .then((response) => {
-          // Handle successful deletion
           dispatch(deleteCategory(categoryToDelete.id));
 
           setIsCategoryDeleteModalOpen(false);
@@ -163,7 +159,6 @@ const Menu = () => {
           }
         })
         .catch((error) => {
-          // Handle error
           console.error("Error deleting category:", error);
         });
     }
@@ -186,7 +181,6 @@ const Menu = () => {
     };
   }, [dropdownRef]);
 
-  // Component rendering logic
   return (
     <div className="menu-container">
       <ContentHeader

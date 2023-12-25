@@ -49,7 +49,6 @@ const Employees = () => {
       setSelectedBranch(String(selectedBranch.id));
       setDisplayedBranchName(selectedBranch.name);
     } else {
-      // Handle the "all" case
       setSelectedBranch("all");
       setDisplayedBranchName("Выберите филиал");
     }
@@ -73,13 +72,6 @@ const Employees = () => {
 
   const handleConfirmDelete = () => {
     dispatch(deleteEmployee(employeeToDelete));
-
-    // Update local storage after state update
-    const updatedEmployees = employees.filter(
-      (employee) => employee.id !== employeeToDelete
-    );
-    localStorage.setItem("employees", JSON.stringify(updatedEmployees));
-
     setIsDeleteModalOpen(false);
   };
 
@@ -97,7 +89,7 @@ const Employees = () => {
       ? employee.name.toLowerCase().startsWith(searchTerm.toLowerCase())
       : true;
     const matchesBranch =
-      selectedBranch === "all" ? true : employee.branch === selectedBranch; // Compare as strings
+      selectedBranch === "all" ? true : employee.branch === selectedBranch;
     return matchesName && matchesBranch;
   });
 
@@ -110,15 +102,7 @@ const Employees = () => {
 
   const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
 
-  useEffect(() => {
-    // Load employees from local storage
-    const savedBranches = JSON.parse(localStorage.getItem("branches")) || [];
-    dispatch(initializeBranches(savedBranches));
-    const savedEmployees = JSON.parse(localStorage.getItem("employees")) || [];
-    dispatch(initializeEmployees(savedEmployees));
-    console.log(employees);
-    console.log(branches);
-  }, [dispatch]);
+  useEffect(() => {}, [dispatch]);
 
   return (
     <div className="employees-container">
