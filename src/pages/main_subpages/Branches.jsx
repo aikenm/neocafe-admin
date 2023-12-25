@@ -47,8 +47,26 @@ const Branches = () => {
   };
 
   const handleConfirmDelete = () => {
-    dispatch(deleteBranch(branchToDelete));
-    setIsDeleteModalOpen(false);
+    const accessToken = localStorage.getItem("token");
+    const url = `https://neo-cafe.org.kg/api-admin/branches/${branchToDelete}/`;
+
+    axios
+      .delete(url, {
+        headers: {
+          accept: "application/json",
+          "X-CSRFToken":
+            "QSSPtjuY3Qq5immYAeadPwYXP07LiGphJNTaPgqG7DyJ3InoRk2u16Tb7tphZqH4",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => {
+        console.log("Branch deleted:", response.data);
+        dispatch(deleteBranch(branchToDelete));
+        setIsDeleteModalOpen(false);
+      })
+      .catch((error) => {
+        console.error("Error deleting branch:", error);
+      });
   };
 
   const handleBranchSubmit = (branchData) => {

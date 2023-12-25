@@ -24,6 +24,9 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
   const daysOfWeek = Object.keys(defaultWorkingHours);
   const [selectedImageFile, setSelectedImageFile] = useState(null);
 
+  //FIX IT
+  const [imageBlob, setImageBlob] = useState(null);
+
   const { register, handleSubmit, control, reset, setValue, watch } = useForm({
     defaultValues: isEditMode
       ? editable
@@ -52,6 +55,9 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setSelectedImageFile(file);
+
+      //FIX IT
+      setImageBlob(file);
 
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -87,7 +93,27 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
     Воскресенье: "sunday",
   };
 
-  const onSubmit = (data) => {
+  //FIX it
+
+  useEffect(() => {
+    if (
+      isOpen &&
+      editable &&
+      editable.image &&
+      !selectedImageFile &&
+      !imageBlob
+    ) {
+      fetch(editable.image)
+        .then((response) => response.blob())
+        .then((blob) => {
+          setImageBlob(blob); // Store the fetched Blob
+          setSelectedImage(URL.createObjectURL(blob));
+        })
+        .catch((error) => console.error("Error fetching image:", error));
+    }
+  }, [isOpen, editable, selectedImageFile, imageBlob]);
+
+  const onSubmit = async (data) => {
     const accessToken = localStorage.getItem("token");
     const formData = new FormData();
 
@@ -105,12 +131,12 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
       }
     });
 
+    //FIX IT
+
     if (selectedImageFile) {
       formData.append("image", selectedImageFile);
-    }
-
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
+    } else if (imageBlob) {
+      formData.append("image", imageBlob, "image.jpg");
     }
 
     const url = `https://neo-cafe.org.kg/api-admin/branches/${
@@ -149,23 +175,29 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
   useEffect(() => {
     if (isOpen && editable) {
       setSelectedImage(editable.image || null);
+      setSelectedImageFile(null);
       setValue("name", editable.name || "");
       setValue("address", editable.address || "");
-      setValue("phone", editable.phone_number || ""); // Make sure the property name matches
-      setValue("link", editable.map_link || ""); // Make sure the property name matches
+      setValue("phone", editable.phone_number || "");
+      setValue("link", editable.map_link || "");
 
-      // Check and set the working hours values
-      const workingHoursData = editable.workingHours || defaultWorkingHours;
-      Object.keys(workingHoursData).forEach((day) => {
-        setValue(
-          `workingHours.${day}.enabled`,
-          workingHoursData[day]?.enabled || false
-        );
-        setValue(`workingHours.${day}.from`, workingHoursData[day]?.from || "");
-        setValue(`workingHours.${day}.to`, workingHoursData[day]?.to || "");
+      Object.keys(dayMappings).forEach((russianDay) => {
+        const englishDay = dayMappings[russianDay];
+        const isEnabled = editable[englishDay];
+        const fromTime =
+          isEnabled && editable[`${englishDay}_start_time`]
+            ? editable[`${englishDay}_start_time`].substring(0, 5)
+            : defaultWorkingHours[russianDay].from;
+        const toTime =
+          isEnabled && editable[`${englishDay}_end_time`]
+            ? editable[`${englishDay}_end_time`].substring(0, 5)
+            : defaultWorkingHours[russianDay].to;
+
+        setValue(`workingHours.${russianDay}.enabled`, isEnabled);
+        setValue(`workingHours.${russianDay}.from`, fromTime);
+        setValue(`workingHours.${russianDay}.to`, toTime);
       });
     } else {
-      // Reset to default values when not in edit mode
       reset({
         name: "",
         address: "",
@@ -174,6 +206,8 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
         image: null,
         workingHours: defaultWorkingHours,
       });
+      setSelectedImage(null);
+      setSelectedImageFile(null);
     }
   }, [isOpen, editable, reset, setValue]);
 
