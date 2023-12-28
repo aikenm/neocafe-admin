@@ -155,7 +155,7 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
         if (isEditMode) {
           dispatch(editBranch({ ...response.data, id: editable.id }));
         } else {
-          dispatch(addBranch({ ...response.data, id: Date.now() }));
+          dispatch(addBranch(response.data));
         }
 
         toggleModal();

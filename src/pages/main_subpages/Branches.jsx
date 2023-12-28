@@ -73,7 +73,7 @@ const Branches = () => {
     if (editableBranch) {
       dispatch(editBranch({ ...editableBranch, ...branchData }));
     } else {
-      dispatch(addBranch({ id: Date.now(), ...branchData }));
+      dispatch(addBranch({ ...branchData }));
     }
     setModalOpen(false);
   };
