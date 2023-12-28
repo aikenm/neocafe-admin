@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import ContentHeader from "../../components/ContentHeader";
 import EmployeeItemModal from "../../components/employees/EmployeeItemModal";
 import DeleteModal from "../../components/DeleteModal";
@@ -102,7 +103,26 @@ const Employees = () => {
 
   const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
 
-  useEffect(() => {}, [dispatch]);
+  useEffect(() => {
+    const accessToken = localStorage.getItem("token");
+    const url = "https://neo-cafe.org.kg/api-admin/staff/profile/";
+
+    axios
+      .get(url, {
+        headers: {
+          accept: "application/json",
+          "X-CSRFToken":
+            "6Yw1nXu0fhgyfM1tWUdSBvRIktAGGbMFF4f3QuXDgzSedNsGZryhlDXmzmoBgVAH",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => {
+        dispatch(initializeEmployees(response.data));
+      })
+      .catch((error) => {
+        console.error("Error fetching employees:", error);
+      });
+  }, [dispatch]);
 
   return (
     <div className="employees-container">

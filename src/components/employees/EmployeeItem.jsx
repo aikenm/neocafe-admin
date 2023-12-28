@@ -15,30 +15,35 @@ const EmployeeItem = ({ employee, branches, index, onEdit, onDelete }) => {
 
   const getBranchName = (branchId) => {
     const numericBranchId = Number(branchId);
-
     const branch = branches.find((b) => b.id === numericBranchId);
     return branch ? branch.name : "Филиал не выбран";
   };
 
   const branchName = getBranchName(employee.branch);
 
-  const formatWorkingDays = (workingHours) => {
+  const formatWorkingDays = () => {
     const dayAbbreviations = {
-      Понедельник: "Пн",
-      Вторник: "Вт",
-      Среда: "Ср",
-      Четверг: "Чт",
-      Пятница: "Пт",
-      Суббота: "Сб",
-      Воскресенье: "Вс",
+      monday: "Пн",
+      tuesday: "Вт",
+      wednesday: "Ср",
+      thursday: "Чт",
+      friday: "Пт",
+      saturday: "Сб",
+      sunday: "Вс",
     };
 
-    return Object.entries(workingHours)
-      .filter(([_, data]) => data.enabled)
-      .map(([day, _]) => dayAbbreviations[day])
-      .join(", ");
+    const workingDays = [];
+
+    for (const [day, isEnabled] of Object.entries(dayAbbreviations)) {
+      if (employee[day]) {
+        workingDays.push(isEnabled);
+      }
+    }
+
+    return workingDays.length > 0 ? workingDays.join(", ") : "Не указан";
   };
-  console.log(employee);
+
+  const displayName = employee.first_name || "";
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -56,16 +61,16 @@ const EmployeeItem = ({ employee, branches, index, onEdit, onDelete }) => {
   return (
     <div className="employee-item">
       <span className="employee-item-card employee-id">№{index + 1}</span>
-      <span className="employee-item-card employee-name">{employee.name}</span>
+      <span className="employee-item-card employee-name">{displayName}</span>
       <span className="employee-item-card employee-position">
-        {employee.role}
+        {employee.position || "Не указана"}
       </span>
       <span className="employee-item-card employee-branch">{branchName}</span>
       <span className="employee-item-card employee-phone">
-        {employee.phone}
+        {employee.phone_number || "Не указан"}
       </span>
       <span className="employee-item-card employee-schedule">
-        {formatWorkingDays(employee.workingHours)}
+        {formatWorkingDays()}
       </span>
       <button onClick={handleMoreClick} className="employee-more-button">
         <img src={moreIcon} alt="more-icon" />
