@@ -4,6 +4,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { addEmployee, editEmployee } from "../../store/employeeSlice";
 import CloseIcon from "../../images/close-icon.svg";
 import "../../styles/components/employees/employee_modal.css";
+import axios from "axios";
 
 const defaultWorkingHours = {
   Понедельник: { enabled: false, from: "11:00", to: "22:00" },
@@ -37,28 +38,88 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
         },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields } = useFieldArray({
     control,
     name: "workingHours",
   });
 
   const workingHours = watch("workingHours");
 
-  const onSubmit = (data) => {
-    if (isEditMode) {
-      dispatch(editEmployee({ ...data, id: editable.id }));
-      const updatedEmployees = employees.map((emp) =>
-        emp.id === editable.id ? { ...data, id: editable.id } : emp
-      );
-      localStorage.setItem("employees", JSON.stringify(updatedEmployees));
-    } else {
-      const newEmployee = { ...data, id: Date.now() };
-      dispatch(addEmployee(newEmployee));
-      const updatedEmployees = [...employees, newEmployee];
-      localStorage.setItem("employees", JSON.stringify(updatedEmployees));
+  const dayMappings = {
+    Понедельник: "monday",
+    Вторник: "tuesday",
+    Среда: "wednesday",
+    Четверг: "thursday",
+    Пятница: "friday",
+    Суббота: "saturday",
+    Воскресенье: "sunday",
+  };
+
+  function formatDateString(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, "0");
+    const day = `${date.getDate()}`.padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  const onSubmit = async (data) => {
+    const accessToken = localStorage.getItem("token");
+    const apiURL = isEditMode
+      ? `https://neo-cafe.org.kg/api-admin/staff/profile/${editable.id}/`
+      : `https://neo-cafe.org.kg/api-admin/staff/profile/`;
+
+    const method = isEditMode ? "put" : "post";
+
+    const formattedDate = data.dob ? formatDateString(data.dob) : null;
+
+    const employeeData = {
+      login: data.login,
+      password: data.password,
+      phone_number: data.phone,
+      date_of_birth: formattedDate,
+      first_name: data.first_name,
+      last_name: data.last_name,
+      position: data.position,
+      branch: data.branch,
+    };
+
+    Object.entries(data.workingHours).forEach(([day, values]) => {
+      const dayEnglish = dayMappings[day];
+      employeeData[`${dayEnglish}`] = values.enabled;
+      if (values.enabled) {
+        employeeData[`${dayEnglish}_start_time`] = values.from;
+        employeeData[`${dayEnglish}_end_time`] = values.to;
+      }
+    });
+
+    try {
+      const response = await axios({
+        url: apiURL,
+        method,
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+          "X-CSRFToken":
+            "6Yw1nXu0fhgyfM1tWUdSBvRIktAGGbMFF4f3QuXDgzSedNsGZryhlDXmzmoBgVAH",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: JSON.stringify(employeeData),
+      });
+
+      console.log("Response:", response.data);
+
+      if (isEditMode) {
+        dispatch(editEmployee({ ...response.data, id: editable.id }));
+      } else {
+        dispatch(addEmployee(response.data));
+      }
+
+      toggleModal();
+      reset();
+    } catch (error) {
+      console.error("Error:", error);
     }
-    toggleModal();
-    reset();
   };
 
   const handleCloseModal = () => {
@@ -68,35 +129,56 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
 
   useEffect(() => {
     if (isOpen && editable) {
-      setValue("login", editable.login);
-      setValue("password", editable.password);
-      setValue("name", editable.name);
-      setValue("role", editable.role);
-      setValue("dob", editable.dob);
-      setValue("phone", editable.phone);
-      setValue("branch", editable.branch);
+      // Set general information
+      setValue("login", editable.login || "");
+      setValue("password", editable.password || "");
+      setValue("first_name", editable.first_name || "");
+      setValue("last_name", editable.last_name || "");
+      setValue("position", editable.position || "");
+      setValue("dob", editable.date_of_birth || "");
+      setValue("phone", editable.phone_number || "");
+      setValue("branch", editable.branch || "");
 
-      Object.keys(defaultWorkingHours).forEach((day) => {
-        setValue(
-          `workingHours.${day}.enabled`,
-          editable.workingHours[day].enabled
-        );
-        setValue(`workingHours.${day}.from`, editable.workingHours[day].from);
-        setValue(`workingHours.${day}.to`, editable.workingHours[day].to);
+      // Set working hours information
+      Object.keys(defaultWorkingHours).forEach((russianDay) => {
+        const dayMappings = {
+          Понедельник: "monday",
+          Вторник: "tuesday",
+          Среда: "wednesday",
+          Четверг: "thursday",
+          Пятница: "friday",
+          Суббота: "saturday",
+          Воскресенье: "sunday",
+        };
+        const englishDay = dayMappings[russianDay];
+        const isEnabled = editable[englishDay];
+        const fromTime =
+          isEnabled && editable[`${englishDay}_start_time`]
+            ? editable[`${englishDay}_start_time`].substring(0, 5)
+            : defaultWorkingHours[russianDay].from;
+        const toTime =
+          isEnabled && editable[`${englishDay}_end_time`]
+            ? editable[`${englishDay}_end_time`].substring(0, 5)
+            : defaultWorkingHours[russianDay].to;
+
+        setValue(`workingHours.${russianDay}.enabled`, isEnabled || false);
+        setValue(`workingHours.${russianDay}.from`, fromTime);
+        setValue(`workingHours.${russianDay}.to`, toTime);
       });
     } else {
       reset({
         login: "",
         password: "",
-        name: "",
-        role: "",
+        first_name: "",
+        last_name: "",
+        position: "",
         dob: "",
         phone: "",
         branch: "",
         workingHours: defaultWorkingHours,
       });
     }
-  }, [isOpen, editable, setValue, reset]);
+  }, [isOpen, editable, reset, setValue, defaultWorkingHours]);
 
   if (!isOpen) return null;
 
@@ -134,18 +216,25 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
               />
               <span className="input-title">Имя</span>
               <input
-                {...register("name")}
-                placeholder="Как зовут сотрудника"
+                {...register("first_name")}
+                placeholder="Имя сотрудника"
+                className="input-field"
+              />
+              <span className="input-title">Фамилия</span>
+              <input
+                {...register("last_name")}
+                placeholder="Фамилия сотрудника"
                 className="input-field"
               />
               <span className="input-title">Должность</span>
-              <select {...register("role")} className="input-field">
+              <select {...register("position")} className="input-field">
                 <option value="" disabled selected>
                   Выберите должность
                 </option>
-                <option value="Бариста">Бариста</option>
-                <option value="Официант">Официант</option>
+                <option value="waiter">Официант</option>
+                <option value="barista">Бариста</option>
               </select>
+
               <span className="input-title">Дата рождения</span>
               <input {...register("dob")} type="date" className="input-field" />
               <span className="input-title">Номер телефона</span>

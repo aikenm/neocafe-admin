@@ -12,7 +12,7 @@ export const employeeSlice = createSlice({
         editEmployee: (state, action) => {
             const index = state.employees.findIndex(employee => employee.id === action.payload.id);
             if (index !== -1) {
-                state.employees[index] = { ...state.employees[index], ...action.payload };
+                state.employees[index] = action.payload;
             }
         },
         deleteEmployee: (state, action) => {

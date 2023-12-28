@@ -105,6 +105,7 @@ const Branches = () => {
       })
       .then((response) => {
         dispatch(initializeBranches(response.data));
+        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching branches:", error);
