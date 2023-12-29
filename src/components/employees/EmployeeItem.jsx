@@ -43,6 +43,15 @@ const EmployeeItem = ({ employee, branches, index, onEdit, onDelete }) => {
     return workingDays.length > 0 ? workingDays.join(", ") : "Не указан";
   };
 
+  const positionMapping = {
+    waiter: "Официант",
+    barista: "Бариста",
+  };
+
+  const getPositionTranslation = (positionKey) => {
+    return positionMapping[positionKey] || "Не указана";
+  };
+
   const displayName = employee.first_name || "";
 
   useEffect(() => {
@@ -63,7 +72,7 @@ const EmployeeItem = ({ employee, branches, index, onEdit, onDelete }) => {
       <span className="employee-item-card employee-id">№{index + 1}</span>
       <span className="employee-item-card employee-name">{displayName}</span>
       <span className="employee-item-card employee-position">
-        {employee.position || "Не указана"}
+        {getPositionTranslation(employee.position)}
       </span>
       <span className="employee-item-card employee-branch">{branchName}</span>
       <span className="employee-item-card employee-phone">

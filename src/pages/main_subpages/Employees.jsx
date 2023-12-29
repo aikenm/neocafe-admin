@@ -104,12 +104,15 @@ const Employees = () => {
   };
 
   const filteredEmployees = employees.filter((employee) => {
+    const employeeBranch = String(employee.branch);
+    const isBranchMatch =
+      selectedBranch === "all" || employeeBranch === selectedBranch;
+
     const matchesName = searchTerm
-      ? employee.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+      ? employee.name.toLowerCase().includes(searchTerm.toLowerCase())
       : true;
-    const matchesBranch =
-      selectedBranch === "all" ? true : employee.branch === selectedBranch;
-    return matchesName && matchesBranch;
+
+    return matchesName && isBranchMatch;
   });
 
   const indexOfLastEmployee = currentPage * employeesPerPage;
