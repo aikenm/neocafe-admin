@@ -12,7 +12,6 @@ import {
   deleteEmployee,
   initializeEmployees,
 } from "../../store/employeeSlice";
-import { initializeBranches } from "../../store/branchSlice";
 import dropClosed from "../../images/down-closed.svg";
 import dropOpen from "../../images/drop-down-open.svg";
 import "../../styles/pages/subpages/employees/employees.css";
@@ -72,7 +71,26 @@ const Employees = () => {
   };
 
   const handleConfirmDelete = () => {
-    dispatch(deleteEmployee(employeeToDelete));
+    const accessToken = localStorage.getItem("token");
+    const url = `https://neo-cafe.org.kg/api-admin/staff/${employeeToDelete}/`;
+
+    axios
+      .delete(url, {
+        headers: {
+          accept: "application/json",
+          "X-CSRFToken":
+            "ygaH6CEm6tTWguqyoThAD00REjRVbV7R7mTJz97Z7LvCevRLrqCZn86vTcFQLFVT",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => {
+        dispatch(deleteEmployee(employeeToDelete));
+        console.log("Employee deleted successfully");
+      })
+      .catch((error) => {
+        console.error("Error deleting employee:", error);
+      });
+
     setIsDeleteModalOpen(false);
   };
 
@@ -80,7 +98,7 @@ const Employees = () => {
     if (editableEmployee) {
       dispatch(editEmployee({ ...editableEmployee, ...employeeData }));
     } else {
-      dispatch(addEmployee({ id: Date.now(), ...employeeData }));
+      dispatch(addEmployee(...employeeData));
     }
     setModalOpen(false);
   };

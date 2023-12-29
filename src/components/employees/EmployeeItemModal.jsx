@@ -66,8 +66,8 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
   const onSubmit = async (data) => {
     const accessToken = localStorage.getItem("token");
     const apiURL = isEditMode
-      ? `https://neo-cafe.org.kg/api-admin/staff/profile/${editable.id}/`
-      : `https://neo-cafe.org.kg/api-admin/staff/profile/`;
+      ? `https://neo-cafe.org.kg/api-admin/staff/${editable.id}/`
+      : `https://neo-cafe.org.kg/api-admin/staff/create`;
 
     const method = isEditMode ? "put" : "post";
 
@@ -101,7 +101,7 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
           accept: "application/json",
           "Content-Type": "application/json",
           "X-CSRFToken":
-            "6Yw1nXu0fhgyfM1tWUdSBvRIktAGGbMFF4f3QuXDgzSedNsGZryhlDXmzmoBgVAH",
+            "ygaH6CEm6tTWguqyoThAD00REjRVbV7R7mTJz97Z7LvCevRLrqCZn86vTcFQLFVT",
           Authorization: `Bearer ${accessToken}`,
         },
         data: JSON.stringify(employeeData),
