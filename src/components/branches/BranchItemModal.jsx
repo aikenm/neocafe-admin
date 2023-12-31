@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useForm, useFieldArray } from "react-hook-form";
 import { addBranch, editBranch } from "../../store/branchSlice";
 import CloseIcon from "../../images/close-icon.svg";
@@ -17,9 +17,18 @@ const defaultWorkingHours = {
   Воскресенье: { enabled: false, from: "08:00", to: "17:00" },
 };
 
+const dayMappings = {
+  Понедельник: "monday",
+  Вторник: "tuesday",
+  Среда: "wednesday",
+  Четверг: "thursday",
+  Пятница: "friday",
+  Суббота: "saturday",
+  Воскресенье: "sunday",
+};
+
 const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
   const dispatch = useDispatch();
-  const branches = useSelector((state) => state.branch.branches);
   const isEditMode = editable != null;
   const daysOfWeek = Object.keys(defaultWorkingHours);
   const [selectedImageFile, setSelectedImageFile] = useState(null);
@@ -40,7 +49,7 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
         },
   });
 
-  const { fields } = useFieldArray({
+  useFieldArray({
     control,
     name: "workingHours",
   });
@@ -48,8 +57,6 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
   const [selectedImage, setSelectedImage] = useState(
     isEditMode ? editable.image : null
   );
-
-  const workingHours = watch("workingHours");
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -81,16 +88,6 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
 
       reader.readAsDataURL(file);
     }
-  };
-
-  const dayMappings = {
-    Понедельник: "monday",
-    Вторник: "tuesday",
-    Среда: "wednesday",
-    Четверг: "thursday",
-    Пятница: "friday",
-    Суббота: "saturday",
-    Воскресенье: "sunday",
   };
 
   //FIX it

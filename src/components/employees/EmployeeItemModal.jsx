@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm, useFieldArray } from "react-hook-form";
 import { addEmployee, editEmployee } from "../../store/employeeSlice";
@@ -16,10 +16,19 @@ const defaultWorkingHours = {
   Воскресенье: { enabled: false, from: "08:00", to: "17:00" },
 };
 
+const dayMappings = {
+  Понедельник: "monday",
+  Вторник: "tuesday",
+  Среда: "wednesday",
+  Четверг: "thursday",
+  Пятница: "friday",
+  Суббота: "saturday",
+  Воскресенье: "sunday",
+};
+
 const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
   const dispatch = useDispatch();
   const branches = useSelector((state) => state.branch.branches);
-  const employees = useSelector((state) => state.employee.employees);
   const isEditMode = editable != null;
   const daysOfWeek = Object.keys(defaultWorkingHours);
 
@@ -38,22 +47,10 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
         },
   });
 
-  const { fields } = useFieldArray({
+  useFieldArray({
     control,
     name: "workingHours",
   });
-
-  const workingHours = watch("workingHours");
-
-  const dayMappings = {
-    Понедельник: "monday",
-    Вторник: "tuesday",
-    Среда: "wednesday",
-    Четверг: "thursday",
-    Пятница: "friday",
-    Суббота: "saturday",
-    Воскресенье: "sunday",
-  };
 
   function formatDateString(dateString) {
     const date = new Date(dateString);
@@ -129,7 +126,6 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
 
   useEffect(() => {
     if (isOpen && editable) {
-      // Set general information
       setValue("login", editable.login || "");
       setValue("password", editable.password || "");
       setValue("first_name", editable.first_name || "");
@@ -139,7 +135,6 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
       setValue("phone", editable.phone_number || "");
       setValue("branch", editable.branch || "");
 
-      // Set working hours information
       Object.keys(defaultWorkingHours).forEach((russianDay) => {
         const dayMappings = {
           Понедельник: "monday",
@@ -178,7 +173,7 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
         workingHours: defaultWorkingHours,
       });
     }
-  }, [isOpen, editable, reset, setValue, defaultWorkingHours]);
+  }, [isOpen, editable, reset, setValue]);
 
   if (!isOpen) return null;
 
