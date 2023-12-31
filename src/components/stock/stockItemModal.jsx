@@ -6,45 +6,22 @@ import { addStockItem, editStockItem } from "../../store/stockSlice";
 import CloseIcon from "../../images/close-icon.svg";
 import "../../styles/components/stock/stock_modal.css";
 
+const unitMapping = {
+  г: "g",
+  кг: "kg",
+  мл: "ml",
+  л: "l",
+  шт: "unit",
+};
+
 const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
   const dispatch = useDispatch();
   const { register, handleSubmit, reset } = useForm();
-
-  useEffect(() => {
-    if (!editable && isOpen) {
-      reset({
-        name: "",
-        category: "",
-        amount: "",
-        unit: "г",
-        minLimit: "",
-        arrivalDate: "",
-        stockId: selectedStock,
-      });
-    }
-  }, [editable, isOpen, reset, selectedStock]);
-
-  useEffect(() => {
-    if (editable && isOpen) {
-      reset({
-        ...editable,
-        stockId: editable.stockId || selectedStock,
-      });
-    }
-  }, [editable, isOpen, reset, selectedStock]);
 
   const onSubmit = async (data) => {
     const accessToken = localStorage.getItem("token");
     let apiURL;
     let method;
-
-    const unitMapping = {
-      г: "g",
-      кг: "kg",
-      мл: "ml",
-      л: "l",
-      шт: "unit",
-    };
 
     const productData = {
       name: data.name,
@@ -94,6 +71,37 @@ const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
     reset();
     toggleModal();
   };
+
+  useEffect(() => {
+    if (!editable && isOpen) {
+      reset({
+        name: "",
+        category: "",
+        amount: "",
+        unit: "г",
+        minLimit: "",
+        arrivalDate: "",
+        stockId: selectedStock,
+      });
+    }
+  }, [editable, isOpen, reset, selectedStock]);
+
+  useEffect(() => {
+    if (editable && isOpen) {
+      reset({
+        name: editable.name,
+        category: editable.category,
+        amount: editable.quantity,
+        unit:
+          Object.keys(unitMapping).find(
+            (key) => unitMapping[key] === editable.quantity_unit
+          ) || "",
+        minLimit: editable.limit,
+        arrivalDate: editable.arrival_date,
+        stockId: editable.stockId || selectedStock,
+      });
+    }
+  }, [editable, isOpen, reset, selectedStock]);
 
   if (!isOpen) return null;
 

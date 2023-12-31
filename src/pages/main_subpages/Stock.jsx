@@ -28,34 +28,28 @@ const Stock = () => {
   const [displayedStockName, setDisplayedStockName] =
     useState("Выберите склад");
 
-  useEffect(() => {
-    if (branches.length > 0) {
-      const firstBranchId = String(branches[0].id);
-      setSelectedStock(firstBranchId);
-      setDisplayedStockName(branches[0].name);
-      fetchInventoryItems(firstBranchId);
-    }
-  }, [branches]);
-
-  const fetchInventoryItems = async (branchId) => {
-    try {
-      const accessToken = localStorage.getItem("token");
-      const response = await axios.get(
-        `https://neo-cafe.org.kg/api-warehouse/branches/${branchId}/inventory/`,
-        {
-          headers: {
-            accept: "application/json",
-            "X-CSRFToken":
-              "zeruwFWl4OSHaunglUEwhc0nHSKG6iBx7iSK6078MxDtAulJyFyWcXIvBZDFnxon",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      dispatch(initializeStockItems(response.data));
-    } catch (error) {
-      console.error("Error fetching inventory items:", error);
-    }
-  };
+  const fetchInventoryItems = useCallback(
+    async (branchId) => {
+      try {
+        const accessToken = localStorage.getItem("token");
+        const response = await axios.get(
+          `https://neo-cafe.org.kg/api-warehouse/branches/${branchId}/inventory/`,
+          {
+            headers: {
+              accept: "application/json",
+              "X-CSRFToken":
+                "zeruwFWl4OSHaunglUEwhc0nHSKG6iBx7iSK6078MxDtAulJyFyWcXIvBZDFnxon",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        dispatch(initializeStockItems(response.data));
+      } catch (error) {
+        console.error("Error fetching inventory items:", error);
+      }
+    },
+    [dispatch]
+  );
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -105,10 +99,6 @@ const Stock = () => {
     });
   }, [stockItems, selectedSubpage, searchTerm, selectedStock]);
 
-  useEffect(() => {
-    filterItems();
-  }, [filterItems]);
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const paginatedItems = filterItems().slice(indexOfFirstItem, indexOfLastItem);
@@ -147,6 +137,19 @@ const Stock = () => {
     setIsDeleteModalOpen(false);
     setItemToDelete(null);
   };
+
+  useEffect(() => {
+    filterItems();
+  }, [filterItems]);
+
+  useEffect(() => {
+    if (branches.length > 0) {
+      const firstBranchId = String(branches[0].id);
+      setSelectedStock(firstBranchId);
+      setDisplayedStockName(branches[0].name);
+      fetchInventoryItems(firstBranchId);
+    }
+  }, [branches, fetchInventoryItems]);
 
   const renderSubpageContent = () => {
     if (paginatedItems.length === 0) {
