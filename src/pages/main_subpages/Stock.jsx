@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import ContentHeader from "../../components/ContentHeader";
 import StockItem from "../../components/stock/StockItem";
@@ -27,7 +27,10 @@ const Stock = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [displayedStockName, setDisplayedStockName] =
     useState("Выберите склад");
+
+  // Change after server fixes
   const [originalCategories, setOriginalCategories] = useState({});
+  const originalCategoriesRef = useRef(originalCategories);
 
   const fetchInventoryItems = useCallback(
     async (branchId) => {
@@ -38,30 +41,24 @@ const Stock = () => {
           {
             headers: {
               accept: "application/json",
-              "X-CSRFToken":
-                "zeruwFWl4OSHaunglUEwhc0nHSKG6iBx7iSK6078MxDtAulJyFyWcXIvBZDFnxon",
+              "X-CSRFToken": "your-token-here",
               Authorization: `Bearer ${accessToken}`,
             },
           }
         );
-        const newCategories = response.data.reduce(
-          (acc, item) => {
-            acc[item.id] =
-              item.category !== "running_out"
-                ? item.category
-                : acc[item.id] || item.category;
-            return acc;
-          },
-          { ...originalCategories }
-        );
-        setOriginalCategories(newCategories);
 
+        const newCategories = response.data.reduce((acc, item) => {
+          acc[item.id] = item.category;
+          return acc;
+        }, {});
+
+        setOriginalCategories(newCategories);
         dispatch(initializeStockItems(response.data));
       } catch (error) {
         console.error("Error fetching inventory items:", error);
       }
     },
-    [dispatch, originalCategories]
+    [dispatch]
   );
 
   const toggleDropdown = () => {
@@ -86,22 +83,25 @@ const Stock = () => {
     setCurrentPage(1);
   };
 
+  // Change after server fixes
+
   const filterItems = useCallback(() => {
     return stockItems.filter((item) => {
       const matchesSearchTerm = item.name
         .toLowerCase()
         .startsWith(searchTerm.toLowerCase());
       const isCorrectStock = item.branch.toString() === selectedStock;
-      const isExpiring = item.quantity <= item.limit;
-      const originalCategory = originalCategories[item.id];
+      const isExpiring = item.is_running_out && item.quantity <= item.limit;
+      const originalCategory = originalCategories[item.id] || item.category;
 
       let isInOriginalCategory = originalCategory === selectedSubpage;
-      let isRunningOut = selectedSubpage === "expiringProducts" && isExpiring;
+      let isRunningOutCategory =
+        selectedSubpage === "expiringProducts" && isExpiring;
 
       return (
         matchesSearchTerm &&
         isCorrectStock &&
-        (isInOriginalCategory || isRunningOut)
+        (isInOriginalCategory || isRunningOutCategory)
       );
     });
   }, [
@@ -139,12 +139,29 @@ const Stock = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (itemToDelete) {
-      dispatch(deleteStockItem(itemToDelete.id));
+      try {
+        const accessToken = localStorage.getItem("token");
+        await axios.delete(
+          `https://neo-cafe.org.kg/api-warehouse/branches/${selectedStock}/inventory/${itemToDelete.id}/`,
+          {
+            headers: {
+              accept: "application/json",
+              "X-CSRFToken":
+                "F1ohOeM7SHkvANB0TEPGlHB9zJdqHzA5U54NGnNxjBoIyTBSKQt5HLNvlxBSntk3",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        dispatch(deleteStockItem(itemToDelete.id));
+      } catch (error) {
+        console.error("Error deleting inventory item:", error);
+      }
+      setIsDeleteModalOpen(false);
+      setItemToDelete(null);
     }
-    setIsDeleteModalOpen(false);
-    setItemToDelete(null);
   };
 
   const handleCancelDelete = () => {
@@ -156,21 +173,37 @@ const Stock = () => {
     filterItems();
   }, [filterItems]);
 
+  // Change after server fixes
+
   useEffect(() => {
-    if (stockItems.length > 0) {
-      const newCategories = stockItems.reduce(
-        (acc, item) => {
-          acc[item.id] =
-            item.category !== "running_out"
-              ? item.category
-              : acc[item.id] || item.category;
-          return acc;
-        },
-        { ...originalCategories }
-      );
+    if (branches.length > 0) {
+      const firstBranchId = String(branches[0].id);
+      setSelectedStock(firstBranchId);
+      setDisplayedStockName(branches[0].name);
+      fetchInventoryItems(firstBranchId);
+    }
+  }, [branches, fetchInventoryItems]);
+
+  useEffect(() => {
+    originalCategoriesRef.current = originalCategories;
+  }, [originalCategories]);
+
+  useEffect(() => {
+    const newCategories = stockItems.reduce((acc, item) => {
+      acc[item.id] =
+        item.category !== "running_out"
+          ? item.category
+          : acc[item.id] || item.category;
+      return acc;
+    }, {});
+
+    if (
+      JSON.stringify(newCategories) !==
+      JSON.stringify(originalCategoriesRef.current)
+    ) {
       setOriginalCategories(newCategories);
     }
-  }, [stockItems, originalCategories]);
+  }, [stockItems]);
 
   const renderSubpageContent = () => {
     if (paginatedItems.length === 0) {
