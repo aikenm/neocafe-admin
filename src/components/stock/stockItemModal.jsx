@@ -89,7 +89,8 @@ const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
   useEffect(() => {
     if (editable && isOpen) {
       reset({
-        name: editable.name,
+        ...editable,
+        // Assuming 'editable' contains the correct category
         category: editable.category,
         amount: editable.quantity,
         unit:

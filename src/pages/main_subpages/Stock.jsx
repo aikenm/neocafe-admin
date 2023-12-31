@@ -27,6 +27,7 @@ const Stock = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [displayedStockName, setDisplayedStockName] =
     useState("Выберите склад");
+  const [originalCategories, setOriginalCategories] = useState({});
 
   const fetchInventoryItems = useCallback(
     async (branchId) => {
@@ -43,12 +44,24 @@ const Stock = () => {
             },
           }
         );
+        const newCategories = response.data.reduce(
+          (acc, item) => {
+            acc[item.id] =
+              item.category !== "running_out"
+                ? item.category
+                : acc[item.id] || item.category;
+            return acc;
+          },
+          { ...originalCategories }
+        );
+        setOriginalCategories(newCategories);
+
         dispatch(initializeStockItems(response.data));
       } catch (error) {
         console.error("Error fetching inventory items:", error);
       }
     },
-    [dispatch]
+    [dispatch, originalCategories]
   );
 
   const toggleDropdown = () => {
@@ -79,25 +92,25 @@ const Stock = () => {
         .toLowerCase()
         .startsWith(searchTerm.toLowerCase());
       const isCorrectStock = item.branch.toString() === selectedStock;
-      let isCorrectCategory = true;
+      const isExpiring = item.quantity <= item.limit;
+      const originalCategory = originalCategories[item.id];
 
-      switch (selectedSubpage) {
-        case "ready_products":
-          isCorrectCategory = item.category === "ready_products";
-          break;
-        case "raw_materials":
-          isCorrectCategory = item.category === "raw_materials";
-          break;
-        case "expiringProducts":
-          isCorrectCategory = item.category === "running_out";
-          break;
-        default:
-          break;
-      }
+      let isInOriginalCategory = originalCategory === selectedSubpage;
+      let isRunningOut = selectedSubpage === "expiringProducts" && isExpiring;
 
-      return matchesSearchTerm && isCorrectStock && isCorrectCategory;
+      return (
+        matchesSearchTerm &&
+        isCorrectStock &&
+        (isInOriginalCategory || isRunningOut)
+      );
     });
-  }, [stockItems, selectedSubpage, searchTerm, selectedStock]);
+  }, [
+    stockItems,
+    selectedSubpage,
+    searchTerm,
+    selectedStock,
+    originalCategories,
+  ]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -105,7 +118,8 @@ const Stock = () => {
   const totalPages = Math.ceil(filterItems().length / itemsPerPage);
 
   const handleEditItem = (item) => {
-    setEditableItem(item);
+    const actualCategory = originalCategories[item.id] || item.category;
+    setEditableItem({ ...item, category: actualCategory });
     setModalOpen(true);
   };
 
@@ -143,13 +157,20 @@ const Stock = () => {
   }, [filterItems]);
 
   useEffect(() => {
-    if (branches.length > 0) {
-      const firstBranchId = String(branches[0].id);
-      setSelectedStock(firstBranchId);
-      setDisplayedStockName(branches[0].name);
-      fetchInventoryItems(firstBranchId);
+    if (stockItems.length > 0) {
+      const newCategories = stockItems.reduce(
+        (acc, item) => {
+          acc[item.id] =
+            item.category !== "running_out"
+              ? item.category
+              : acc[item.id] || item.category;
+          return acc;
+        },
+        { ...originalCategories }
+      );
+      setOriginalCategories(newCategories);
     }
-  }, [branches, fetchInventoryItems]);
+  }, [stockItems, originalCategories]);
 
   const renderSubpageContent = () => {
     if (paginatedItems.length === 0) {

@@ -103,7 +103,7 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
       fetch(editable.image)
         .then((response) => response.blob())
         .then((blob) => {
-          setImageBlob(blob); // Store the fetched Blob
+          setImageBlob(blob);
           setSelectedImage(URL.createObjectURL(blob));
         })
         .catch((error) => console.error("Error fetching image:", error));
