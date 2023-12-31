@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addStockItem, editStockItem } from "../../store/stockSlice";
@@ -32,14 +33,61 @@ const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
     }
   }, [editable, isOpen, reset, selectedStock]);
 
-  const onSubmit = (data) => {
-    const itemData = { ...data, id: editable ? editable.id : Date.now() };
+  const onSubmit = async (data) => {
+    const accessToken = localStorage.getItem("token");
+    let apiURL;
+    let method;
+
+    const unitMapping = {
+      г: "g",
+      кг: "kg",
+      мл: "ml",
+      л: "l",
+      шт: "unit",
+    };
+
+    const productData = {
+      name: data.name,
+      quantity: data.amount,
+      quantity_unit: unitMapping[data.unit],
+      limit: data.minLimit,
+      arrival_date: data.arrivalDate,
+      category: data.category,
+      is_running_out: false,
+      branch: selectedStock,
+    };
+
     if (editable) {
-      dispatch(editStockItem(itemData));
+      apiURL = `https://neo-cafe.org.kg/api-warehouse/branches/${selectedStock}/inventory/${editable.id}/`;
+      method = "put";
     } else {
-      dispatch(addStockItem(itemData));
+      apiURL = `https://neo-cafe.org.kg/api-warehouse/branches/${selectedStock}/inventory/`;
+      method = "post";
     }
-    toggleModal();
+
+    try {
+      const response = await axios({
+        url: apiURL,
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken":
+            "ygaH6CEm6tTWguqyoThAD00REjRVbV7R7mTJz97Z7LvCevRLrqCZn86vTcFQLFVT",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: JSON.stringify(productData),
+      });
+
+      if (editable) {
+        dispatch(editStockItem({ ...response.data, id: editable.id }));
+      } else {
+        dispatch(addStockItem(response.data));
+      }
+
+      toggleModal();
+    } catch (error) {
+      console.error("Error in operation:", error);
+    }
   };
 
   const handleCloseModal = () => {
@@ -80,8 +128,8 @@ const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
                 <span className="input-title">Категория</span>
                 <select {...register("category")} className="input-field">
                   <option value="">Выберите категорию</option>
-                  <option value="finishedGoods">Готовая продукция</option>
-                  <option value="rawMaterials">Сырье</option>
+                  <option value="ready_products">Готовая продукция</option>
+                  <option value="raw_materials">Сырье</option>
                 </select>
               </div>
               <div className="inline-input-group amount-unit-group">

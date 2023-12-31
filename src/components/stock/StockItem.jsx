@@ -26,17 +26,31 @@ const StockItem = ({ item, index, onEdit, onDelete }) => {
     };
   }, [optionsRef]);
 
+  const formatUnit = (unit) => {
+    const unitMapping = {
+      g: "г",
+      kg: "кг",
+      ml: "мл",
+      l: "л",
+      unit: "шт",
+    };
+
+    return unitMapping[unit] || unit;
+  };
+
   return (
     <div className="stock-item">
       <span className="stock-item-card stock-id">№{index + 1}</span>
       <span className="stock-item-card stock-name">{item.name}</span>
       <span className="stock-item-card stock-amount">
-        {item.amount} {item.unit}
+        {item.quantity} {formatUnit(item.quantity_unit)}
       </span>
       <span className="stock-item-card stock-limit">
-        {item.minLimit} {item.unit}
+        {item.limit} {formatUnit(item.quantity_unit)}
       </span>
-      <span className="stock-item-card stock-date">{item.arrivalDate}</span>
+      <span className="stock-item-card stock-date">
+        {new Date(item.arrival_date).toLocaleDateString()}
+      </span>
       <button onClick={handleMoreClick} className="stock-more-button">
         <img src={moreIcon} alt="more-icon" />
       </button>
@@ -49,7 +63,7 @@ const StockItem = ({ item, index, onEdit, onDelete }) => {
             }}
             className="option-button"
           >
-            <img src={editIcon} alt="edit-icon" className="option-icon" />{" "}
+            <img src={editIcon} alt="edit-icon" className="option-icon" />
             Редактировать
           </button>
           <button
@@ -59,7 +73,7 @@ const StockItem = ({ item, index, onEdit, onDelete }) => {
             }}
             className="option-button"
           >
-            <img src={deleteIcon} alt="delete-icon" className="option-icon" />{" "}
+            <img src={deleteIcon} alt="delete-icon" className="option-icon" />
             Удалить
           </button>
         </div>

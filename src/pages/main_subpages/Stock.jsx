@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import ContentHeader from "../../components/ContentHeader";
 import StockItem from "../../components/stock/StockItem";
@@ -12,8 +12,8 @@ import dropOpen from "../../images/drop-down-open.svg";
 import "../../styles/pages/subpages/stock/stock.css";
 
 const Stock = () => {
-  const [selectedStock, setSelectedStock] = useState("stock1");
-  const [selectedSubpage, setSelectedSubpage] = useState("finishedGoods");
+  const [selectedStock, setSelectedStock] = useState("");
+  const [selectedSubpage, setSelectedSubpage] = useState("ready_products");
   const [currentPage, setCurrentPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [editableItem, setEditableItem] = useState(null);
@@ -22,14 +22,40 @@ const Stock = () => {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
-
   const itemsPerPage = 5;
-
   const branches = useSelector((state) => state.branch.branches);
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [displayedStockName, setDisplayedStockName] =
     useState("Выберите склад");
+
+  useEffect(() => {
+    if (branches.length > 0) {
+      const firstBranchId = String(branches[0].id);
+      setSelectedStock(firstBranchId);
+      setDisplayedStockName(branches[0].name);
+      fetchInventoryItems(firstBranchId);
+    }
+  }, [branches]);
+
+  const fetchInventoryItems = async (branchId) => {
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await axios.get(
+        `https://neo-cafe.org.kg/api-warehouse/branches/${branchId}/inventory/`,
+        {
+          headers: {
+            accept: "application/json",
+            "X-CSRFToken":
+              "zeruwFWl4OSHaunglUEwhc0nHSKG6iBx7iSK6078MxDtAulJyFyWcXIvBZDFnxon",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      dispatch(initializeStockItems(response.data));
+    } catch (error) {
+      console.error("Error fetching inventory items:", error);
+    }
+  };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -40,35 +66,11 @@ const Stock = () => {
     setCurrentPage(1);
   };
 
-  const fetchInventoryItems = async (branchId) => {
-    try {
-      const response = await axios.get(
-        `https://neo-cafe.org.kg/api-warehouse/branches/${branchId}/inventory/`,
-        {
-          headers: {
-            accept: "application/json",
-            "X-CSRFToken":
-              "zeruwFWl4OSHaunglUEwhc0nHSKG6iBx7iSK6078MxDtAulJyFyWcXIvBZDFnxon",
-          },
-        }
-      );
-      dispatch(initializeStockItems(response.data));
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching inventory items:", error);
-    }
-  };
-
   const handleSelectStock = (stockName) => {
-    const selectedStock = branches.find((b) => b.name === stockName);
-    if (selectedStock) {
-      setSelectedStock(String(selectedStock.id));
-      setDisplayedStockName(selectedStock.name);
-      fetchInventoryItems(1);
-    } else {
-      setSelectedStock("all");
-      setDisplayedStockName("Выберите склад");
-    }
+    const selectedBranch = branches.find((b) => b.name === stockName);
+    setSelectedStock(String(selectedBranch.id));
+    setDisplayedStockName(selectedBranch.name);
+    fetchInventoryItems(selectedBranch.id);
     setIsDropdownOpen(false);
   };
 
@@ -77,43 +79,44 @@ const Stock = () => {
     setCurrentPage(1);
   };
 
-  const filteredItems = stockItems.filter((item) => {
-    const matchesSearchTerm = item.name
-      .toLowerCase()
-      .startsWith(searchTerm.toLowerCase());
-    const isCorrectStock = item.stockId === selectedStock;
-    let isCorrectCategory = true;
+  const filterItems = useCallback(() => {
+    return stockItems.filter((item) => {
+      const matchesSearchTerm = item.name
+        .toLowerCase()
+        .startsWith(searchTerm.toLowerCase());
+      const isCorrectStock = item.branch.toString() === selectedStock;
+      let isCorrectCategory = true;
 
-    switch (selectedSubpage) {
-      case "finishedGoods":
-        isCorrectCategory = item.category === "finishedGoods";
-        break;
-      case "rawMaterials":
-        isCorrectCategory = item.category === "rawMaterials";
-        break;
-      case "expiringProducts":
-        isCorrectCategory = item.amount <= item.minLimit;
-        break;
-      default:
-        break;
-    }
+      switch (selectedSubpage) {
+        case "ready_products":
+          isCorrectCategory = item.category === "ready_products";
+          break;
+        case "raw_materials":
+          isCorrectCategory = item.category === "raw_materials";
+          break;
+        case "expiringProducts":
+          isCorrectCategory = item.category === "running_out";
+          break;
+        default:
+          break;
+      }
 
-    return matchesSearchTerm && isCorrectStock && isCorrectCategory;
-  });
+      return matchesSearchTerm && isCorrectStock && isCorrectCategory;
+    });
+  }, [stockItems, selectedSubpage, searchTerm, selectedStock]);
+
+  useEffect(() => {
+    filterItems();
+  }, [filterItems]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const paginatedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const paginatedItems = filterItems().slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filterItems().length / itemsPerPage);
 
   const handleEditItem = (item) => {
     setEditableItem(item);
     setModalOpen(true);
-    // Update local storage for edit
-    const updatedItems = stockItems.map((it) =>
-      it.id === item.id ? item : it
-    );
-    localStorage.setItem("stockItems", JSON.stringify(updatedItems));
   };
 
   const handleCreateNewItem = () => {
@@ -135,11 +138,6 @@ const Stock = () => {
   const handleConfirmDelete = () => {
     if (itemToDelete) {
       dispatch(deleteStockItem(itemToDelete.id));
-      // Update local storage
-      const updatedItems = stockItems.filter(
-        (item) => item.id !== itemToDelete.id
-      );
-      localStorage.setItem("stockItems", JSON.stringify(updatedItems));
     }
     setIsDeleteModalOpen(false);
     setItemToDelete(null);
@@ -165,18 +163,6 @@ const Stock = () => {
       />
     ));
   };
-
-  useEffect(() => {
-    // Load stock items from local storage on component mount
-    const savedStockItems =
-      JSON.parse(localStorage.getItem("stockItems")) || [];
-    dispatch(initializeStockItems(savedStockItems));
-    console.log(savedStockItems);
-  }, [dispatch]);
-
-  useEffect(() => {
-    localStorage.setItem("stockItems", JSON.stringify(stockItems));
-  }, [stockItems]);
 
   return (
     <div className="stock-container">
@@ -205,14 +191,6 @@ const Stock = () => {
                   branches.length > 6 ? "stock-dropdown-scrollable" : ""
                 }`}
               >
-                <div className="stock-wrapper">
-                  <span
-                    onClick={() => handleSelectStock("all")}
-                    className="stock-option"
-                  >
-                    Все
-                  </span>
-                </div>
                 {branches.map((branch) => (
                   <div key={branch.id} className="stock-wrapper">
                     <span
@@ -228,17 +206,17 @@ const Stock = () => {
           </span>
         </div>
         <button
-          onClick={() => handleSubpageChange("finishedGoods")}
+          onClick={() => handleSubpageChange("ready_products")}
           className={`stock-subpage-button ${
-            selectedSubpage === "finishedGoods" ? "active-subpage-button" : ""
+            selectedSubpage === "ready_products" ? "active-subpage-button" : ""
           }`}
         >
           Готовая продукция
         </button>
         <button
-          onClick={() => handleSubpageChange("rawMaterials")}
+          onClick={() => handleSubpageChange("raw_materials")}
           className={`stock-subpage-button ${
-            selectedSubpage === "rawMaterials" ? "active-subpage-button" : ""
+            selectedSubpage === "raw_materials" ? "active-subpage-button" : ""
           }`}
         >
           Сырье
