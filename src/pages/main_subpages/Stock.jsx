@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import ContentHeader from "../../components/ContentHeader";
 import StockItem from "../../components/stock/StockItem";
@@ -28,10 +28,6 @@ const Stock = () => {
   const [displayedStockName, setDisplayedStockName] =
     useState("Выберите склад");
 
-  // Change after server fixes
-  const [originalCategories, setOriginalCategories] = useState({});
-  const originalCategoriesRef = useRef(originalCategories);
-
   const fetchInventoryItems = useCallback(
     async (branchId) => {
       try {
@@ -46,13 +42,6 @@ const Stock = () => {
             },
           }
         );
-
-        const newCategories = response.data.reduce((acc, item) => {
-          acc[item.id] = item.category;
-          return acc;
-        }, {});
-
-        setOriginalCategories(newCategories);
         dispatch(initializeStockItems(response.data));
       } catch (error) {
         console.error("Error fetching inventory items:", error);
@@ -83,8 +72,6 @@ const Stock = () => {
     setCurrentPage(1);
   };
 
-  // Change after server fixes
-
   const filterItems = useCallback(() => {
     return stockItems.filter((item) => {
       const matchesSearchTerm = item.name
@@ -92,10 +79,8 @@ const Stock = () => {
         .startsWith(searchTerm.toLowerCase());
       const isCorrectStock = item.branch.toString() === selectedStock;
       const isExpiring = item.is_running_out && item.quantity <= item.limit;
-      const originalCategory = originalCategories[item.id] || item.category;
-
-      let isInOriginalCategory = originalCategory === selectedSubpage;
-      let isRunningOutCategory =
+      const isInOriginalCategory = item.category === selectedSubpage;
+      const isRunningOutCategory =
         selectedSubpage === "expiringProducts" && isExpiring;
 
       return (
@@ -104,13 +89,7 @@ const Stock = () => {
         (isInOriginalCategory || isRunningOutCategory)
       );
     });
-  }, [
-    stockItems,
-    selectedSubpage,
-    searchTerm,
-    selectedStock,
-    originalCategories,
-  ]);
+  }, [stockItems, selectedSubpage, searchTerm, selectedStock]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -118,8 +97,7 @@ const Stock = () => {
   const totalPages = Math.ceil(filterItems().length / itemsPerPage);
 
   const handleEditItem = (item) => {
-    const actualCategory = originalCategories[item.id] || item.category;
-    setEditableItem({ ...item, category: actualCategory });
+    setEditableItem({ ...item });
     setModalOpen(true);
   };
 
@@ -154,7 +132,6 @@ const Stock = () => {
             },
           }
         );
-
         dispatch(deleteStockItem(itemToDelete.id));
       } catch (error) {
         console.error("Error deleting inventory item:", error);
@@ -170,12 +147,6 @@ const Stock = () => {
   };
 
   useEffect(() => {
-    filterItems();
-  }, [filterItems]);
-
-  // Change after server fixes
-
-  useEffect(() => {
     if (branches.length > 0) {
       const firstBranchId = String(branches[0].id);
       setSelectedStock(firstBranchId);
@@ -183,27 +154,6 @@ const Stock = () => {
       fetchInventoryItems(firstBranchId);
     }
   }, [branches, fetchInventoryItems]);
-
-  useEffect(() => {
-    originalCategoriesRef.current = originalCategories;
-  }, [originalCategories]);
-
-  useEffect(() => {
-    const newCategories = stockItems.reduce((acc, item) => {
-      acc[item.id] =
-        item.category !== "running_out"
-          ? item.category
-          : acc[item.id] || item.category;
-      return acc;
-    }, {});
-
-    if (
-      JSON.stringify(newCategories) !==
-      JSON.stringify(originalCategoriesRef.current)
-    ) {
-      setOriginalCategories(newCategories);
-    }
-  }, [stockItems]);
 
   const renderSubpageContent = () => {
     if (paginatedItems.length === 0) {
