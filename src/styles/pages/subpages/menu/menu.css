@@ -145,6 +145,7 @@
     width: 370px;
     height: 22px;
     overflow-x: auto;
+    overflow-y: hidden;
     margin-left: 55px;
 }
 

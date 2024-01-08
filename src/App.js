@@ -9,7 +9,7 @@ import Menu from './pages/main_subpages/Menu';
 import Stock from './pages/main_subpages/Stock';
 import Branches from './pages/main_subpages/Branches';
 import Employees from './pages/main_subpages/Employees';
-// import PrivateRoute from './components/PrivateRoute';
+import PrivateRoute from './components/PrivateRoute';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        {/* <Route path="/main" element={<PrivateRoute><MainPage /></PrivateRoute>} />
+        {/* <Route path="/main" element={<PrivateRoute ><MainPage /></PrivateRoute>} />
         <Route path="/menu" element={<PrivateRoute><Menu /></PrivateRoute>} />
         <Route path="/stock" element={<PrivateRoute><Stock /></PrivateRoute>} />
         <Route path="/branches" element={<PrivateRoute><Branches /></PrivateRoute>} />
