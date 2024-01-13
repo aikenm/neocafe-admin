@@ -15,7 +15,9 @@ const MenuItem = ({ item, index, onMoreClick, onEdit, onDelete }) => {
   const handleMoreClick = (e) => {
     e.stopPropagation();
     setShowOptions(!showOptions);
-    onMoreClick(item);
+    if (onMoreClick && typeof onMoreClick === "function") {
+      onMoreClick(item);
+    }
   };
 
   useEffect(() => {

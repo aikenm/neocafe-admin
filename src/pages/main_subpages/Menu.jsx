@@ -12,6 +12,7 @@ import {
   addCategory,
   deleteCategory,
   initializeCategories,
+  initializeItems,
 } from "../../store/menuSlice";
 import dropClosed from "../../images/down-closed.svg";
 import dropOpen from "../../images/drop-down-open.svg";
@@ -93,6 +94,10 @@ const Menu = () => {
   const handleConfirmDelete = () => {
     if (itemToDelete) {
       dispatch(deleteItem(itemToDelete.id));
+      const updatedItems = menuItems.filter(
+        (item) => item.id !== itemToDelete.id
+      );
+      localStorage.setItem("items", JSON.stringify(updatedItems));
     }
     setIsDeleteModalOpen(false);
     setItemToDelete(null);
@@ -180,6 +185,14 @@ const Menu = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownRef]);
+
+  useEffect(() => {
+    const storedItems = localStorage.getItem("items");
+    if (storedItems) {
+      const parsedItems = JSON.parse(storedItems);
+      dispatch(initializeItems(parsedItems));
+    }
+  }, [dispatch]);
 
   return (
     <div className="menu-container">
