@@ -104,15 +104,19 @@ const Employees = () => {
   };
 
   const filteredEmployees = employees.filter((employee) => {
-    const employeeBranch = String(employee.branch);
-    const isBranchMatch =
-      selectedBranch === "all" || employeeBranch === selectedBranch;
+    const isBranchInvalid = employee.branch === "Филиал не выбран";
+    const isPositionInvalid = employee.position === "Не указана";
 
+    const isBranchMatch =
+      selectedBranch === "all" || String(employee.branch) === selectedBranch;
     const matchesName = searchTerm
       ? employee.name.toLowerCase().includes(searchTerm.toLowerCase())
       : true;
 
-    return matchesName && isBranchMatch;
+    // Exclude employees when both branch and position are invalid
+    return (
+      !(isBranchInvalid && isPositionInvalid) && matchesName && isBranchMatch
+    );
   });
 
   const indexOfLastEmployee = currentPage * employeesPerPage;
