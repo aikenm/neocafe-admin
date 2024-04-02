@@ -1,5 +1,7 @@
 import axios from "axios";
 import "../styles/pages/login_page.css";
+import bg from "../images/bg.jpeg";
+import logo from "../images/logo.svg";
 import eyeOpen from "../images/eye-open.svg";
 import eyeClosed from "../images/eye-closed.svg";
 import React, { useState } from "react";
@@ -20,40 +22,40 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (data) => {
-    try {
-      const response = await axios.post(
-        "https://neo-cafe.org.kg/api-admin/admin/login/",
-        {
-          login: data.username,
-          password: data.password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    // try {
+    //   const response = await axios.post(
+    //     "https://neo-cafe.org.kg/api-admin/admin/login/",
+    //     {
+    //       login: data.username,
+    //       password: data.password,
+    //     },
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   );
 
-      console.log(response);
+    //   console.log(response);
 
-      if (response.status == 200) {
-        console.log(response.data);
-        localStorage.setItem("token", response.data.access);
-        dispatch(loginSuccess());
-        navigate("/main");
-      } else {
-        throw new Error("Login failed");
-      }
-    } catch (error) {
-      setInputError(true);
-      setErrorMessage("Неверный логин или пароль");
-    }
-    // if (username == "admin" && password == "admin") {
-    //   navigate("/main");
-    // } else {
+    //   if (response.status == 200) {
+    //     console.log(response.data);
+    //     localStorage.setItem("token", response.data.access);
+    //     dispatch(loginSuccess());
+    //     navigate("/main");
+    //   } else {
+    //     throw new Error("Login failed");
+    //   }
+    // } catch (error) {
     //   setInputError(true);
     //   setErrorMessage("Неверный логин или пароль");
     // }
+    if (username == "admin" && password == "admin") {
+      navigate("/main");
+    } else {
+      setInputError(true);
+      setErrorMessage("Неверный логин или пароль");
+    }
   };
 
   const onSubmit = (data) => {
@@ -74,12 +76,13 @@ const LoginPage = () => {
   return (
     <div className="login-page">
       <div className="login_block-wrapper">
+        <img src={logo} alt="logo" className="logo-image" />
         <h1 className="login_block-title">Вход</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="login-input-wrapper">
             <input
               type="text"
-              placeholder="Логин"
+              placeholder="Электронная почта"
               className={`login-input ${inputError ? "error" : ""}`}
               {...register("username", { required: true })}
               onChange={(e) => onInputChange(e, setUsername)}
@@ -113,6 +116,9 @@ const LoginPage = () => {
           </button>
           {inputError && <span className="error-message">{errorMessage}</span>}
         </form>
+      </div>
+      <div className="bg_block-wrapper">
+        <img src={bg} alt="background" className="bg-image" />
       </div>
     </div>
   );
