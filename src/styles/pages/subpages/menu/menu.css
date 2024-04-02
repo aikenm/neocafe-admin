@@ -1,6 +1,12 @@
+.menu-content {
+    margin: 25px;
+    border-radius: 12px;
+    background-color: #fff;
+}
+
 .menu-content-header {
     display: flex;
-    height: 42px;
+    height: 86px;
     align-items: center;
     border-bottom: 2px solid black;
     padding-left: 25px;

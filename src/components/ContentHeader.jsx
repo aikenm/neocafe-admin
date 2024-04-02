@@ -1,5 +1,6 @@
 import React from "react";
 import searchIcon from "../images/search-icon.svg";
+import notificationsIcon from "../images/notifications.svg";
 import "../styles/components/content_header.css";
 
 const ContentHeader = ({
@@ -40,6 +41,13 @@ const ContentHeader = ({
         />
         <button onClick={onCreate} className="create-button">
           Создать
+        </button>
+        <button className="notifications-button">
+          <img
+            src={notificationsIcon}
+            alt="notifications"
+            className="notifications-icon"
+          />
         </button>
       </div>
     </div>

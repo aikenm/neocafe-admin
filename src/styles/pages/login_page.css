@@ -116,7 +116,7 @@
     align-items: center;
     border-radius: 20px;
     font-size: 18px;
-    background-color: #35536BBF;
+    background-color: #35536B;
     color: #fff;
     transition: all ease 0.3s;
     cursor: pointer;
@@ -129,7 +129,7 @@
 }
 
 .login-button:disabled {
-    background-color: #5C7994;
+    background-color: #35536BBF;
 }
 
 .login-button:disabled:hover {

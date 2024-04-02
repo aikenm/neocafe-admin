@@ -9,7 +9,6 @@ import DeleteModal from "../components/DeleteModal";
 import "../styles/pages/main_page.css";
 import logo from "../images/logo.svg";
 import signoutIcon from "../images/signout.svg";
-import notificationsIcon from "../images/notifications.svg";
 import { useDispatch } from "react-redux";
 import { logout } from "../store/adminSlice";
 import { initializeBranches } from "../store/branchSlice";
@@ -122,12 +121,7 @@ const MainPage = () => {
           </button>
         </div>
       </div>
-      <div className="content">
-        <button className="notifications-button">
-          <img src={notificationsIcon} alt="notifications" />
-        </button>
-        {renderContent()}
-      </div>
+      <div className="content">{renderContent()}</div>
       <DeleteModal
         isOpen={showLogoutModal}
         message="Вы уверены что хотите выйти?"
