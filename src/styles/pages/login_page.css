@@ -4,7 +4,7 @@
     height: 100vh;
     overflow-y: hidden;
     align-items: center;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Noto Sans JP", sans-serif;
 }
 
 .login_block-wrapper {
@@ -55,7 +55,7 @@
     padding: 24px, 64px, 24px, 64px;
     font-size: 18px;
     background-color: #EBEFF2;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Noto Sans JP", sans-serif;
 }
 
 .login-input::placeholder {
@@ -79,7 +79,7 @@
     padding: 24px, 64px, 24px, 64px;
     font-size: 18px;
     background-color: #EBEFF2;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Noto Sans JP", sans-serif;
 }
 
 .password-input::placeholder {
@@ -120,7 +120,7 @@
     color: #fff;
     transition: all ease 0.3s;
     cursor: pointer;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Noto Sans JP", sans-serif;
 }
 
 .login-button:hover {

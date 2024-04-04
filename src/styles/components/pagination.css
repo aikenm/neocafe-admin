@@ -25,11 +25,11 @@
     background: none;
     border: none;
     margin: 3px;
-    font-family: 'Nunito', sans-serif;
+    font-family: "Noto Sans JP", sans-serif;
     font-size: 18px;
     font-weight: 700;
     color: black;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
     border-radius: 10px;
     cursor: pointer;
 }

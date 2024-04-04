@@ -1,7 +1,6 @@
 .content-header {
     display: flex;
     align-items: center;
-    font-family: 'Poppins', sans-serif;
     background-color: #fff;
 }
 
@@ -17,8 +16,6 @@
     background: none;
     border: none;
     outline: none;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
     margin-left: 15px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -53,7 +50,7 @@
     border: none;
     background-color: #EBEFF2;
     outline: none;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Noto Sans JP", sans-serif;
 }
 
 .search-icon {

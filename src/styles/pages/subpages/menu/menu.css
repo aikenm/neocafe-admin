@@ -1,7 +1,7 @@
 .menu-content {
     height: 83vh;
     margin: 25px;
-    border-radius: 12px;
+    border-radius: 20px;
     background-color: #fff;
 }
 
@@ -17,6 +17,7 @@
 
 .menu-content-header-subtitle {
     align-items: center;
+    display: flex;
     font-weight: 700;
 }
 
@@ -120,7 +121,7 @@
     height: 50px;
     padding: 0px 20px;
     text-align: start;
-    font-family: 'Nunito', sans-serif;
+    font-family: "Noto Sans JP", sans-serif;
     font-size: 18px;
     color: #00315D;
     border: none;

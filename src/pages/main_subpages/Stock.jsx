@@ -178,68 +178,70 @@ const Stock = () => {
         onCreate={handleCreateNewItem}
         onSearch={handleStockSearch}
       />
-      <div className="stock-subpages-header">
-        <div className="stock-branch-dropdown">
-          <span
-            className={`stock-content-header-subtitle stock-branch ${
-              isDropdownOpen ? "branch-open" : "branch-closed"
-            }`}
-            onClick={toggleDropdown}
-          >
-            {displayedStockName}
-            <img
-              src={isDropdownOpen ? dropOpen : dropClosed}
-              alt="drop-down"
-              className="drop-down-icon"
-            />
-            {isDropdownOpen && (
-              <div
-                className={`stock-dropdown ${
-                  branches.length > 6 ? "stock-dropdown-scrollable" : ""
-                }`}
-              >
-                {branches.map((branch) => (
-                  <div key={branch.id} className="stock-wrapper">
-                    <span
-                      onClick={() => handleSelectStock(branch.name)}
-                      className="stock-option"
-                    >
-                      {branch.name}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </span>
-        </div>
-        <button
-          onClick={() => handleSubpageChange("ready_products")}
-          className={`stock-subpage-button ${
-            selectedSubpage === "ready_products" ? "active-subpage-button" : ""
-          }`}
-        >
-          Готовая продукция
-        </button>
-        <button
-          onClick={() => handleSubpageChange("raw_materials")}
-          className={`stock-subpage-button ${
-            selectedSubpage === "raw_materials" ? "active-subpage-button" : ""
-          }`}
-        >
-          Сырье
-        </button>
-        <button
-          onClick={() => handleSubpageChange("expiringProducts")}
-          className={`stock-subpage-button expiring-products ${
-            selectedSubpage === "expiringProducts"
-              ? "active-expiring-products"
-              : ""
-          }`}
-        >
-          Заканчивающиеся продукты
-        </button>
-      </div>
       <div className="stock-content">
+        <div className="stock-subpages-header">
+          <div className="stock-branch-dropdown">
+            <span
+              className={`stock-content-header-subtitle stock-branch ${
+                isDropdownOpen ? "branch-open" : "branch-closed"
+              }`}
+              onClick={toggleDropdown}
+            >
+              {displayedStockName}
+              <img
+                src={isDropdownOpen ? dropOpen : dropClosed}
+                alt="drop-down"
+                className="drop-down-icon"
+              />
+              {isDropdownOpen && (
+                <div
+                  className={`stock-dropdown ${
+                    branches.length > 6 ? "stock-dropdown-scrollable" : ""
+                  }`}
+                >
+                  {branches.map((branch) => (
+                    <div key={branch.id} className="stock-wrapper">
+                      <span
+                        onClick={() => handleSelectStock(branch.name)}
+                        className="stock-option"
+                      >
+                        {branch.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </span>
+          </div>
+          <button
+            onClick={() => handleSubpageChange("ready_products")}
+            className={`stock-subpage-button ${
+              selectedSubpage === "ready_products"
+                ? "active-subpage-button"
+                : ""
+            }`}
+          >
+            Готовая продукция
+          </button>
+          <button
+            onClick={() => handleSubpageChange("raw_materials")}
+            className={`stock-subpage-button ${
+              selectedSubpage === "raw_materials" ? "active-subpage-button" : ""
+            }`}
+          >
+            Сырье
+          </button>
+          <button
+            onClick={() => handleSubpageChange("expiringProducts")}
+            className={`stock-subpage-button expiring-products ${
+              selectedSubpage === "expiringProducts"
+                ? "active-expiring-products"
+                : ""
+            }`}
+          >
+            Заканчивающиеся продукты
+          </button>
+        </div>
         <div className="stock-content-header">
           <span className="stock-content-header-subtitle stock-id">№</span>
           <span className="stock-content-header-subtitle stock-name">
