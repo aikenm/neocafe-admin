@@ -5,20 +5,18 @@
     width: auto;
     height: 50px;
     padding: 3px;
-    position: fixed;
-    bottom: 5%;
+    position: absolute;
+    bottom: 4%;
     left: 50%;
-    background-color: #F9F9F9;
-    border-radius: 6px;
+    background-color: #fff;
+    border-radius: 10px;
 }
 
 .page-numbers-wrapper {
     display: flex;
     align-items: center;
     height: 35px;
-    padding: 5px;
-    border-left: 1px solid #D8D8D8;
-    border-right: 1px solid #D8D8D8;
+    padding: 10px;
 }
 
 .page-link {
@@ -30,26 +28,25 @@
     font-family: 'Nunito', sans-serif;
     font-size: 18px;
     font-weight: 700;
+    color: black;
     transition: background-color 0.2s ease;
-    border-radius: 4px;
+    border-radius: 10px;
     cursor: pointer;
 }
 
 .page-link:hover {
-    background-color: #eaeaea;
+    background-color: #35536B;
+    color: #fff;
 }
 
 .page-link.active {
-    border-radius: 0px;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    color: #00315D;
-    border-bottom: 2px solid #00315D;
+    background-color: #EBEFF2;
+    color: black;
     cursor: default;
 }
 
 .page-link.active:hover {
-    background-color: #F9F9F9;
+    background-color: #EBEFF2;
 }
 
 .arrow-button {
@@ -73,17 +70,16 @@
 }
 
 .arrow-button:hover {
-    background-color: #eaeaea;
+    background-color: #35536B;
+    color: #fff;
 }
 
 .left-arrow {
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
+    border-radius: 10px;
     margin-right: 2px;
 }
 
 .right-arrow {
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
+    border-radius: 10px;
     margin-left: 2px;
 }

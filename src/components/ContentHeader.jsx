@@ -40,7 +40,7 @@ const ContentHeader = ({
           className="search-bar"
         />
         <button onClick={onCreate} className="create-button">
-          Создать
+          Создать <span className="plus-sign">+</span>
         </button>
         <button className="notifications-button">
           <img
