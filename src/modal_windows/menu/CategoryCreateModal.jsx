@@ -49,13 +49,10 @@ const CategoryCreateModal = ({ isOpen, toggleModal, onCreate }) => {
         },
       })
       .then((response) => {
-        // Assuming response.data contains the new category
         const newCategory = response.data;
 
-        // Dispatch an action to update the Redux state
         dispatch(addCategory(newCategory));
 
-        // Reset the form and close the modal
         setCategoryName("");
         setSelectedImage(null);
         setImageFile(null);
@@ -92,7 +89,6 @@ const CategoryCreateModal = ({ isOpen, toggleModal, onCreate }) => {
               onDragOver={(e) => e.preventDefault()}
             >
               <div className="image-input-block">
-                {/* <img src={selectedImage || ImageIcon} alt='Uploaded' className='uploaded-image' /> */}
                 {selectedImage ? (
                   <img
                     src={selectedImage}

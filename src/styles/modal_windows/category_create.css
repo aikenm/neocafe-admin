@@ -31,6 +31,10 @@
     transition: color 0.2s ease;
 }
 
+.confirm-btn {
+    background-color: #35536B;
+}
+
 .category-view-button:hover {
     color: #004583;
 }

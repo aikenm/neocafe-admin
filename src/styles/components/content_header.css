@@ -45,7 +45,7 @@
     height: 48px;
     margin-right: 20px;
     padding-left: 45px;
-    font-size: 18px;
+    font-size: 17px;
     border-radius: 14px;
     border: none;
     background-color: #EBEFF2;
@@ -73,7 +73,7 @@
     border-radius: 14px;
     background-color: #35536B;
     color: #fff;
-    font-size: 18px;
+    font-size: 17px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
