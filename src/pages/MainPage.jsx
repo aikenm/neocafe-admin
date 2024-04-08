@@ -8,6 +8,10 @@ import Employees from "./main_subpages/Employees";
 import DeleteModal from "../components/DeleteModal";
 import "../styles/pages/main_page.css";
 import logo from "../images/logo.svg";
+import menuIcon from "../images/menu-icon.svg";
+import warehouseIcon from "../images/warehouse-icon.svg";
+import employeesIcon from "../images/employees-icon.svg";
+import branchesIcon from "../images/branches-icon.svg";
 import signoutIcon from "../images/signout.svg";
 import { useDispatch } from "react-redux";
 import { logout } from "../store/adminSlice";
@@ -86,6 +90,7 @@ const MainPage = () => {
               activeComponent === "menu" ? "active-button" : ""
             }`}
           >
+            <img src={menuIcon} alt="icon" className="sidebar-button-icon" />
             Меню
           </button>
           <button
@@ -94,6 +99,11 @@ const MainPage = () => {
               activeComponent === "stock" ? "active-button" : ""
             }`}
           >
+            <img
+              src={warehouseIcon}
+              alt="icon"
+              className="sidebar-button-icon"
+            />
             Склад
           </button>
           <button
@@ -102,6 +112,11 @@ const MainPage = () => {
               activeComponent === "branches" ? "active-button" : ""
             }`}
           >
+            <img
+              src={branchesIcon}
+              alt="icon"
+              className="sidebar-button-icon"
+            />
             Филиалы
           </button>
           <button
@@ -110,14 +125,19 @@ const MainPage = () => {
               activeComponent === "employees" ? "active-button" : ""
             }`}
           >
+            <img
+              src={employeesIcon}
+              alt="icon"
+              className="sidebar-button-icon"
+            />
             Сотрудники
           </button>
           <button
             onClick={handleLogOut}
             className="side-bar-button log-out-button"
           >
-            Выход{" "}
             <img src={signoutIcon} alt="sign-out" className="signout-icon" />
+            Выход
           </button>
         </div>
       </div>
