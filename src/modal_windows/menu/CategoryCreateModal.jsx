@@ -30,37 +30,62 @@ const CategoryCreateModal = ({ isOpen, toggleModal, onCreate }) => {
   };
 
   const handleSubmit = (e) => {
+    // e.preventDefault();
+
+    // const formData = new FormData();
+    // formData.append("name", categoryName);
+    // if (imageFile) {
+    //   formData.append("image", imageFile);
+    // }
+
+    // const accessToken = localStorage.getItem("token");
+
+    // axios
+    //   .post("https://neo-cafe.org.kg/api-admin/category/", formData, {
+    //     headers: {
+    //       accept: "application/json",
+    //       "Content-Type": "multipart/form-data",
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     const newCategory = response.data;
+
+    //     dispatch(addCategory(newCategory));
+
+    //     setCategoryName("");
+    //     setSelectedImage(null);
+    //     setImageFile(null);
+    //     toggleModal();
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error creating category:", error);
+    //   });
+
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", categoryName);
-    if (imageFile) {
-      formData.append("image", imageFile);
-    }
+    // Assuming categories are stored as an array of objects in local storage
+    const storedCategories =
+      JSON.parse(localStorage.getItem("categories")) || [];
+    const newCategoryId = new Date().getTime(); // Simple unique ID generation
 
-    const accessToken = localStorage.getItem("token");
+    const newCategory = {
+      id: newCategoryId, // Assigning the unique ID
+      name: categoryName,
+      image: selectedImage, // This would be a base64 string or similar; adjust as needed
+    };
 
-    axios
-      .post("https://neo-cafe.org.kg/api-admin/category/", formData, {
-        headers: {
-          accept: "application/json",
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((response) => {
-        const newCategory = response.data;
+    const updatedCategories = [...storedCategories, newCategory];
 
-        dispatch(addCategory(newCategory));
+    localStorage.setItem("categories", JSON.stringify(updatedCategories));
 
-        setCategoryName("");
-        setSelectedImage(null);
-        setImageFile(null);
-        toggleModal();
-      })
-      .catch((error) => {
-        console.error("Error creating category:", error);
-      });
+    dispatch(addCategory(newCategory)); // Update Redux store
+
+    // Reset state and close modal
+    setCategoryName("");
+    setSelectedImage(null);
+    setImageFile(null);
+    toggleModal();
   };
 
   if (!isOpen) {

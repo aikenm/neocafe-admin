@@ -1,52 +1,56 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 export const menuSlice = createSlice({
-  name: 'menu',
+  name: "menu",
   initialState: {
-    items: [],
-    categories: [],
+    items: JSON.parse(localStorage.getItem("items")) || [],
+    categories: JSON.parse(localStorage.getItem("categories")) || [],
   },
   reducers: {
-
-    // Item
-
     addItem: (state, action) => {
       state.items.push(action.payload);
+      localStorage.setItem("items", JSON.stringify(state.items));
     },
     editItem: (state, action) => {
-        const index = state.items.findIndex(item => item.id === action.payload.id);
-        if (index !== -1) {
-            state.items[index] = { ...state.items[index], ...action.payload };
-        }
-    },          
-
+      const index = state.items.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      if (index !== -1) {
+        state.items[index] = { ...state.items[index], ...action.payload };
+        localStorage.setItem("items", JSON.stringify(state.items));
+      }
+    },
     deleteItem: (state, action) => {
-        state.items = state.items.filter(item => item.id !== action.payload);
+      state.items = state.items.filter((item) => item.id !== action.payload);
+      localStorage.setItem("items", JSON.stringify(state.items));
     },
-
-    // Category
-
     addCategory: (state, action) => {
-        state.categories.push(action.payload);
+      state.categories.push(action.payload);
+      localStorage.setItem("categories", JSON.stringify(state.categories));
     },
-  
     deleteCategory: (state, action) => {
-        state.categories = state.categories.filter(category => category.id !== action.payload);
+      state.categories = state.categories.filter(
+        (category) => category.id !== action.payload
+      );
+      localStorage.setItem("categories", JSON.stringify(state.categories));
     },
-    
-    //localstorage temp
-    initializeCategories: (state, action) => {
-        state.categories = action.payload;
-      },
-      initializeItems: (state, action) => {
-        state.items = action.payload;
+    initializeCategoriesInBulk: (state, action) => {
+      state.categories = action.payload;
+    },
+    initializeItems: (state, action) => {
+      state.items = action.payload;
+      localStorage.setItem("items", JSON.stringify(state.items));
     },
   },
 });
 
 export const {
-    addItem, editItem, deleteItem, 
-    addCategory, deleteCategory, 
-    initializeCategories, initializeItems  
-  } = menuSlice.actions;
+  addItem,
+  editItem,
+  deleteItem,
+  addCategory,
+  deleteCategory,
+  initializeCategoriesInBulk,
+  initializeItems,
+} = menuSlice.actions;
 export default menuSlice.reducer;

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import ContentHeader from "../../components/ContentHeader";
 import Pagination from "../../components/Pagination";
 import MenuItem from "../../components/menu/MenuItem";
@@ -11,7 +10,7 @@ import {
   deleteItem,
   addCategory,
   deleteCategory,
-  initializeCategories,
+  initializeCategoriesInBulk,
   initializeItems,
 } from "../../store/menuSlice";
 import dropClosed from "../../images/down-closed.svg";
@@ -30,7 +29,6 @@ const Menu = () => {
   const [editableItem, setEditableItem] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -42,36 +40,49 @@ const Menu = () => {
     useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
   const dropdownRef = useRef(null);
-
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem("token");
+  // Removed axios call for categories from useEffect
 
-    axios
-      .get("https://neo-cafe.org.kg/api-admin/category/", {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((response) => {
-        dispatch(initializeCategories(response.data));
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
+  // useEffect(() => {
+  //   const accessToken = localStorage.getItem("token");
+
+  //   axios
+  //     .get("https://neo-cafe.org.kg/api-admin/category/", {
+  //       headers: {
+  //         accept: "application/json",
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       dispatch(initializeCategories(response.data));
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching categories:", error);
+  //     });
+  // }, [dispatch]);
+
+  useEffect(() => {
+    const storedCategories = localStorage.getItem("categories");
+    if (storedCategories) {
+      const parsedCategories = JSON.parse(storedCategories);
+      dispatch(initializeCategoriesInBulk(parsedCategories));
+    }
+
+    const storedItems = localStorage.getItem("items");
+    if (storedItems) {
+      const parsedItems = JSON.parse(storedItems);
+
+      dispatch(initializeItems(parsedItems));
+    }
   }, [dispatch]);
 
   const filteredItems = menuItems.filter((item) => {
     const matchesSearchTerm = item.name
       .toLowerCase()
-      .startsWith(searchTerm.toLowerCase());
+      .includes(searchTerm.toLowerCase());
     const matchesCategory =
       internalSelectedCategory === "Все" ||
       item.category === internalSelectedCategory;
@@ -79,6 +90,8 @@ const Menu = () => {
   });
 
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const paginatedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleEdit = (updatedItem) => {
@@ -94,13 +107,9 @@ const Menu = () => {
   const handleConfirmDelete = () => {
     if (itemToDelete) {
       dispatch(deleteItem(itemToDelete.id));
-      const updatedItems = menuItems.filter(
-        (item) => item.id !== itemToDelete.id
-      );
-      localStorage.setItem("items", JSON.stringify(updatedItems));
+      setIsDeleteModalOpen(false);
+      setItemToDelete(null);
     }
-    setIsDeleteModalOpen(false);
-    setItemToDelete(null);
   };
 
   const handleCancelDelete = () => {
@@ -123,13 +132,8 @@ const Menu = () => {
   };
 
   const handleCategorySelect = (category) => {
-    if (category === "Все") {
-      setSelectedCategory("all");
-      setInternalSelectedCategory("Все");
-    } else {
-      setSelectedCategory(category);
-      setInternalSelectedCategory(category);
-    }
+    setSelectedCategory(category === "Все" ? "all" : category);
+    setInternalSelectedCategory(category);
     setIsDropdownOpen(false);
     setCurrentPage(1);
   };
@@ -143,29 +147,13 @@ const Menu = () => {
 
   const handleConfirmDeleteCategory = () => {
     if (categoryToDelete) {
-      const accessToken = localStorage.getItem("token");
-      axios
-        .delete(
-          `https://neo-cafe.org.kg/api-admin/category/${categoryToDelete.id}`,
-          {
-            headers: {
-              accept: "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        )
-        .then((response) => {
-          dispatch(deleteCategory(categoryToDelete.id));
-
-          setIsCategoryDeleteModalOpen(false);
-          setCategoryToDelete(null);
-          if (selectedCategory === categoryToDelete.name) {
-            setSelectedCategory("all");
-          }
-        })
-        .catch((error) => {
-          console.error("Error deleting category:", error);
-        });
+      dispatch(deleteCategory(categoryToDelete.id));
+      setIsCategoryDeleteModalOpen(false);
+      setCategoryToDelete(null);
+      if (selectedCategory === categoryToDelete.name) {
+        setSelectedCategory("all");
+        setInternalSelectedCategory("Все");
+      }
     }
   };
 
@@ -185,14 +173,6 @@ const Menu = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownRef]);
-
-  useEffect(() => {
-    const storedItems = localStorage.getItem("items");
-    if (storedItems) {
-      const parsedItems = JSON.parse(storedItems);
-      dispatch(initializeItems(parsedItems));
-    }
-  }, [dispatch]);
 
   return (
     <div className="menu-container">
