@@ -8,7 +8,13 @@ export const menuSlice = createSlice({
   },
   reducers: {
     addItem: (state, action) => {
-      state.items.push(action.payload);
+      const maxId = state.items.reduce(
+        (max, item) => Math.max(max, item.id),
+        0
+      );
+      const newItem = { ...action.payload, id: maxId + 1 };
+
+      state.items.push(newItem);
       localStorage.setItem("items", JSON.stringify(state.items));
     },
     editItem: (state, action) => {

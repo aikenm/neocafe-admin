@@ -1,25 +1,26 @@
-import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { loginSuccess } from './store/adminSlice';
-import LoginPage from './pages/LoginPage';
-import MainPage from './pages/MainPage';
-import Menu from './pages/main_subpages/Menu';
-import Stock from './pages/main_subpages/Stock';
-import Branches from './pages/main_subpages/Branches';
-import Employees from './pages/main_subpages/Employees';
-import PrivateRoute from './components/PrivateRoute';
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "./store/adminSlice";
+import LoginPage from "./pages/LoginPage";
+import MainPage from "./pages/MainPage";
+import Menu from "./pages/main_subpages/Menu";
+import Stock from "./pages/main_subpages/Stock";
+import Branches from "./pages/main_subpages/Branches";
+import Employees from "./pages/main_subpages/Employees";
+import PrivateRoute from "./components/PrivateRoute";
+import { initialItems, initialCategories } from "./common";
 
 const App = () => {
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      dispatch(loginSuccess());
+    if (!localStorage.getItem("items")) {
+      localStorage.setItem("items", JSON.stringify(initialItems));
     }
-  }, [dispatch]);
+    if (!localStorage.getItem("categories")) {
+      localStorage.setItem("categories", JSON.stringify(initialCategories));
+    }
+  }, []);
 
   return (
     <BrowserRouter>
@@ -30,7 +31,7 @@ const App = () => {
         <Route path="/stock" element={<PrivateRoute><Stock /></PrivateRoute>} />
         <Route path="/branches" element={<PrivateRoute><Branches /></PrivateRoute>} />
         <Route path="/employees" element={<PrivateRoute><Employees /></PrivateRoute>} /> */}
-        <Route path="/main" element={<MainPage />}/>
+        <Route path="/main" element={<MainPage />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/stock" element={<Stock />} />
         <Route path="/branches" element={<Branches />} />

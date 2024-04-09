@@ -8,7 +8,8 @@ const MenuItem = ({ item, index, onMoreClick, onEdit, onDelete }) => {
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef(null);
 
-  const ingredientsText = item.ingredients
+  // Check if ingredients exist and is an array, otherwise set as an empty array
+  const ingredientsText = (item.ingredients || [])
     .map((ing) => `${ing.name} (${ing.amount}${ing.unit})`)
     .join(", ");
 
@@ -45,28 +46,26 @@ const MenuItem = ({ item, index, onMoreClick, onEdit, onDelete }) => {
       </button>
       {showOptions && (
         <div className="options-window" ref={optionsRef}>
-          <div className="options-window" ref={optionsRef}>
-            <button
-              onClick={() => {
-                onEdit(item);
-                setShowOptions(false);
-              }}
-              className="option-button"
-            >
-              <img src={editIcon} alt="edit-icon" className="option-icon" />
-              Редактировать
-            </button>
-            <button
-              onClick={() => {
-                onDelete(item);
-                setShowOptions(false);
-              }}
-              className="option-button"
-            >
-              <img src={deleteIcon} alt="delete-icon" className="option-icon" />
-              Удалить
-            </button>
-          </div>
+          <button
+            onClick={() => {
+              onEdit(item);
+              setShowOptions(false);
+            }}
+            className="option-button"
+          >
+            <img src={editIcon} alt="edit-icon" className="option-icon" />
+            Редактировать
+          </button>
+          <button
+            onClick={() => {
+              onDelete(item);
+              setShowOptions(false);
+            }}
+            className="option-button"
+          >
+            <img src={deleteIcon} alt="delete-icon" className="option-icon" />
+            Удалить
+          </button>
         </div>
       )}
     </div>
