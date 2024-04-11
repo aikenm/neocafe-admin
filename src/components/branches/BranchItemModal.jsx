@@ -110,58 +110,70 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
     }
   }, [isOpen, editable, selectedImageFile, imageBlob]);
 
-  const onSubmit = async (data) => {
-    const accessToken = localStorage.getItem("token");
-    const formData = new FormData();
+  // const onSubmit = async (data) => {
+  // const accessToken = localStorage.getItem("token");
+  // const formData = new FormData();
 
-    formData.append("name", data.name);
-    formData.append("address", data.address);
-    formData.append("phone_number", data.phone);
-    formData.append("map_link", data.link);
+  // formData.append("name", data.name);
+  // formData.append("address", data.address);
+  // formData.append("phone_number", data.phone);
+  // formData.append("map_link", data.link);
 
-    Object.entries(data.workingHours).forEach(([day, values]) => {
-      const dayEnglish = dayMappings[day];
-      formData.append(dayEnglish, values.enabled);
-      if (values.enabled) {
-        formData.append(`${dayEnglish}_start_time`, values.from);
-        formData.append(`${dayEnglish}_end_time`, values.to);
-      }
-    });
+  // Object.entries(data.workingHours).forEach(([day, values]) => {
+  //   const dayEnglish = dayMappings[day];
+  //   formData.append(dayEnglish, values.enabled);
+  //   if (values.enabled) {
+  //     formData.append(`${dayEnglish}_start_time`, values.from);
+  //     formData.append(`${dayEnglish}_end_time`, values.to);
+  //   }
+  // });
 
-    //FIX IT
+  // if (selectedImageFile) {
+  //   formData.append("image", selectedImageFile);
+  // } else if (imageBlob) {
+  //   formData.append("image", imageBlob, "image.jpg");
+  // }
 
-    if (selectedImageFile) {
-      formData.append("image", selectedImageFile);
-    } else if (imageBlob) {
-      formData.append("image", imageBlob, "image.jpg");
+  // const url = `https://neo-cafe.org.kg/api-admin/branches/${
+  //   isEditMode ? `${editable.id}/` : ""
+  // }`;
+  // const method = isEditMode ? "put" : "post";
+  // const headers = {
+  //   accept: "application/json",
+  //   "X-CSRFToken":
+  //     "o8Y7VxZuP0yLg0cu3nfFR3UBxa0hsqCyVtNeMnSl7M6OCcij2OZl8rqoJ5j0a70Q",
+  //   Authorization: `Bearer ${accessToken}`,
+  // };
+
+  // axios({ url, method, headers, data: formData })
+  //   .then((response) => {
+  //     if (isEditMode) {
+  //       dispatch(editBranch({ ...response.data, id: editable.id }));
+  //     } else {
+  //       dispatch(addBranch(response.data));
+  //     }
+
+  //     toggleModal();
+  //     reset();
+  //     setSelectedImage(null);
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error:", error);
+  //   });
+  // };
+
+  const onSubmit = (data) => {
+    console.log(data);
+    // Construct branch data from form
+    const branchData = { ...data, image: selectedImage };
+
+    if (isEditMode) {
+      dispatch(editBranch({ ...branchData, id: editable.id }));
+    } else {
+      dispatch(addBranch(branchData));
     }
 
-    const url = `https://neo-cafe.org.kg/api-admin/branches/${
-      isEditMode ? `${editable.id}/` : ""
-    }`;
-    const method = isEditMode ? "put" : "post";
-    const headers = {
-      accept: "application/json",
-      "X-CSRFToken":
-        "o8Y7VxZuP0yLg0cu3nfFR3UBxa0hsqCyVtNeMnSl7M6OCcij2OZl8rqoJ5j0a70Q",
-      Authorization: `Bearer ${accessToken}`,
-    };
-
-    axios({ url, method, headers, data: formData })
-      .then((response) => {
-        if (isEditMode) {
-          dispatch(editBranch({ ...response.data, id: editable.id }));
-        } else {
-          dispatch(addBranch(response.data));
-        }
-
-        toggleModal();
-        reset();
-        setSelectedImage(null);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    toggleModal();
   };
 
   const handleCloseModal = () => {
@@ -171,28 +183,24 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
 
   useEffect(() => {
     if (isOpen && editable) {
-      setSelectedImage(editable.image || null);
-      setSelectedImageFile(null);
+      // Set non-dynamic fields
       setValue("name", editable.name || "");
       setValue("address", editable.address || "");
-      setValue("phone", editable.phone_number || "");
-      setValue("link", editable.map_link || "");
+      setValue("phone", editable.phone || "");
+      setValue("link", editable.link || "");
+      setValue("image", editable.image || null);
 
-      Object.keys(dayMappings).forEach((russianDay) => {
-        const englishDay = dayMappings[russianDay];
-        const isEnabled = editable[englishDay];
-        const fromTime =
-          isEnabled && editable[`${englishDay}_start_time`]
-            ? editable[`${englishDay}_start_time`].substring(0, 5)
-            : defaultWorkingHours[russianDay].from;
-        const toTime =
-          isEnabled && editable[`${englishDay}_end_time`]
-            ? editable[`${englishDay}_end_time`].substring(0, 5)
-            : defaultWorkingHours[russianDay].to;
+      // Set dynamic working hours fields
+      Object.keys(dayMappings).forEach((day) => {
+        const dayKey = dayMappings[day]; // Assuming `editable` uses day mappings like 'monday', 'tuesday', etc.
+        const dayData = editable.workingHours[day];
+        const isEnabled = dayData?.enabled === true; // Ensure boolean value
+        const fromTime = dayData?.from || defaultWorkingHours[day].from;
+        const toTime = dayData?.to || defaultWorkingHours[day].to;
 
-        setValue(`workingHours.${russianDay}.enabled`, isEnabled);
-        setValue(`workingHours.${russianDay}.from`, fromTime);
-        setValue(`workingHours.${russianDay}.to`, toTime);
+        setValue(`workingHours.${day}.enabled`, isEnabled);
+        setValue(`workingHours.${day}.from`, fromTime);
+        setValue(`workingHours.${day}.to`, toTime);
       });
     } else {
       reset({
@@ -203,8 +211,6 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
         image: null,
         workingHours: defaultWorkingHours,
       });
-      setSelectedImage(null);
-      setSelectedImageFile(null);
     }
   }, [isOpen, editable, reset, setValue]);
 

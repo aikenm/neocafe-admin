@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { initialItems, initialCategories } from "../common";
 
 export const menuSlice = createSlice({
   name: "menu",
   initialState: {
-    items: JSON.parse(localStorage.getItem("items")) || [],
-    categories: JSON.parse(localStorage.getItem("categories")) || [],
+    items: JSON.parse(localStorage.getItem("items")) || initialItems,
+    categories:
+      JSON.parse(localStorage.getItem("categories")) || initialCategories,
   },
   reducers: {
     addItem: (state, action) => {

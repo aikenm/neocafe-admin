@@ -2,35 +2,40 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "./store/adminSlice";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import Menu from "./pages/main_subpages/Menu";
 import Stock from "./pages/main_subpages/Stock";
 import Branches from "./pages/main_subpages/Branches";
 import Employees from "./pages/main_subpages/Employees";
-import PrivateRoute from "./components/PrivateRoute";
-import { initialItems, initialCategories } from "./common";
+import { initializeBranches } from "./store/branchSlice";
+import { initialItems, initialCategories, initialBranches } from "./common";
 
 const App = () => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
+    // localStorage.clear();
     if (!localStorage.getItem("items")) {
       localStorage.setItem("items", JSON.stringify(initialItems));
     }
     if (!localStorage.getItem("categories")) {
       localStorage.setItem("categories", JSON.stringify(initialCategories));
     }
-  }, []);
+    if (!localStorage.getItem("branches")) {
+      console.log("Initializing branches in localStorage", initialBranches);
+      localStorage.setItem("branches", JSON.stringify(initialBranches));
+      dispatch(initializeBranches(initialBranches));
+    } else {
+      const storedBranches = JSON.parse(localStorage.getItem("branches"));
+      dispatch(initializeBranches(storedBranches));
+    }
+  }, [dispatch]);
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        {/* <Route path="/main" element={<PrivateRoute ><MainPage /></PrivateRoute>} />
-        <Route path="/menu" element={<PrivateRoute><Menu /></PrivateRoute>} />
-        <Route path="/stock" element={<PrivateRoute><Stock /></PrivateRoute>} />
-        <Route path="/branches" element={<PrivateRoute><Branches /></PrivateRoute>} />
-        <Route path="/employees" element={<PrivateRoute><Employees /></PrivateRoute>} /> */}
         <Route path="/main" element={<MainPage />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/stock" element={<Stock />} />

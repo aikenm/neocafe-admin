@@ -23,7 +23,6 @@ const Branches = () => {
   const [branchToDelete, setBranchToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const branchesPerPage = 6;
-
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleBranchesSearch = (term) => {
@@ -47,33 +46,38 @@ const Branches = () => {
   };
 
   const handleConfirmDelete = () => {
-    const accessToken = localStorage.getItem("token");
-    const url = `https://neo-cafe.org.kg/api-admin/branches/${branchToDelete}/`;
-
-    axios
-      .delete(url, {
-        headers: {
-          accept: "application/json",
-          "X-CSRFToken":
-            "QSSPtjuY3Qq5immYAeadPwYXP07LiGphJNTaPgqG7DyJ3InoRk2u16Tb7tphZqH4",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((response) => {
-        console.log("Branch deleted:", response.data);
-        dispatch(deleteBranch(branchToDelete));
-        setIsDeleteModalOpen(false);
-      })
-      .catch((error) => {
-        console.error("Error deleting branch:", error);
-      });
+    dispatch(deleteBranch(branchToDelete));
+    setIsDeleteModalOpen(false);
   };
+
+  // const handleConfirmDelete = () => {
+  //   const accessToken = localStorage.getItem("token");
+  //   const url = `https://neo-cafe.org.kg/api-admin/branches/${branchToDelete}/`;
+
+  //   axios
+  //     .delete(url, {
+  //       headers: {
+  //         accept: "application/json",
+  //         "X-CSRFToken":
+  //           "QSSPtjuY3Qq5immYAeadPwYXP07LiGphJNTaPgqG7DyJ3InoRk2u16Tb7tphZqH4",
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       console.log("Branch deleted:", response.data);
+  //       dispatch(deleteBranch(branchToDelete));
+  //       setIsDeleteModalOpen(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error deleting branch:", error);
+  //     });
+  // };
 
   const handleBranchSubmit = (branchData) => {
     if (editableBranch) {
-      dispatch(editBranch({ ...editableBranch, ...branchData }));
+      dispatch(editBranch(branchData));
     } else {
-      dispatch(addBranch({ ...branchData }));
+      dispatch(addBranch(branchData));
     }
     setModalOpen(false);
   };
@@ -94,23 +98,30 @@ const Branches = () => {
   const totalPages = Math.ceil(filteredBranches.length / branchesPerPage);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("token");
-
-    axios
-      .get("https://neo-cafe.org.kg/api-admin/branches/", {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((response) => {
-        dispatch(initializeBranches(response.data));
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching branches:", error);
-      });
+    const storedBranches = JSON.parse(localStorage.getItem("branches"));
+    if (storedBranches) {
+      dispatch(initializeBranches(storedBranches));
+    }
   }, [dispatch]);
+
+  // useEffect(() => {
+  //   const accessToken = localStorage.getItem("token");
+
+  //   axios
+  //     .get("https://neo-cafe.org.kg/api-admin/branches/", {
+  //       headers: {
+  //         accept: "application/json",
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       dispatch(initializeBranches(response.data));
+  //       console.log(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching branches:", error);
+  //     });
+  // }, [dispatch]);
 
   return (
     <div className="branches-container">

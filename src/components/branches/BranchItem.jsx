@@ -32,48 +32,68 @@ const BranchItem = ({
 
   const formatWorkingHours = (branch) => {
     const daysOfWeek = [
-      { day: "monday", label: "Пн" },
-      { day: "tuesday", label: "Вт" },
-      { day: "wednesday", label: "Ср" },
-      { day: "thursday", label: "Чт" },
-      { day: "friday", label: "Пт" },
-      { day: "saturday", label: "Сб" },
-      { day: "sunday", label: "Вс" },
+      { day: "Понедельник", label: "Пн" },
+      { day: "Вторник", label: "Вт" },
+      { day: "Среда", label: "Ср" },
+      { day: "Четверг", label: "Чт" },
+      { day: "Пятница", label: "Пт" },
+      { day: "Суббота", label: "Сб" },
+      { day: "Воскресенье", label: "Вс" },
     ];
 
-    const schedule = daysOfWeek.reduce((acc, { day, label }) => {
-      const isOpen = branch[day];
-      const startTime = branch[`${day}_start_time`]?.slice(0, 5);
-      const endTime = branch[`${day}_end_time`]?.slice(0, 5);
+    let groups = [];
 
-      if (isOpen) {
-        acc[label] = `${startTime} до ${endTime}`;
-      } else {
-        acc[label] = "Выходной";
-      }
+    daysOfWeek.forEach((dayInfo, index) => {
+      const hours = branch.workingHours[dayInfo.day];
+      if (hours) {
+        const lastGroup = groups[groups.length - 1];
+        const { enabled, from, to } = hours;
 
-      return acc;
-    }, {});
-
-    let summary = [];
-    daysOfWeek.forEach(({ label }, index) => {
-      if (
-        schedule[label] !== "Выходной" &&
-        (!summary.length ||
-          summary[summary.length - 1].hours !== schedule[label])
-      ) {
-        summary.push({ days: [label], hours: schedule[label] });
-      } else if (schedule[label] !== "Выходной") {
-        summary[summary.length - 1].days.push(label);
+        if (enabled) {
+          const range = `${from}-${to}`;
+          if (lastGroup && lastGroup.range === range) {
+            lastGroup.days.push(dayInfo.label);
+            lastGroup.consecutive = lastGroup.consecutive !== false;
+          } else {
+            groups.push({ range, days: [dayInfo.label], consecutive: false });
+          }
+        } else {
+          if (lastGroup && lastGroup.range === "Выходной") {
+            lastGroup.days.push(dayInfo.label);
+            lastGroup.consecutive = lastGroup.consecutive !== false;
+          } else {
+            groups.push({
+              range: "Выходной",
+              days: [dayInfo.label],
+              consecutive: false,
+            });
+          }
+        }
       }
     });
 
-    let formattedHours = summary
-      .map((item) => {
-        const days = item.days.join("-");
-        return `${days} с ${item.hours}`;
+    const formattedHours = groups
+      .map((group) => {
+        if (group.range === "Выходной") {
+          if (group.days.length === 7) {
+            return `Каждый день выходной`;
+          }
+          const daysFormatted =
+            group.consecutive && group.days.length > 2
+              ? `${group.days[0]} - ${group.days[group.days.length - 1]}`
+              : group.days.join(", ");
+          return `${daysFormatted} - Выходной`;
+        }
+        if (group.days.length === 7) {
+          return `Каждый день с ${group.range}`;
+        }
+        const daysFormatted =
+          group.consecutive && group.days.length > 2
+            ? `${group.days[0]} - ${group.days[group.days.length - 1]}`
+            : group.days.join(", ");
+        return `${daysFormatted} с ${group.range}`;
       })
-      .join(", ");
+      .join("; ");
 
     return formattedHours || "Нет рабочих часов";
   };
