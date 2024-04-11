@@ -2,10 +2,11 @@
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding-left: 25px;
     height: 86px;
-    background-color: #F9F9F9;
-    border-bottom: 2px solid #cdd3dd;
+    background-color: #fff;
+    border-bottom: 1px solid #EBEFF2;
     font-size: 17px;
 }
 
