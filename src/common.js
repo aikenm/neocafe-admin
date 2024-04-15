@@ -1,4 +1,3 @@
-// common.js
 export const initialItems = [
   {
     id: 1,
@@ -153,5 +152,43 @@ export const initialBranches = [
       Суббота: { enabled: true, from: "10:00", to: "22:00" },
       Воскресенье: { enabled: false },
     },
+  },
+];
+
+// Stock Items
+
+export const initialStockItems = [
+  {
+    id: 1,
+    name: "Apple",
+    amount: 150,
+    unit: "шт",
+    limit: 20,
+    arrival_date: "2024-04-10",
+    category: "raw_materials",
+    is_running_out: false,
+    stockId: 2,
+  },
+  {
+    id: 2,
+    name: "Coffee Beans",
+    amount: 7,
+    unit: "кг",
+    limit: 10,
+    arrival_date: "2024-03-20",
+    category: "raw_materials",
+    is_running_out: true,
+    stockId: 1,
+  },
+  {
+    id: 3,
+    name: "Cheese",
+    amount: 40,
+    unit: "кг",
+    limit: 5,
+    arrival_date: "2024-04-01",
+    category: "ready_products",
+    is_running_out: false,
+    stockId: 1,
   },
 ];

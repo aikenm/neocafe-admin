@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import ContentHeader from "../../components/ContentHeader";
 import StockItem from "../../components/stock/StockItem";
 import StockItemModal from "../../components/stock/StockItemModal";
@@ -28,27 +27,19 @@ const Stock = () => {
   const [displayedStockName, setDisplayedStockName] =
     useState("Выберите склад");
 
-  const fetchInventoryItems = useCallback(
-    async (branchId) => {
-      try {
-        const accessToken = localStorage.getItem("token");
-        const response = await axios.get(
-          `https://neo-cafe.org.kg/api-warehouse/branches/${branchId}/inventory/`,
-          {
-            headers: {
-              accept: "application/json",
-              "X-CSRFToken": "your-token-here",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        dispatch(initializeStockItems(response.data));
-      } catch (error) {
-        console.error("Error fetching inventory items:", error);
-      }
-    },
-    [dispatch]
-  );
+  useEffect(() => {
+    const stockItems = localStorage.getItem("stockItems");
+    if (stockItems) {
+      const parsedStock = JSON.parse(stockItems);
+      dispatch(initializeStockItems(parsedStock));
+    }
+
+    if (branches.length > 0) {
+      const firstBranch = branches[0];
+      setSelectedStock(String(firstBranch.id));
+      setDisplayedStockName(firstBranch.name);
+    }
+  }, [dispatch, branches]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -63,7 +54,6 @@ const Stock = () => {
     const selectedBranch = branches.find((b) => b.name === stockName);
     setSelectedStock(String(selectedBranch.id));
     setDisplayedStockName(selectedBranch.name);
-    fetchInventoryItems(selectedBranch.id);
     setIsDropdownOpen(false);
   };
 
@@ -72,13 +62,13 @@ const Stock = () => {
     setCurrentPage(1);
   };
 
-  const filterItems = useCallback(() => {
+  const filterItems = () => {
     return stockItems.filter((item) => {
       const matchesSearchTerm = item.name
         .toLowerCase()
-        .startsWith(searchTerm.toLowerCase());
-      const isCorrectStock = item.branch.toString() === selectedStock;
-      const isExpiring = item.is_running_out && item.quantity <= item.limit;
+        .includes(searchTerm.toLowerCase());
+      const isCorrectStock = item.stockId.toString() === selectedStock;
+      const isExpiring = item.amount <= item.limit;
       const isInOriginalCategory = item.category === selectedSubpage;
       const isRunningOutCategory =
         selectedSubpage === "expiringProducts" && isExpiring;
@@ -89,7 +79,7 @@ const Stock = () => {
         (isInOriginalCategory || isRunningOutCategory)
       );
     });
-  }, [stockItems, selectedSubpage, searchTerm, selectedStock]);
+  };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -117,25 +107,9 @@ const Stock = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleConfirmDelete = async () => {
+  const handleConfirmDelete = () => {
     if (itemToDelete) {
-      try {
-        const accessToken = localStorage.getItem("token");
-        await axios.delete(
-          `https://neo-cafe.org.kg/api-warehouse/branches/${selectedStock}/inventory/${itemToDelete.id}/`,
-          {
-            headers: {
-              accept: "application/json",
-              "X-CSRFToken":
-                "F1ohOeM7SHkvANB0TEPGlHB9zJdqHzA5U54NGnNxjBoIyTBSKQt5HLNvlxBSntk3",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        dispatch(deleteStockItem(itemToDelete.id));
-      } catch (error) {
-        console.error("Error deleting inventory item:", error);
-      }
+      dispatch(deleteStockItem(itemToDelete.id));
       setIsDeleteModalOpen(false);
       setItemToDelete(null);
     }
@@ -145,15 +119,6 @@ const Stock = () => {
     setIsDeleteModalOpen(false);
     setItemToDelete(null);
   };
-
-  useEffect(() => {
-    if (branches.length > 0) {
-      const firstBranchId = String(branches[0].id);
-      setSelectedStock(firstBranchId);
-      setDisplayedStockName(branches[0].name);
-      fetchInventoryItems(firstBranchId);
-    }
-  }, [branches, fetchInventoryItems]);
 
   const renderSubpageContent = () => {
     if (paginatedItems.length === 0) {

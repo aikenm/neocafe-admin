@@ -43,10 +43,10 @@ const StockItem = ({ item, index, onEdit, onDelete }) => {
       <span className="stock-item-card stock-id">№{index + 1}</span>
       <span className="stock-item-card stock-name">{item.name}</span>
       <span className="stock-item-card stock-amount">
-        {item.quantity} {formatUnit(item.quantity_unit)}
+        {item.amount} {formatUnit(item.unit)}
       </span>
       <span className="stock-item-card stock-limit">
-        {item.limit} {formatUnit(item.quantity_unit)}
+        {item.limit} {formatUnit(item.unit)}
       </span>
       <span className="stock-item-card stock-date">
         {new Date(item.arrival_date).toLocaleDateString()}

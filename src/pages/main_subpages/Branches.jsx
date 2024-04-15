@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import ContentHeader from "../../components/ContentHeader";
 import BranchItemModal from "../../components/branches/BranchItemModal";
 import DeleteModal from "../../components/DeleteModal";

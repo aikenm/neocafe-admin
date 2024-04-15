@@ -15,7 +15,6 @@ export const menuSlice = createSlice({
         0
       );
       const newItem = { ...action.payload, id: maxId + 1 };
-
       state.items.push(newItem);
       localStorage.setItem("items", JSON.stringify(state.items));
     },

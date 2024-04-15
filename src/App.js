@@ -1,19 +1,17 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import Menu from "./pages/main_subpages/Menu";
 import Stock from "./pages/main_subpages/Stock";
 import Branches from "./pages/main_subpages/Branches";
 import Employees from "./pages/main_subpages/Employees";
-import { initializeBranches } from "./store/branchSlice";
+// import { initializeBranches } from "./store/branchSlice";
 import { initialItems, initialCategories, initialBranches } from "./common";
 
 const App = () => {
-  const dispatch = useDispatch();
-
   useEffect(() => {
     // localStorage.clear();
     if (!localStorage.getItem("items")) {
@@ -23,14 +21,9 @@ const App = () => {
       localStorage.setItem("categories", JSON.stringify(initialCategories));
     }
     if (!localStorage.getItem("branches")) {
-      console.log("Initializing branches in localStorage", initialBranches);
       localStorage.setItem("branches", JSON.stringify(initialBranches));
-      dispatch(initializeBranches(initialBranches));
-    } else {
-      const storedBranches = JSON.parse(localStorage.getItem("branches"));
-      dispatch(initializeBranches(storedBranches));
     }
-  }, [dispatch]);
+  }, []);
 
   return (
     <BrowserRouter>

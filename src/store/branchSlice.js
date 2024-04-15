@@ -21,12 +21,10 @@ export const branchSlice = createSlice({
         (branch) => branch.id === action.payload.id
       );
       if (index !== -1) {
-        // Correctly handle the update to ensure all nested data is updated
         state.branches[index] = { ...state.branches[index], ...action.payload };
         localStorage.setItem("branches", JSON.stringify(state.branches));
       }
     },
-
     deleteBranch: (state, action) => {
       state.branches = state.branches.filter(
         (branch) => branch.id !== action.payload

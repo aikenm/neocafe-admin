@@ -1,70 +1,23 @@
 import React, { useEffect } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addStockItem, editStockItem } from "../../store/stockSlice";
 import CloseIcon from "../../images/close-icon.svg";
 import "../../styles/components/stock/stock_modal.css";
 
-const unitMapping = {
-  г: "g",
-  кг: "kg",
-  мл: "ml",
-  л: "l",
-  шт: "unit",
-};
-
 const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
   const dispatch = useDispatch();
   const { register, handleSubmit, reset } = useForm();
 
-  const onSubmit = async (data) => {
-    const accessToken = localStorage.getItem("token");
-    let apiURL;
-    let method;
-
-    const productData = {
-      name: data.name,
-      quantity: data.amount,
-      quantity_unit: unitMapping[data.unit],
-      limit: data.minLimit,
-      arrival_date: data.arrivalDate,
-      category: data.category,
-      is_running_out: false,
-      branch: selectedStock,
-    };
-
+  const onSubmit = (data) => {
     if (editable) {
-      apiURL = `https://neo-cafe.org.kg/api-warehouse/branches/${selectedStock}/inventory/${editable.id}/`;
-      method = "put";
+      dispatch(
+        editStockItem({ ...data, id: editable.id, stockId: selectedStock })
+      );
     } else {
-      apiURL = `https://neo-cafe.org.kg/api-warehouse/branches/${selectedStock}/inventory/`;
-      method = "post";
+      dispatch(addStockItem({ ...data, stockId: selectedStock }));
     }
-
-    try {
-      const response = await axios({
-        url: apiURL,
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken":
-            "ygaH6CEm6tTWguqyoThAD00REjRVbV7R7mTJz97Z7LvCevRLrqCZn86vTcFQLFVT",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: JSON.stringify(productData),
-      });
-
-      if (editable) {
-        dispatch(editStockItem({ ...response.data, id: editable.id }));
-      } else {
-        dispatch(addStockItem(response.data));
-      }
-
-      toggleModal();
-    } catch (error) {
-      console.error("Error in operation:", error);
-    }
+    toggleModal();
   };
 
   const handleCloseModal = () => {
@@ -79,26 +32,18 @@ const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
         category: "",
         amount: "",
         unit: "г",
-        minLimit: "",
-        arrivalDate: "",
+        limit: "",
+        arrival_date: "",
         stockId: selectedStock,
       });
-    }
-  }, [editable, isOpen, reset, selectedStock]);
-
-  useEffect(() => {
-    if (editable && isOpen) {
+    } else if (editable && isOpen) {
       reset({
-        ...editable,
-        // Assuming 'editable' contains the correct category
+        name: editable.name,
         category: editable.category,
-        amount: editable.quantity,
-        unit:
-          Object.keys(unitMapping).find(
-            (key) => unitMapping[key] === editable.quantity_unit
-          ) || "",
-        minLimit: editable.limit,
-        arrivalDate: editable.arrival_date,
+        amount: editable.amount,
+        unit: editable.unit,
+        limit: editable.limit,
+        arrival_date: editable.arrival_date,
         stockId: editable.stockId || selectedStock,
       });
     }
@@ -154,9 +99,9 @@ const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
                 <div className="unit-input-wrapper">
                   <select {...register("unit")} className="input-field">
                     <option value="г">г</option>
-                    <option value="г">кг</option>
+                    <option value="кг">кг</option>
                     <option value="мл">мл</option>
-                    <option value="мл">л</option>
+                    <option value="л">л</option>
                     <option value="шт">шт</option>
                   </select>
                 </div>
@@ -166,7 +111,7 @@ const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
               <div className="inline-input-group">
                 <span className="input-title">Минимальный лимит</span>
                 <input
-                  {...register("minLimit", { valueAsNumber: true })}
+                  {...register("limit", { valueAsNumber: true })}
                   placeholder="Например: 2кг"
                   type="number"
                   className="input-field"
@@ -175,7 +120,7 @@ const StockItemModal = ({ isOpen, toggleModal, editable, selectedStock }) => {
               <div className="inline-input-group">
                 <span className="input-title">Дата прихода</span>
                 <input
-                  {...register("arrivalDate")}
+                  {...register("arrival_date")}
                   type="date"
                   placeholder="Arrival Date"
                   className="input-field"
