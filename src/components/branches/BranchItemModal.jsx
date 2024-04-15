@@ -183,18 +183,16 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
 
   useEffect(() => {
     if (isOpen && editable) {
-      // Set non-dynamic fields
       setValue("name", editable.name || "");
       setValue("address", editable.address || "");
       setValue("phone", editable.phone || "");
       setValue("link", editable.link || "");
       setValue("image", editable.image || null);
 
-      // Set dynamic working hours fields
       Object.keys(dayMappings).forEach((day) => {
-        const dayKey = dayMappings[day]; // Assuming `editable` uses day mappings like 'monday', 'tuesday', etc.
+        const dayKey = dayMappings[day];
         const dayData = editable.workingHours[day];
-        const isEnabled = dayData?.enabled === true; // Ensure boolean value
+        const isEnabled = dayData?.enabled === true;
         const fromTime = dayData?.from || defaultWorkingHours[day].from;
         const toTime = dayData?.to || defaultWorkingHours[day].to;
 
@@ -322,14 +320,14 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
                     </div>
                     <div className="schedule-hours">
                       <input
-                        type="text"
+                        type="time"
                         {...register(`workingHours.${day}.from`)}
                         className="working-hours"
                         disabled={!watch(`workingHours.${day}.enabled`)}
                       />
                       <span> - </span>
                       <input
-                        type="text"
+                        type="time"
                         {...register(`workingHours.${day}.to`)}
                         className="working-hours"
                         disabled={!watch(`workingHours.${day}.enabled`)}

@@ -245,6 +245,7 @@ const Employees = () => {
       {isDeleteModalOpen && (
         <DeleteModal
           isOpen={isDeleteModalOpen}
+          title="Удаление"
           message="Вы уверены, что хотите удалить этого сотрудника?"
           onConfirm={handleConfirmDelete}
           onCancel={() => setIsDeleteModalOpen(false)}

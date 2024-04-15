@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/components/delete_modal.css";
 import CloseIcon from "../images/close-icon.svg";
 
-const DeleteModal = ({ isOpen, message, onConfirm, onCancel }) => {
+const DeleteModal = ({ isOpen, title, message, onConfirm, onCancel }) => {
   if (!isOpen) return null;
 
   const handleCloseModal = () => {
@@ -19,7 +19,7 @@ const DeleteModal = ({ isOpen, message, onConfirm, onCancel }) => {
         >
           <img src={CloseIcon} alt="close-icon" />
         </button>
-        <h3 className="delete-title">Удаление</h3>
+        <h3 className="delete-title">{title}</h3>
         <p className="delete-message">{message}</p>
         <div className="delete-actions">
           <button onClick={onCancel} className="cancel-btn button">

@@ -241,6 +241,7 @@ const Stock = () => {
       {isDeleteModalOpen && (
         <DeleteModal
           isOpen={isDeleteModalOpen}
+          title="Удаление"
           message="Вы действительно хотите удалить этот товар?"
           onConfirm={handleConfirmDelete}
           onCancel={handleCancelDelete}

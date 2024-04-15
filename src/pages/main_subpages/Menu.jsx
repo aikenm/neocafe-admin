@@ -268,6 +268,7 @@ const Menu = () => {
           )}
           <DeleteModal
             isOpen={isCategoryDeleteModalOpen}
+            title="Удаление"
             message={`Вы действительно хотите удалить категорию "${categoryToDelete?.name}"?`}
             onConfirm={handleConfirmDeleteCategory}
             onCancel={handleCancelDeleteCategory}

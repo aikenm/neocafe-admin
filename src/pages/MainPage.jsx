@@ -144,6 +144,7 @@ const MainPage = () => {
       <div className="content">{renderContent()}</div>
       <DeleteModal
         isOpen={showLogoutModal}
+        title="Выход"
         message="Вы уверены что хотите выйти?"
         onConfirm={confirmLogout}
         onCancel={cancelLogout}

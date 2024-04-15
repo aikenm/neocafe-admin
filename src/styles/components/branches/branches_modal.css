@@ -34,7 +34,7 @@
 }
 
 .branches-section-title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 500;
 }
 
@@ -59,12 +59,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 20px;
   font-weight: 600;
   margin-bottom: 10px;
 }
 
 .schedule-days {
+  font-size: 17px;
   width: 43%;
   display: flex;
   justify-content: space-between;
@@ -73,6 +73,7 @@
 .schedule-hours {
   width: 43%;
   display: flex;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -81,11 +82,14 @@
 }
 
 .working-days {
-  position: relative;
+  display: flex;
+  align-items: center;
   width: 89%;
   cursor: pointer;
-  display: inline-block;
-  user-select: none; 
+}
+
+.working-days:hover {
+  color: #00315D;
 }
 
 .working-days::before {
@@ -101,25 +105,33 @@
 }
 
 .working-hours-checkbox:checked + .working-days::before {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   content: url("../../../images/check.svg");
   color: black;
-  text-align: center;
-  line-height: 25px;
   border: 1px solid #00315D;
 }
 
 .working-hours {
-  font-family: "Nunito", sans-serif;
-  font-size: 20px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
   width: 85px;
   height: 36px;
+  font-size: 16px;
   text-align: center;
   background: none;
   border: 1px solid #C1C1C3;
   border-radius: 4px;
 }
 
+.working-hours:enabled {
+  font-size: 18px;
+}
+
 .working-hours:disabled {
     color: #C1C1C3;
+    font-size: 18px;
 }
   

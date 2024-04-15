@@ -173,6 +173,7 @@ const Branches = () => {
       {isDeleteModalOpen && (
         <DeleteModal
           isOpen={isDeleteModalOpen}
+          title="Удаление"
           message="Вы уверены, что хотите удалить этот филиал?"
           onConfirm={handleConfirmDelete}
           onCancel={() => setIsDeleteModalOpen(false)}
