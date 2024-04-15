@@ -192,3 +192,48 @@ export const initialStockItems = [
     stockId: 1,
   },
 ];
+
+// Employees
+
+export const initialEmployees = [
+  {
+    id: 1,
+    login: "john_doe",
+    password: "securepassword123",
+    first_name: "John",
+    last_name: "Doe",
+    position: "waiter",
+    dob: "1990-01-01",
+    phone: "+996500111222",
+    branch: 1,
+    workingHours: {
+      Понедельник: { enabled: true, from: "09:00", to: "17:00" },
+      Вторник: { enabled: true, from: "09:00", to: "17:00" },
+      Среда: { enabled: true, from: "09:00", to: "17:00" },
+      Четверг: { enabled: false, from: "11:00", to: "22:00" },
+      Пятница: { enabled: false, from: "11:00", to: "22:00" },
+      Суббота: { enabled: true, from: "10:00", to: "14:00" },
+      Воскресенье: { enabled: false, from: "08:00", to: "17:00" },
+    },
+  },
+  {
+    id: 2,
+    login: "jane_smith",
+    password: "passwordsecure456",
+    first_name: "Jane",
+    last_name: "Smith",
+    position: "barista",
+    dob: "1985-05-05",
+    phone: "+996500333444",
+    branch: 2,
+    workingHours: {
+      Понедельник: { enabled: true, from: "10:00", to: "18:00" },
+      Вторник: { enabled: true, from: "10:00", to: "18:00" },
+      Среда: { enabled: true, from: "10:00", to: "18:00" },
+      Четверг: { enabled: true, from: "10:00", to: "18:00" },
+      Пятница: { enabled: true, from: "10:00", to: "18:00" },
+      Суббота: { enabled: false, from: "08:00", to: "17:00" },
+      Воскресенье: { enabled: false, from: "08:00", to: "17:00" },
+    },
+  },
+];

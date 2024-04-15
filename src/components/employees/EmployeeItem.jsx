@@ -23,22 +23,24 @@ const EmployeeItem = ({ employee, branches, index, onEdit, onDelete }) => {
 
   const formatWorkingDays = () => {
     const dayAbbreviations = {
-      monday: "Пн",
-      tuesday: "Вт",
-      wednesday: "Ср",
-      thursday: "Чт",
-      friday: "Пт",
-      saturday: "Сб",
-      sunday: "Вс",
+      Понедельник: "Пн",
+      Вторник: "Вт",
+      Среда: "Ср",
+      Четверг: "Чт",
+      Пятница: "Пт",
+      Суббота: "Сб",
+      Воскресенье: "Вс",
     };
 
-    const workingDays = [];
-
-    for (const [day, isEnabled] of Object.entries(dayAbbreviations)) {
-      if (employee[day]) {
-        workingDays.push(isEnabled);
-      }
-    }
+    const workingDays = Object.entries(employee.workingHours || {}).reduce(
+      (acc, [day, { enabled }]) => {
+        if (enabled) {
+          acc.push(dayAbbreviations[day]);
+        }
+        return acc;
+      },
+      []
+    );
 
     return workingDays.length > 0 ? workingDays.join(", ") : "Не указан";
   };
@@ -53,6 +55,7 @@ const EmployeeItem = ({ employee, branches, index, onEdit, onDelete }) => {
   };
 
   const displayName = employee.first_name || "";
+  const displaySurname = employee.last_name || "";
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -70,13 +73,15 @@ const EmployeeItem = ({ employee, branches, index, onEdit, onDelete }) => {
   return (
     <div className="employee-item">
       <span className="employee-item-card employee-id">№{index + 1}</span>
-      <span className="employee-item-card employee-name">{displayName}</span>
+      <span className="employee-item-card employee-name">
+        {displayName} {displaySurname}
+      </span>
       <span className="employee-item-card employee-position">
         {getPositionTranslation(employee.position)}
       </span>
       <span className="employee-item-card employee-branch">{branchName}</span>
       <span className="employee-item-card employee-phone">
-        {employee.phone_number || "Не указан"}
+        {employee.phone || "Не указан"}
       </span>
       <span className="employee-item-card employee-schedule">
         {formatWorkingDays()}

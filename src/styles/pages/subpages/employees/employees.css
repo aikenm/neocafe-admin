@@ -7,9 +7,9 @@
 
 .employees-content-header {
     display: flex;
+    justify-content: space-between;
     height: 86px;
     align-items: center;
-    justify-content: space-between;
     border-bottom: 1px solid #35536B;
     padding-left: 25px;
     font-size: 17px;
@@ -32,8 +32,8 @@
 }
 
 .employee-position {
-    width: 200px;
-    margin-left: 35px;
+    width: 150px;
+    margin-left: 25px;
 }
 
 .employee-branch {
@@ -43,7 +43,7 @@
     width: 200px;
     height: 60px;
     padding: 0px 20px;
-    margin-left: 45px;
+    margin-left: 25px;
     cursor: pointer;
 }
 

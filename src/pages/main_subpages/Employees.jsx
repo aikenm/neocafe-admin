@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import ContentHeader from "../../components/ContentHeader";
 import EmployeeItemModal from "../../components/employees/EmployeeItemModal";
 import DeleteModal from "../../components/DeleteModal";
@@ -71,34 +70,15 @@ const Employees = () => {
   };
 
   const handleConfirmDelete = () => {
-    const accessToken = localStorage.getItem("token");
-    const url = `https://neo-cafe.org.kg/api-admin/staff/${employeeToDelete}/`;
-
-    axios
-      .delete(url, {
-        headers: {
-          accept: "application/json",
-          "X-CSRFToken":
-            "ygaH6CEm6tTWguqyoThAD00REjRVbV7R7mTJz97Z7LvCevRLrqCZn86vTcFQLFVT",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((response) => {
-        dispatch(deleteEmployee(employeeToDelete));
-        console.log("Employee deleted successfully");
-      })
-      .catch((error) => {
-        console.error("Error deleting employee:", error);
-      });
-
+    dispatch(deleteEmployee(employeeToDelete));
     setIsDeleteModalOpen(false);
   };
 
   const handleEmployeeSubmit = (employeeData) => {
     if (editableEmployee) {
-      dispatch(editEmployee({ ...editableEmployee, ...employeeData }));
+      dispatch(editEmployee({ ...employeeData, id: editableEmployee.id }));
     } else {
-      dispatch(addEmployee(...employeeData));
+      dispatch(addEmployee(employeeData));
     }
     setModalOpen(false);
   };
@@ -113,7 +93,6 @@ const Employees = () => {
       ? employee.name.toLowerCase().includes(searchTerm.toLowerCase())
       : true;
 
-    // Exclude employees when both branch and position are invalid
     return (
       !(isBranchInvalid && isPositionInvalid) && matchesName && isBranchMatch
     );
@@ -129,24 +108,10 @@ const Employees = () => {
   const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("token");
-    const url = "https://neo-cafe.org.kg/api-admin/staff/profile/";
-
-    axios
-      .get(url, {
-        headers: {
-          accept: "application/json",
-          "X-CSRFToken":
-            "6Yw1nXu0fhgyfM1tWUdSBvRIktAGGbMFF4f3QuXDgzSedNsGZryhlDXmzmoBgVAH",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((response) => {
-        dispatch(initializeEmployees(response.data));
-      })
-      .catch((error) => {
-        console.error("Error fetching employees:", error);
-      });
+    const savedEmployees = JSON.parse(localStorage.getItem("employees"));
+    if (savedEmployees) {
+      dispatch(initializeEmployees(savedEmployees));
+    }
   }, [dispatch]);
 
   return (

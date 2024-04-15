@@ -4,14 +4,7 @@ import moreIcon from "../../images/more-icon.svg";
 import editIcon from "../../images/edit-icon.svg";
 import deleteIcon from "../../images/delete-icon.svg";
 
-const BranchItem = ({
-  branch,
-  index,
-  onEdit,
-  onDeleteInitiated,
-  moreOptionsVisible,
-  setMoreOptionsVisible,
-}) => {
+const BranchItem = ({ branch, index, onEdit, onDeleteInitiated }) => {
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef(null);
 

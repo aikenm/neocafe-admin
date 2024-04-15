@@ -115,7 +115,6 @@
 
 .working-hours {
   display: flex;
-  justify-content: end;
   align-items: center;
   width: 85px;
   height: 36px;

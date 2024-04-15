@@ -4,7 +4,6 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { addEmployee, editEmployee } from "../../store/employeeSlice";
 import CloseIcon from "../../images/close-icon.svg";
 import "../../styles/components/employees/employee_modal.css";
-import axios from "axios";
 
 const defaultWorkingHours = {
   Понедельник: { enabled: false, from: "11:00", to: "22:00" },
@@ -52,71 +51,13 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
     name: "workingHours",
   });
 
-  function formatDateString(dateString) {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = `${date.getMonth() + 1}`.padStart(2, "0");
-    const day = `${date.getDate()}`.padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
-
-  const onSubmit = async (data) => {
-    const accessToken = localStorage.getItem("token");
-    const apiURL = isEditMode
-      ? `https://neo-cafe.org.kg/api-admin/staff/${editable.id}/`
-      : `https://neo-cafe.org.kg/api-admin/staff/create`;
-
-    const method = isEditMode ? "put" : "post";
-
-    const formattedDate = data.dob ? formatDateString(data.dob) : null;
-
-    const employeeData = {
-      login: data.login,
-      password: data.password,
-      phone_number: data.phone,
-      date_of_birth: formattedDate,
-      first_name: data.first_name,
-      last_name: data.last_name,
-      position: data.position,
-      branch: data.branch,
-    };
-
-    Object.entries(data.workingHours).forEach(([day, values]) => {
-      const dayEnglish = dayMappings[day];
-      employeeData[`${dayEnglish}`] = values.enabled;
-      if (values.enabled) {
-        employeeData[`${dayEnglish}_start_time`] = values.from;
-        employeeData[`${dayEnglish}_end_time`] = values.to;
-      }
-    });
-
-    try {
-      const response = await axios({
-        url: apiURL,
-        method,
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-          "X-CSRFToken":
-            "ygaH6CEm6tTWguqyoThAD00REjRVbV7R7mTJz97Z7LvCevRLrqCZn86vTcFQLFVT",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: JSON.stringify(employeeData),
-      });
-
-      console.log("Response:", response.data);
-
-      if (isEditMode) {
-        dispatch(editEmployee({ ...response.data, id: editable.id }));
-      } else {
-        dispatch(addEmployee(response.data));
-      }
-
-      toggleModal();
-      reset();
-    } catch (error) {
-      console.error("Error:", error);
+  const onSubmit = (data) => {
+    if (editable) {
+      dispatch(editEmployee({ ...editable, ...data }));
+    } else {
+      dispatch(addEmployee(data));
     }
+    toggleModal();
   };
 
   const handleCloseModal = () => {
@@ -131,34 +72,19 @@ const EmployeeItemModal = ({ isOpen, toggleModal, editable }) => {
       setValue("first_name", editable.first_name || "");
       setValue("last_name", editable.last_name || "");
       setValue("position", editable.position || "");
-      setValue("dob", editable.date_of_birth || "");
-      setValue("phone", editable.phone_number || "");
+      setValue("dob", editable.dob || "");
+      setValue("phone", editable.phone || "");
       setValue("branch", editable.branch || "");
 
-      Object.keys(defaultWorkingHours).forEach((russianDay) => {
-        const dayMappings = {
-          Понедельник: "monday",
-          Вторник: "tuesday",
-          Среда: "wednesday",
-          Четверг: "thursday",
-          Пятница: "friday",
-          Суббота: "saturday",
-          Воскресенье: "sunday",
-        };
-        const englishDay = dayMappings[russianDay];
-        const isEnabled = editable[englishDay];
-        const fromTime =
-          isEnabled && editable[`${englishDay}_start_time`]
-            ? editable[`${englishDay}_start_time`].substring(0, 5)
-            : defaultWorkingHours[russianDay].from;
-        const toTime =
-          isEnabled && editable[`${englishDay}_end_time`]
-            ? editable[`${englishDay}_end_time`].substring(0, 5)
-            : defaultWorkingHours[russianDay].to;
+      Object.keys(dayMappings).forEach((day) => {
+        const dayData = editable.workingHours[day];
+        const isEnabled = dayData?.enabled === true;
+        const fromTime = dayData?.from || defaultWorkingHours[day].from;
+        const toTime = dayData?.to || defaultWorkingHours[day].to;
 
-        setValue(`workingHours.${russianDay}.enabled`, isEnabled || false);
-        setValue(`workingHours.${russianDay}.from`, fromTime);
-        setValue(`workingHours.${russianDay}.to`, toTime);
+        setValue(`workingHours.${day}.enabled`, isEnabled);
+        setValue(`workingHours.${day}.from`, fromTime);
+        setValue(`workingHours.${day}.to`, toTime);
       });
     } else {
       reset({

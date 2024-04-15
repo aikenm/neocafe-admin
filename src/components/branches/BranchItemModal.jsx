@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useForm, useFieldArray } from "react-hook-form";
 import { addBranch, editBranch } from "../../store/branchSlice";
@@ -33,7 +32,6 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
   const daysOfWeek = Object.keys(defaultWorkingHours);
   const [selectedImageFile, setSelectedImageFile] = useState(null);
 
-  //FIX IT
   const [imageBlob, setImageBlob] = useState(null);
 
   const { register, handleSubmit, control, reset, setValue, watch } = useForm({
@@ -62,8 +60,6 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setSelectedImageFile(file);
-
-      //FIX IT
       setImageBlob(file);
 
       const reader = new FileReader();
@@ -90,8 +86,6 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
     }
   };
 
-  //FIX it
-
   useEffect(() => {
     if (
       isOpen &&
@@ -110,61 +104,8 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
     }
   }, [isOpen, editable, selectedImageFile, imageBlob]);
 
-  // const onSubmit = async (data) => {
-  // const accessToken = localStorage.getItem("token");
-  // const formData = new FormData();
-
-  // formData.append("name", data.name);
-  // formData.append("address", data.address);
-  // formData.append("phone_number", data.phone);
-  // formData.append("map_link", data.link);
-
-  // Object.entries(data.workingHours).forEach(([day, values]) => {
-  //   const dayEnglish = dayMappings[day];
-  //   formData.append(dayEnglish, values.enabled);
-  //   if (values.enabled) {
-  //     formData.append(`${dayEnglish}_start_time`, values.from);
-  //     formData.append(`${dayEnglish}_end_time`, values.to);
-  //   }
-  // });
-
-  // if (selectedImageFile) {
-  //   formData.append("image", selectedImageFile);
-  // } else if (imageBlob) {
-  //   formData.append("image", imageBlob, "image.jpg");
-  // }
-
-  // const url = `https://neo-cafe.org.kg/api-admin/branches/${
-  //   isEditMode ? `${editable.id}/` : ""
-  // }`;
-  // const method = isEditMode ? "put" : "post";
-  // const headers = {
-  //   accept: "application/json",
-  //   "X-CSRFToken":
-  //     "o8Y7VxZuP0yLg0cu3nfFR3UBxa0hsqCyVtNeMnSl7M6OCcij2OZl8rqoJ5j0a70Q",
-  //   Authorization: `Bearer ${accessToken}`,
-  // };
-
-  // axios({ url, method, headers, data: formData })
-  //   .then((response) => {
-  //     if (isEditMode) {
-  //       dispatch(editBranch({ ...response.data, id: editable.id }));
-  //     } else {
-  //       dispatch(addBranch(response.data));
-  //     }
-
-  //     toggleModal();
-  //     reset();
-  //     setSelectedImage(null);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error:", error);
-  //   });
-  // };
-
   const onSubmit = (data) => {
     console.log(data);
-    // Construct branch data from form
     const branchData = { ...data, image: selectedImage };
 
     if (isEditMode) {
