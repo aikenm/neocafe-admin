@@ -131,7 +131,6 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
       setValue("image", editable.image || null);
 
       Object.keys(dayMappings).forEach((day) => {
-        const dayKey = dayMappings[day];
         const dayData = editable.workingHours[day];
         const isEnabled = dayData?.enabled === true;
         const fromTime = dayData?.from || defaultWorkingHours[day].from;
