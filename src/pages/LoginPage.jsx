@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import "../styles/pages/login_page.css";
 import bg from "../images/bg.jpeg";
 import logo from "../images/logo.svg";
@@ -7,11 +7,11 @@ import eyeClosed from "../images/eye-closed.svg";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { loginSuccess } from "../store/adminSlice";
+// import { useDispatch } from "react-redux";
+// import { loginSuccess } from "../store/adminSlice";
 
 const LoginPage = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const { register, handleSubmit, clearErrors } = useForm();
   const [inputError, setInputError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -50,7 +50,7 @@ const LoginPage = () => {
     //   setInputError(true);
     //   setErrorMessage("Неверный логин или пароль");
     // }
-    if (username == "admin" && password == "admin") {
+    if (username === "admin" && password === "admin") {
       navigate("/main");
     } else {
       setInputError(true);
