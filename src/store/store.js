@@ -1,9 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit';
-import adminReducer from './adminSlice';
-import menuReducer from './menuSlice';
-import stockReducer from './stockSlice';
-import branchSlice from './branchSlice';
-import employeeSlice from './employeeSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import adminReducer from "./adminSlice";
+import menuReducer from "./menuSlice";
+import stockReducer from "./stockSlice";
+import branchSlice from "./branchSlice";
+import employeeSlice from "./employeeSlice";
 
 const store = configureStore({
   reducer: {
@@ -16,7 +16,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredPaths: ['menu.items.image'],
+        ignoredPaths: ["menu.items.image"],
       },
     }),
 });
