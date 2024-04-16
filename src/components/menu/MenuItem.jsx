@@ -8,7 +8,6 @@ const MenuItem = ({ item, index, onMoreClick, onEdit, onDelete }) => {
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef(null);
 
-  // Check if ingredients exist and is an array, otherwise set as an empty array
   const ingredientsText = (item.ingredients || [])
     .map((ing) => `${ing.name} (${ing.amount}${ing.unit})`)
     .join(", ");

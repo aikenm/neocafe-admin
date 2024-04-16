@@ -4,19 +4,17 @@ import { useDispatch } from "react-redux";
 import "../../styles/modal_windows/category_create.css";
 import CloseIcon from "../../images/close-icon.svg";
 import { addCategory } from "../../store/menuSlice";
-import axios from "axios";
+// import axios from "axios";
 
 const CategoryCreateModal = ({ isOpen, toggleModal, onCreate }) => {
   const [categoryName, setCategoryName] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
   const dispatch = useDispatch();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setSelectedImage(URL.createObjectURL(file));
-      setImageFile(file);
     }
   };
 
@@ -25,7 +23,6 @@ const CategoryCreateModal = ({ isOpen, toggleModal, onCreate }) => {
     const file = e.dataTransfer.files[0];
     if (file) {
       setSelectedImage(URL.createObjectURL(file));
-      setImageFile(file);
     }
   };
 
@@ -64,27 +61,24 @@ const CategoryCreateModal = ({ isOpen, toggleModal, onCreate }) => {
 
     e.preventDefault();
 
-    // Assuming categories are stored as an array of objects in local storage
     const storedCategories =
       JSON.parse(localStorage.getItem("categories")) || [];
-    const newCategoryId = new Date().getTime(); // Simple unique ID generation
+    const newCategoryId = new Date().getTime();
 
     const newCategory = {
-      id: newCategoryId, // Assigning the unique ID
+      id: newCategoryId,
       name: categoryName,
-      image: selectedImage, // This would be a base64 string or similar; adjust as needed
+      image: selectedImage,
     };
 
     const updatedCategories = [...storedCategories, newCategory];
 
     localStorage.setItem("categories", JSON.stringify(updatedCategories));
 
-    dispatch(addCategory(newCategory)); // Update Redux store
+    dispatch(addCategory(newCategory));
 
-    // Reset state and close modal
     setCategoryName("");
     setSelectedImage(null);
-    setImageFile(null);
     toggleModal();
   };
 

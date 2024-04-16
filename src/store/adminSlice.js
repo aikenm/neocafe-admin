@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoggedIn: false,
@@ -6,7 +6,7 @@ const initialState = {
 };
 
 const adminSlice = createSlice({
-  name: 'admin',
+  name: "admin",
   initialState,
   reducers: {
     loginSuccess: (state) => {
@@ -20,9 +20,9 @@ const adminSlice = createSlice({
     logout: (state) => {
       state.isLoggedIn = false;
       state.error = null;
-      localStorage.removeItem('token'); 
-    }
-  }
+      localStorage.removeItem("token");
+    },
+  },
 });
 
 export const { loginSuccess, loginFailed, logout } = adminSlice.actions;
