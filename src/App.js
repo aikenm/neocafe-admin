@@ -11,7 +11,7 @@ import { initialItems, initialCategories, initialBranches } from "./common";
 
 const App = () => {
   useEffect(() => {
-    // localStorage.clear();
+    localStorage.clear();
     if (!localStorage.getItem("items")) {
       localStorage.setItem("items", JSON.stringify(initialItems));
     }
