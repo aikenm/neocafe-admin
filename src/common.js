@@ -200,7 +200,7 @@ export const initialEmployees = [
     id: 1,
     login: "john_doe",
     password: "securepassword123",
-    first_name: "John",
+    first_name: "Penny",
     last_name: "Doe",
     position: "waiter",
     dob: "1990-01-01",
