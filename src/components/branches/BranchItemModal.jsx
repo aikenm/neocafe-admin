@@ -30,21 +30,18 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
   const dispatch = useDispatch();
   const isEditMode = editable != null;
   const daysOfWeek = Object.keys(defaultWorkingHours);
-  const [selectedImageFile, setSelectedImageFile] = useState(null);
-
+  const [selectedImage, setSelectedImage] = useState(null);
   const [imageBlob, setImageBlob] = useState(null);
 
   const { register, handleSubmit, control, reset, setValue, watch } = useForm({
-    defaultValues: isEditMode
-      ? editable
-      : {
-          name: "",
-          address: "",
-          phone: "",
-          link: "",
-          image: null,
-          workingHours: defaultWorkingHours,
-        },
+    defaultValues: {
+      name: "",
+      address: "",
+      phone: "",
+      link: "",
+      image: null,
+      workingHours: defaultWorkingHours,
+    },
   });
 
   useFieldArray({
@@ -52,14 +49,51 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
     name: "workingHours",
   });
 
-  const [selectedImage, setSelectedImage] = useState(
-    isEditMode ? editable.image : null
-  );
+  useEffect(() => {
+    if (isOpen && editable) {
+      setValue("name", editable.name || "");
+      setValue("address", editable.address || "");
+      setValue("phone", editable.phone || "");
+      setValue("link", editable.link || "");
+      setValue("image", editable.image || null);
+
+      Object.keys(dayMappings).forEach((day) => {
+        const dayData = editable.workingHours[day];
+        const isEnabled = dayData?.enabled === true;
+        const fromTime = dayData?.from || defaultWorkingHours[day].from;
+        const toTime = dayData?.to || defaultWorkingHours[day].to;
+
+        setValue(`workingHours.${day}.enabled`, isEnabled);
+        setValue(`workingHours.${day}.from`, fromTime);
+        setValue(`workingHours.${day}.to`, toTime);
+      });
+
+      if (editable.image) {
+        fetch(editable.image)
+          .then((response) => response.blob())
+          .then((blob) => {
+            setImageBlob(blob);
+            setSelectedImage(URL.createObjectURL(blob));
+          })
+          .catch((error) => console.error("Error fetching image:", error));
+      }
+    } else {
+      reset({
+        name: "",
+        address: "",
+        phone: "",
+        link: "",
+        image: null,
+        workingHours: defaultWorkingHours,
+      });
+      setSelectedImage(null);
+      setImageBlob(null);
+    }
+  }, [isOpen, editable, reset, setValue]);
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setSelectedImageFile(file);
       setImageBlob(file);
 
       const reader = new FileReader();
@@ -86,26 +120,7 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
     }
   };
 
-  useEffect(() => {
-    if (
-      isOpen &&
-      editable &&
-      editable.image &&
-      !selectedImageFile &&
-      !imageBlob
-    ) {
-      fetch(editable.image)
-        .then((response) => response.blob())
-        .then((blob) => {
-          setImageBlob(blob);
-          setSelectedImage(URL.createObjectURL(blob));
-        })
-        .catch((error) => console.error("Error fetching image:", error));
-    }
-  }, [isOpen, editable, selectedImageFile, imageBlob]);
-
   const onSubmit = (data) => {
-    console.log(data);
     const branchData = { ...data, image: selectedImage };
 
     if (isEditMode) {
@@ -120,37 +135,9 @@ const BranchItemModal = ({ isOpen, toggleModal, editable }) => {
   const handleCloseModal = () => {
     reset();
     toggleModal();
+    setSelectedImage(null);
+    setImageBlob(null);
   };
-
-  useEffect(() => {
-    if (isOpen && editable) {
-      setValue("name", editable.name || "");
-      setValue("address", editable.address || "");
-      setValue("phone", editable.phone || "");
-      setValue("link", editable.link || "");
-      setValue("image", editable.image || null);
-
-      Object.keys(dayMappings).forEach((day) => {
-        const dayData = editable.workingHours[day];
-        const isEnabled = dayData?.enabled === true;
-        const fromTime = dayData?.from || defaultWorkingHours[day].from;
-        const toTime = dayData?.to || defaultWorkingHours[day].to;
-
-        setValue(`workingHours.${day}.enabled`, isEnabled);
-        setValue(`workingHours.${day}.from`, fromTime);
-        setValue(`workingHours.${day}.to`, toTime);
-      });
-    } else {
-      reset({
-        name: "",
-        address: "",
-        phone: "",
-        link: "",
-        image: null,
-        workingHours: defaultWorkingHours,
-      });
-    }
-  }, [isOpen, editable, reset, setValue]);
 
   if (!isOpen) return null;
 

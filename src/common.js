@@ -1,3 +1,5 @@
+// Item images
+
 import americano from "./images/photos/Американо.jpg";
 import capuccino from "./images/photos/Капучино.jpg";
 import bagrovyi_zakat from "./images/photos/Багровый закат.jpg";
@@ -17,6 +19,14 @@ import blacktea from "./images/photos/Черный чай.jpg";
 import cheesecake from "./images/photos/Чизкейк.jpg";
 import espresso from "./images/photos/Эспрессо.jpg";
 import applepirog from "./images/photos/Яблочный пирог.jpg";
+
+// Branch images
+
+import branch1 from "./images/branch-images/1.jpg";
+import branch2 from "./images/branch-images/2.jpg";
+import branch3 from "./images/branch-images/3.jpg";
+import branch4 from "./images/branch-images/4.jpg";
+import branch5 from "./images/branch-images/5.jpg";
 
 export const initialItems = [
   {
@@ -305,7 +315,7 @@ export const initialBranches = [
     address: "Жоомарта Боконбаева, 132",
     phone: "0550123456",
     link: "https://go.2gis.com/gko9u",
-    image: "",
+    image: branch1,
     workingHours: {
       Понедельник: { enabled: true, from: "08:00", to: "22:00" },
       Вторник: { enabled: true, from: "08:00", to: "22:00" },
@@ -322,7 +332,7 @@ export const initialBranches = [
     address: "Табышалиева, 72/1",
     phone: "0555234567",
     link: "https://go.2gis.com/ifh0u",
-    image: "",
+    image: branch2,
     workingHours: {
       Понедельник: { enabled: false, from: "09:00", to: "21:00" },
       Вторник: { enabled: false, from: "09:00", to: "21:00" },
@@ -339,7 +349,7 @@ export const initialBranches = [
     address: "Проспект Чынгыза Айтматова, 3",
     phone: "0555123456",
     link: "https://go.2gis.com/nepel",
-    image: "",
+    image: branch3,
     workingHours: {
       Понедельник: { enabled: true, from: "09:00", to: "23:00" },
       Вторник: { enabled: true, from: "09:00", to: "23:00" },
@@ -356,7 +366,7 @@ export const initialBranches = [
     address: "Бульвар Эркиндик, 35",
     phone: "0555223456",
     link: "https://go.2gis.com/ffl7x",
-    image: "",
+    image: branch4,
     workingHours: {
       Понедельник: { enabled: true, from: "08:00", to: "22:00" },
       Вторник: { enabled: false },
@@ -373,7 +383,7 @@ export const initialBranches = [
     address: "Московская, 73",
     phone: "0555323456",
     link: "https://go.2gis.com/6ltsv",
-    image: "",
+    image: branch5,
     workingHours: {
       Понедельник: { enabled: true, from: "09:00", to: "21:00" },
       Вторник: { enabled: true, from: "09:00", to: "21:00" },
