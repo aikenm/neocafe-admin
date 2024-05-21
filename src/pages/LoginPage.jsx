@@ -1,7 +1,7 @@
 // import axios from "axios";
 import "../styles/pages/login_page.css";
 import bg from "../images/bg.jpeg";
-import logo from "../images/logo.svg";
+import logo from "../images/auth-logo.svg";
 import eyeOpen from "../images/eye-open.svg";
 import eyeClosed from "../images/eye-closed.svg";
 import React, { useState } from "react";
